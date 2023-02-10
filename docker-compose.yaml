@@ -9,7 +9,7 @@ services:
     ports:
       - 3000:3000
 
-    container_name: client_sample
+    container_name: client-container
 
     networks:
       - ielts_dash
@@ -28,13 +28,51 @@ services:
     ports:
       - 8000:8000
 
-    container_name: express-container
+    container_name: server-container
 
     networks:
       - ielts_dash
 
     volumes:
       - ./server:/app
+
+    depends_on:
+      - database
+
+  database:
+    image: postgres:latest
+
+    container_name: database-container
+
+    ports:
+      - 5555:5555
+
+    environment:
+      POSTGRES_PASSWORD: ieltsDB@09!
+      POSTGRES_USER: ingelt
+      POSTGRES_DB: ieltsDB
+
+    networks:
+      - ielts_dash
+
+    volumes:
+      - ./database:/var/lib/postgresql/data
+
+    depends_on:
+      - pgadmin
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+
+    container_name: pgadmin-container
+
+    ports:
+      - 5050:5050
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: nishant@ingelt.com
+      PGADMIN_DEFAULT_PASSWORD: nishantInGelt@09!
+      PGADMIN_LISTEN_PORT: 5050
 
 networks:
   ielts_dash:
