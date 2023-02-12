@@ -11,29 +11,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// DB Config
-const db = require("./database/connection");
-
 // TODO: Routes Config
-
-// TEST API
-app.get("/", (req, res) => {
-  const sqlInsert =
-    "INSERT INTO MOVIE_REVIEWS (movie_name, movie_review) VALUES ('interstellar', 'Awesome Movie!!');";
-
-  db.query(sqlInsert, (err, result) => {
-    if (err) console.log(err);
-    else {
-      console.log("Done Inserting!");
-      res.status(200).json({
-        message: "Hello World",
-      });
-    }
-  });
-});
 
 // App Listen Config
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// DB Config
+const db = require("./models");
+db.sequelize.sync().then((req) => {
+  // App Listen
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
