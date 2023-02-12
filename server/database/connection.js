@@ -1,16 +1,11 @@
-const dbKeys = require("./keys");
+const mysql = require("mysql");
 
-const { Pool } = require("pg");
-
-const pgClient = new Pool({
-  user: dbKeys.pgUser,
-  host: dbKeys.pgHost,
-  database: dbKeys.pgDatabase,
-  password: dbKeys.pgPassword,
-  port: dbKeys.pgPort,
+const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
 });
 
-// On Connection
-pgClient.on("connect", (client) => {
-  console.log("Postgres Connected");
-});
+module.exports = db;

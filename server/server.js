@@ -11,12 +11,25 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// DB Postgres Config
-require("./database/connection");
+// DB Config
+const db = require("./database/connection");
 
-// Routes Config
+// TODO: Routes Config
+
+// TEST API
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  const sqlInsert =
+    "INSERT INTO MOVIE_REVIEWS (movie_name, movie_review) VALUES ('interstellar', 'Awesome Movie!!');";
+
+  db.query(sqlInsert, (err, result) => {
+    if (err) console.log(err);
+    else {
+      console.log("Done Inserting!");
+      res.status(200).json({
+        message: "Hello World",
+      });
+    }
+  });
 });
 
 // App Listen Config
