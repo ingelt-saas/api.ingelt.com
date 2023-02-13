@@ -11,16 +11,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// DB Postgres Config
-require("./database/connection");
-
-// Routes Config
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+// TODO: Routes Config
 
 // App Listen Config
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// DB Config
+const db = require("./models");
+db.sequelize.sync().then((req) => {
+  // App Listen
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
