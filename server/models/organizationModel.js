@@ -1,5 +1,5 @@
 
-const organisationModel = (sequelize, DataTypes) => {
+const organizationModel = (sequelize, DataTypes) => {
     return sequelize.define('oraganisation', {
         id: {
             type: DataTypes.UUID,
@@ -75,4 +75,4 @@ const organisationModel = (sequelize, DataTypes) => {
     });
 }
 
-module.exports = organisationModel;
+module.exports = organizationModel;
