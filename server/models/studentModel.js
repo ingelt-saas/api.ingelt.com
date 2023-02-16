@@ -1,5 +1,5 @@
-const teacherModel = (sequelize, DataTypes) => {
-  return sequelize.define("teacher", {
+const studentModel = (sequelize, DataTypes) => {
+  return sequelize.define("student", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -15,14 +15,6 @@ const teacherModel = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: "name is required" },
-      },
-    },
-
-    gender: {
-      type: DataTypes.ENUM("Male", "Female", "Other"),
-      allowNull: false,
-      validate: {
-        notNull: { msg: "gender is required" },
       },
     },
 
@@ -42,15 +34,19 @@ const teacherModel = (sequelize, DataTypes) => {
       },
     },
 
-    expertise: DataTypes.STRING,
-
-    dob: DataTypes.DATE,
-
     phone_no: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notNull: { msg: "phone number is required" },
+      },
+    },
+
+    gender: {
+      type: DataTypes.ENUM("Male", "Female", "Other"),
+      allowNull: false,
+      validate: {
+        notNull: { msg: "gender is required" },
       },
     },
 
@@ -58,7 +54,7 @@ const teacherModel = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "city number is required" },
+        notNull: { msg: "city is required" },
       },
     },
 
@@ -66,7 +62,7 @@ const teacherModel = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "state number is required" },
+        notNull: { msg: "state is required" },
       },
     },
 
@@ -74,19 +70,20 @@ const teacherModel = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "country number is required" },
+        notNull: { msg: "country is required" },
       },
     },
 
-    pincode: {
-      type: DataTypes.STRING,
+    pin_code: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notNull: { msg: "pincode number is required" },
       },
     },
 
-    work_exp: DataTypes.FLOAT,
+    dob: DataTypes.DATE,
+
     reg_date: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -95,16 +92,16 @@ const teacherModel = (sequelize, DataTypes) => {
       },
     },
 
-    active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
+    active: DataTypes.BOOLEAN,
 
-    syllabus: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    target_score: DataTypes.FLOAT,
+
+    previous_score: DataTypes.FLOAT,
+
+    average_band: DataTypes.INTEGER,
+
+    total_average_band: DataTypes.INTEGER,
   });
 };
 
-module.exports = teacherModel;
+module.exports = studentModel;
