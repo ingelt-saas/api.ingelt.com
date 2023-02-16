@@ -1,89 +1,78 @@
+
 const organisationModel = (sequelize, DataTypes) => {
-  return sequelize.define("oraganisation", {
+  return sequelize.define('oraganisation', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
+      primaryKey: true
     },
-
     name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "name is required" },
-      },
+        notNull: { msg: 'name is required' }
+      }
     },
-
     owner_name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "owner name is required" },
-      },
+        notNull: { msg: 'owner name is required' }
+      }
     },
-
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "email is required" },
-      },
+        notNull: { msg: 'email is required' }
+      }
     },
-
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "password is required" },
-      },
+        notNull: { msg: 'password is required' }
+      }
     },
-
     logo: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
-
     website: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
-
     address: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "address is required" },
-      },
+        notNull: { msg: 'address is required' }
+      }
     },
-
     state: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "state is required" },
-      },
+        notNull: { msg: 'state is required' }
+      }
     },
-
     country: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: "country is required" },
-      },
+        notNull: { msg: 'country is required' }
+      }
     },
-
     registration_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATE
     },
-
     plan: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
-
     active: {
-      type: DataTypes.BOOLEAN,
-    },
+      type: DataTypes.BOOLEAN
+    }
   });
-};
+}
 
 module.exports = organisationModel;
