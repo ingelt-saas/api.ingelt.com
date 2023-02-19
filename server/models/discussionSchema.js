@@ -1,24 +1,16 @@
 
 const discussionModel = (sequelize, DataTypes) => {
-    return sequelize.define('discussion', {
+    return sequelize.define("discussion", {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
         batch_id: {
-            type: DataTypes.UUID,
-            references: {
-                model: 'batch',
-                key: 'id',
-            }
+            type: DataTypes.UUID
         },
         sender_id: {
             type: DataTypes.UUID,
-            references: {
-                model: 'student',
-                key: 'id',
-            }
         },
         sender_name: DataTypes.STRING,
         message: {
