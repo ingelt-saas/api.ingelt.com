@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
+const router = require('./router/index');
 
 // App Config
 const app = express();
@@ -12,11 +13,13 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // TODO: Routes Config
+app.use(router);
 
 // App Listen Config
 const PORT = process.env.PORT || 8000;
 // DB Config
 const db = require("./models");
+
 db.sequelize.sync().then((req) => {
   // App Listen
   app.listen(PORT, () => {

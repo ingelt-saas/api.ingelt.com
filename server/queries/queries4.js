@@ -2,13 +2,6 @@
 
 const { organisationModel, adminModel, teacherModel, docModel, assignmentModel, submissionModel, discussionModel } = require('../models/index');
 
-// read organization
-// query No : 37
-organisationModel.find({
-    order: [
-        ['id', 'DESC']
-    ]
-});
 
 // read admin
 // query No : 38

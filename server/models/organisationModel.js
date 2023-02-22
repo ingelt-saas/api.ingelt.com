@@ -1,6 +1,6 @@
 
 const organisationModel = (sequelize, DataTypes) => {
-  return sequelize.define('oraganisation', {
+  return sequelize.define('organization', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
