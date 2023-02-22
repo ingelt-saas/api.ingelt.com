@@ -11,8 +11,10 @@ teacherRoute.post('/', teacherController.create);
 // get all teacher by batch 
 teacherRoute.get('/batch/:id', teacherController.getTeachersByBatch);
 
+// update teacher 
+teacherRoute.put('/:id', teacherController.update);
 
-// batchRoute.put('/:id', batchController.update);
-// batchRoute.delete('/:id', batchController.delete);
+// delete teacher 
+teacherRoute.delete('/:id', teacherController.delete);
 
 module.exports = teacherRoute;
