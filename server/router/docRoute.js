@@ -3,13 +3,16 @@ const docController = require('../controllers/docController');
 
 const docRoute = express();
 
-// POST route / Create a organization
-// batchRoute.post('/', batchController.create);
+// POST route / Create a doc
+docRoute.post('/', docController.create);
 
 // get all docs by organization 
 docRoute.get('/organization/:id', docController.getDocsByOrg);
 
-// batchRoute.put('/:id', batchController.update);
-// batchRoute.delete('/:id', batchController.delete);
+// update doc
+docRoute.put('/:id', docController.update);
+
+// delete doc
+docRoute.delete('/:id', docController.delete);
 
 module.exports = docRoute;
