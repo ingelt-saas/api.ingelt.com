@@ -8,7 +8,7 @@ const docController = {};
 docController.create = async (req, res) => {
     const newDoc = req.body;
     try {
-        const result = document.create(newDoc);
+        const result = await document.create(newDoc);
         res.send(result);
     } catch (err) {
         res.status(err.status).send(err.message);

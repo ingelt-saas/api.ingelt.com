@@ -10,7 +10,7 @@ docRoute.post('/', docController.create);
 docRoute.get('/organization/:id', docController.getDocsByOrg);
 
 // update doc
-docRoute.put('/:id', docController.update);
+// docRoute.put('/:id', docController.update);
 
 // delete doc
 docRoute.delete('/:id', docController.delete);

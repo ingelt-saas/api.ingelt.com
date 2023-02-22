@@ -45,4 +45,19 @@ studentController.update = async (req, res) => {
     }
 }
 
+// delete a student 
+studentController.delete = async (req, res) => {
+    const studentId = req.params.id;
+    try {
+        const result = await student.destroy({
+            where: {
+                id: studentId
+            }
+        });
+        res.send(result);
+    } catch (err) {
+        res.status(err.status).send(err.message);
+    }
+}
+
 module.exports = studentController;

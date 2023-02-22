@@ -68,5 +68,20 @@ submissionController.updateSubmissionByStudent = async (req, res) => {
     }
 }
 
+// delete submission 
+submissionController.delete = async (req, res) => {
+    const submissionId = req.params.id;
+    try {
+        const result = await submission.destroy({
+            where: {
+                id: submissionId
+            }
+        });
+        res.send(result);
+    } catch (err) {
+        res.status(err.status).send(err.message);
+    }
+}
+
 
 module.exports = submissionController;
