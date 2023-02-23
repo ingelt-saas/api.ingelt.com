@@ -3,8 +3,6 @@ const teacherController = require('../controllers/teacherController');
 
 const teacherRoute = express();
 
-// POST route / Create a organization
-
 // create teacher 
 teacherRoute.post('/', teacherController.create);
 

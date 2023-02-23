@@ -62,4 +62,19 @@ batchController.update = async (req, res) => {
     }
 }
 
+// delete a batch 
+batchController.delete = async (req, res) => {
+    const batchId = req.params.id;
+    try {
+        const result = await batch.destroy({
+            where: {
+                id: batchId
+            }
+        });
+        res.send(result);
+    } catch (err) {
+        res.status(err.status).send(err.message);
+    }
+}
+
 module.exports = batchController;

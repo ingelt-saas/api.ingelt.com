@@ -34,7 +34,7 @@ teacherController.update = async (req, res) => {
     const teacherId = req.params.id;
     const updateData = req.body;
     try {
-        const result = teacher.update(updateData, {
+        const result = await teacher.update(updateData, {
             where: {
                 id: teacherId
             }
@@ -44,5 +44,20 @@ teacherController.update = async (req, res) => {
         res.status(err.status).send(err.message);
     }
 };
+
+// delete teacher 
+teacherController.delete = async (req, res) => {
+    const teacherId = req.params.id;
+    try {
+        const result = await teacher.destroy({
+            where: {
+                id: teacherId
+            }
+        });
+        res.send(result);
+    } catch (err) {
+        res.status(err.status).send(err.message);
+    }
+}
 
 module.exports = teacherController;

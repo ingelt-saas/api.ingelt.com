@@ -1,5 +1,5 @@
 // import model
-const { oraganization } = require('../models/index');
+const { organization } = require('../models/index');
 
 const organizationController = {};
 
@@ -7,7 +7,7 @@ const organizationController = {};
 organizationController.create = async (req, res) => {
     const newOrganization = req.body;
     try {
-        const result = await oraganization.create(newOrganization);
+        const result = await organization.create(newOrganization);
         res.send(result);
     } catch (err) {
         res.status(500).send(err.message);
@@ -17,7 +17,7 @@ organizationController.create = async (req, res) => {
 // read
 organizationController.read = async (req, res) => {
     try {
-        const result = await oraganization.findAll({
+        const result = await organization.findAll({
             order: [
                 ['id', 'DESC']
             ]
@@ -33,7 +33,7 @@ organizationController.update = async (req, res) => {
     const organizationId = req.params.id;
     const updateData = req.body;
     try {
-        const result = await oraganization.update(updateData, {
+        const result = await organization.update(updateData, {
             where: {
                 id: organizationId
             }
@@ -48,7 +48,7 @@ organizationController.update = async (req, res) => {
 organizationController.delete = async (req, res) => {
     const organizationId = req.params.id;
     try {
-        const result = await oraganization.destroy({
+        const result = await organization.destroy({
             where: {
                 id: organizationId
             }
