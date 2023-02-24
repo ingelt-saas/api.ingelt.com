@@ -1,4 +1,5 @@
 import "./App.css";
+import data from "./utils/data";
 
 function App() {
   return (
@@ -9,6 +10,11 @@ function App() {
         <input type="number" name="review" placeholder="Review" />
         <button type="submit">Submit</button>
       </form>
+      { // sample import of fake data
+        data.map((item, key) => (
+          <>{item.category1}</>
+        ))
+      }
     </div>
   );
 }
