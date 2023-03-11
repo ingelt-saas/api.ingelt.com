@@ -1,6 +1,5 @@
 // Sequelize
 const Sequelize = require("sequelize");
-console.log(process.pwd);
 
 // Models
 const db = require("..");
