@@ -2,7 +2,7 @@
     "development": {
         "username": "root",
         "password": "Nish2002",
-        "database": "TestDB",
+        "database": "ingelt_dev",
         "host": "localhost",
         "dialect": "mysql"
     },

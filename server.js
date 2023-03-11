@@ -3,24 +3,28 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
-const router = require('./router/index');
 
 // App Config
 const app = express();
-
-// Middlewares Config
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(bodyParser.json());
-app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// TODO: Routes Config
-app.use(router);
+// Services Config
+const studentServices = require("./services/student");
+app.use("/stu", studentServices);
 
-// App Listen Config
+// DB and Server Config
 const PORT = process.env.PORT || 8000;
-// DB Config
 const db = require("./models");
+require("./models/associations");
 
-db.sequelize.sync().then((req) => {
+// TODO: FORCE ALTER ONLY FOR DEV ENVIRONMENT
+db.sequelize.sync({ alter: true }).then((req) => {
   // App Listen
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
