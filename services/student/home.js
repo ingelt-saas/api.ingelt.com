@@ -3,6 +3,6 @@ const studentUtil = require("../../utils/student");
 const studentService = express.Router();
 
 // GET student by id
-studentService.get("/:id", studentUtil.readById);
+// studentService.get("/:id", );
 
 module.exports = studentService;

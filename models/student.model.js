@@ -35,7 +35,7 @@ const studentModel = (sequelize, DataTypes) => {
     },
 
     phoneNo: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: { msg: "phone number is required" },
@@ -83,14 +83,6 @@ const studentModel = (sequelize, DataTypes) => {
     },
 
     dob: DataTypes.DATE,
-
-    regDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "registration date is required" },
-      },
-    },
 
     active: DataTypes.BOOLEAN,
 

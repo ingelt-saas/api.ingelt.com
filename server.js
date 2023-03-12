@@ -15,7 +15,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Services Config
+const ingeltServices = require("./services/ingelt");
 const studentServices = require("./services/student");
+app.use("/ingelt", ingeltServices);
 app.use("/stu", studentServices);
 
 // DB and Server Config
@@ -24,9 +26,9 @@ const db = require("./models");
 require("./models/associations");
 
 // TODO: FORCE ALTER ONLY FOR DEV ENVIRONMENT
-db.sequelize.sync({ alter: true }).then((req) => {
+db.sequelize.sync({ alter: true }).then(() => {
   // App Listen
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`🚀 Server is running on port ${PORT}`);
   });
 });
