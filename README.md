@@ -11,7 +11,7 @@ This is the server side of InGelt Board. This script serves ReactJS based Fronte
 
 - NodeJS: for the run-time environment.
 - ExpressJS: application framework.
-- MySQL: database
+- MySQL: database (Hosted) (Use the Provided config only)
 - Docker: for containerizing the application.
 
 ### Directory Structure

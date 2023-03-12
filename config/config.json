@@ -1,9 +1,9 @@
 {
     "development": {
-        "username": "root",
-        "password": "Nish2002",
+        "username": "admin",
+        "password": "helloWorld",
         "database": "ingelt_dev",
-        "host": "localhost",
+        "host": "ingelt-dev.cwdlzhtcc44j.us-east-1.rds.amazonaws.com",
         "dialect": "mysql",
         "logging": false
     },
