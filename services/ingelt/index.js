@@ -31,7 +31,7 @@ router.use("/batch", batchService);
 router.use("/discussion", discussionService);
 
 // InGelt Document Router
-router.use("/doc", docService);
+router.use("/document", docService);
 
 // InGelt Mock Test Router
 router.use("/mocktest", mockTestService);

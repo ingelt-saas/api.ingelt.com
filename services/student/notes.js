@@ -2,10 +2,24 @@ const express = require("express");
 const notesUtil = require("../../utils/notes");
 const notesService = express.Router();
 
-// get documents by organization id
-notesService.get("/batch/:id", notesUtil.getNotesByBatch);
+// get notes by batch  id
+notesService.get("/batch/:batchId", async (req, res) => {
+    try {
+        const result = await notesUtil.getNotesByBatch(req.params.batchId);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
 
-// get document by id
-notesService.get("/:id", notesUtil.readById);
+// get a notes by notes id  
+notesService.get("/:notesId", async (req, res) => {
+    try {
+        const result = await notesUtil.readById(req.params.notesId);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
 
 module.exports = notesService;
