@@ -1,5 +1,5 @@
 const express = require("express");
-const organizationUtil = require("../../utils/batch");
+const organizationUtil = require("../../utils/organization");
 const organizationService = express.Router();
 
 // create new organization 

@@ -45,7 +45,7 @@ assignmentService.put("/:assignmentId", async (req, res) => {
 });
 
 // delete assignment
-assignmentService.put("/:assignmentId", async (req, res) => {
+assignmentService.delete("/:assignmentId", async (req, res) => {
     const assignmentId = req.params.assignmentId;
     try {
         const result = await assignmentUtil.delete(assignmentId);

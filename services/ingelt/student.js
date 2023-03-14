@@ -24,7 +24,7 @@ studentService.get("/batch/:batchId", async (req, res) => {
 });
 
 // get a student by student id
-studentService.get("/student/:studentId", async (req, res) => {
+studentService.get("/:studentId", async (req, res) => {
   const studentId = req.params.studentId;
   try {
     const result = await studentUtil.readById(studentId);

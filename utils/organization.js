@@ -35,8 +35,6 @@ organizationUtil.readById = async (organizationId) => {
 
 // PUT
 organizationUtil.update = async (organizationId, updateData) => {
-  const organizationId = req.params.id;
-  const updateData = req.body;
   try {
     const result = await organization.update(updateData, {
       where: {
@@ -51,7 +49,7 @@ organizationUtil.update = async (organizationId, updateData) => {
 
 // DELETE
 organizationUtil.delete = async (organizationId) => {
-  const organizationId = req.params.id;
+
   try {
     const result = await organization.destroy({
       where: {

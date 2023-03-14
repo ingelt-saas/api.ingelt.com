@@ -23,7 +23,7 @@ batchService.get("/", async (req, res) => {
 });
 
 // get a batch by batch id  
-batchService.get("/:adminId", async (req, res) => {
+batchService.get("/:batchId", async (req, res) => {
     try {
         const result = await batchUtil.readById(req.params.batchId);
         res.status(201).json(result);
@@ -33,7 +33,7 @@ batchService.get("/:adminId", async (req, res) => {
 });
 
 // update batch
-batchService.put("/:adminId", async (req, res) => {
+batchService.put("/:batchId", async (req, res) => {
     try {
         const result = await batchUtil.update(req.params.batchId, req.body);
         res.status(201).json(result);
@@ -43,7 +43,7 @@ batchService.put("/:adminId", async (req, res) => {
 });
 
 // delete batch
-batchService.delete("/:adminId", async (req, res) => {
+batchService.delete("/:batchId", async (req, res) => {
     try {
         const result = await batchUtil.delete(req.params.batchId);
         res.status(201).json(result);

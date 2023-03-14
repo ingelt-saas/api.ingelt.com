@@ -23,9 +23,9 @@ discussionService.get("/:discussionId", async (req, res) => {
 });
 
 // get discussion by batch id  
-discussionService.get("/:adminId", async (req, res) => {
+discussionService.get("/batch/:batchId", async (req, res) => {
     try {
-        const result = await discussionUtil.readById(req.params.batchId);
+        const result = await discussionUtil.getDiscussionsByBatch(req.params.batchId);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).json(err);

@@ -12,20 +12,20 @@ documentService.post("/", async (req, res) => {
     }
 });
 
-// get all document by org id 
-documentService.get("/organization/:orgId", async (req, res) => {
+// get a document by document id  
+documentService.get("/:documentId", async (req, res) => {
     try {
-        const result = await documentUtil.getDocsByOrg(req.params.orgId);
+        const result = await documentUtil.readById(req.params.documentId);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).json(err);
     }
 });
 
-// get a document by document id  
-documentService.get("/:documentId", async (req, res) => {
+// get all document by org id 
+documentService.get("/organization/:orgId", async (req, res) => {
     try {
-        const result = await documentUtil.readById(req.params.documentId);
+        const result = await documentUtil.getDocsByOrg(req.params.orgId);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).json(err);

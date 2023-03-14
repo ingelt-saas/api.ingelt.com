@@ -1,5 +1,5 @@
 const express = require("express");
-const submissionUtil = require("../../utils/batch");
+const submissionUtil = require("../../utils/submission");
 const submissionService = express.Router();
 
 // create new submission 
