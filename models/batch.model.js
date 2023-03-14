@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
 
       orgId: {
         type: DataTypes.UUID,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'organization id is required' }
+        }
       },
 
       name: {

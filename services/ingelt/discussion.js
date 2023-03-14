@@ -2,20 +2,10 @@ const express = require("express");
 const discussionUtil = require("../../utils/discussion");
 const discussionService = express.Router();
 
-// POST discussion
+// create new discussion 
 discussionService.post("/", async (req, res) => {
     try {
         const result = await discussionUtil.create(req.body);
-        res.status(201).json(result);
-    } catch (err) {
-        res.status(400).json(err);
-    }
-});
-
-// get all discussions by batch id
-discussionService.get("/batch/:batchId", async (req, res) => {
-    try {
-        const result = await discussionUtil.getDiscussionsByBatch(req.params.batchId);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).json(err);
@@ -26,6 +16,26 @@ discussionService.get("/batch/:batchId", async (req, res) => {
 discussionService.get("/:discussionId", async (req, res) => {
     try {
         const result = await discussionUtil.readById(req.params.discussionId);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
+
+// get discussion by batch id  
+discussionService.get("/batch/:batchId", async (req, res) => {
+    try {
+        const result = await discussionUtil.getDiscussionsByBatch(req.params.batchId);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
+
+// update discussion
+discussionService.put("/:discussionId", async (req, res) => {
+    try {
+        const result = await discussionUtil.update(req.params.discussionId, req.body);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).json(err);

@@ -1,4 +1,4 @@
-import { mockTest } from "../models";
+const { mockTest } = require("../models");
 const mockTestUtil = {};
 
 // POST
@@ -27,7 +27,6 @@ mockTestUtil.getMockTestsByBatch = async (batchId) => {
 
 // GET by id
 mockTestUtil.readById = async (mockTestId) => {
-  const mockTestId = req.params.id;
   try {
     const result = await mockTest.findByPk(mockTestId);
     return result;

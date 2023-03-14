@@ -11,9 +11,9 @@ const notesService = require("./notes");
 
 // Student Services Router
 router.use("/", homeService);
-router.use("/discussions", discussionsService);
-router.use("/assignments", assignmentsService);
-router.use("/documents", documentsService);
+router.use("/discussion", discussionsService);
+router.use("/assignment", assignmentsService);
+router.use("/document", documentsService);
 router.use("/settings", settingsService);
 router.use("/notes", notesService);
 
