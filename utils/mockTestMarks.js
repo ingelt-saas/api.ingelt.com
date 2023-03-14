@@ -1,4 +1,4 @@
-import { mockTestMarks } from "../models";
+const { mockTestMarks } = require("../models");
 const mockTestMarksUtil = {};
 
 // POST
