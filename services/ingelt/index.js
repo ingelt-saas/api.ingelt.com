@@ -13,6 +13,10 @@ const notesService = require("./notes");
 const orgService = require("./organization");
 const submissionService = require("./submission");
 const teacherService = require("./teacher");
+const adminService = require("./admin");
+
+// InGelt Admin Router
+router.use("/admin", adminService);
 
 // InGelt Student Router
 router.use("/student", studentService);
