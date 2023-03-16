@@ -1,5 +1,6 @@
 const { teacher, batch, student } = require("../models");
 const teacherUtil = {};
+const { Sequelize, Op } = require('sequelize');
 
 // POST
 teacherUtil.create = async (newTeacher) => {
@@ -100,6 +101,14 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
 
       // taught students 
       taughtStudents = await student.count({ where: { batchId: batchId } });
+      bandStudents = await student.count({
+        where: {
+          batchId: batchId,
+          totalAverageBand: {
+            [Op.gte]: 7.5
+          }
+        }
+      });
 
     }
 

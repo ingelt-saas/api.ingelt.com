@@ -2,8 +2,6 @@ const { student } = require("../models");
 const { Sequelize, Op } = require('sequelize');
 const studentUtil = {};
 
-// const sequelize = new Sequelize();
-
 // POST
 studentUtil.create = async (newStudent) => {
   try {
