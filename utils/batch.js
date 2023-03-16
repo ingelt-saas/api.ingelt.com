@@ -1,5 +1,6 @@
-const { batch } = require("../models");
+const { batch, student, teacher } = require("../models");
 const batchUtil = {};
+const { Op } = require('sequelize');
 
 // POST
 batchUtil.create = async (newBatch) => {
@@ -15,13 +16,33 @@ batchUtil.create = async (newBatch) => {
 batchUtil.read = async () => {
   try {
     const result = await batch.findAll({
-      order: [["id", "DESC"]],
+      order: [["name", "DESC"]],
     });
     return result;
   } catch (err) {
     throw err;
   }
 };
+
+// get all batch and batch students and teacher
+batchUtil.batchesWithStuAndTea = async () => {
+  try {
+    // get all batches
+    const batches = await batch.findAll({ order: [["id", "DESC"]] });
+    let batchesArr = []; // define new batch array
+
+    // get students and teacher by batch 
+    for (let batch of batches) {
+      const students = await student.count({ where: { batchId: batch.id } });
+      const teachers = await teacher.count({ where: { batchId: { [Op.in]: batch.id } } });
+      batchesArr.push({ ...batch, students, teachers });
+    }
+    // return new batch array
+    return batchesArr;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // GET by id
 batchUtil.readById = async (batchId) => {
@@ -32,6 +53,37 @@ batchUtil.readById = async (batchId) => {
     throw err;
   }
 };
+
+// get current batches
+batchUtil.currentBatches = async () => {
+  try {
+    const result = await batch.count({
+      where: {
+        active: true
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// get complete batches
+batchUtil.completeBatches = async () => {
+  try {
+    const result = await batch.count({
+      where: {
+        active: false,
+        endDate: {
+          [Op.lte]: Date.now
+        }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // PUT
 batchUtil.update = async (batchId, updateData) => {
