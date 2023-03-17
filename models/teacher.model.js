@@ -10,6 +10,20 @@ const teacherModel = (sequelize, DataTypes) => {
 
       batchId: {
         type: DataTypes.UUID,
+        get() {
+          const val = this.getDataValue('batchId');
+          return val ? val.split(',') : null;
+        },
+        set(value) {
+          const arrayValue = value ? value.join(',') : '';
+          this.setDataValue('batchId', arrayValue);
+        },
+        // get() {
+        //   return this.getDataValue('batchId').split(';') || [this.getDataValue('batchId')];
+        // },
+        // set(val) {
+        //   return this.setDataValue('batchId', val.join(';'));
+        // }
       },
 
       name: {
