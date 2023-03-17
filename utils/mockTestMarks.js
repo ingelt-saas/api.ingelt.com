@@ -1,4 +1,4 @@
-const { mockTestMarks } = require("../models");
+const { mockTestMarks, student } = require("../models");
 const mockTestMarksUtil = {};
 
 // POST
@@ -7,7 +7,7 @@ mockTestMarksUtil.create = async (newMockTestMarks) => {
     const result = await mockTestMarks.create(newMockTestMarks);
     return result;
   } catch (err) {
-    throw err;
+    throw Error(err);
   }
 };
 
@@ -21,9 +21,37 @@ mockTestMarksUtil.getMockTestMarksByMockTest = async (mockTestId) => {
     });
     return result;
   } catch (err) {
-    throw err;
+    throw Error(err);
   }
 };
+
+// get mock test marks by student id
+mockTestMarksUtil.getMockTestMarksByStudent = async (studentId) => {
+  try {
+    const result = await mockTestMarks.findAll({
+      where: {
+        studentId: studentId,
+      },
+    });
+    return result;
+  } catch (err) {
+    throw Error(err);
+  }
+}
+
+// get mock test marks and student details by mock test id
+mockTestMarksUtil.getTestMarksWithStudent = async (mockTestId) => {
+  try {
+    const result = await mockTestMarks.findAll({
+      where: { id: mockTestId },
+      include: { model: student, required: true },
+      order: [['id', 'ASC']]
+    });
+    return result;
+  } catch (err) {
+    throw Error(err);
+  }
+}
 
 // UPDATE
 mockTestMarksUtil.update = async (mockTestMarksId, updateData) => {
@@ -35,7 +63,7 @@ mockTestMarksUtil.update = async (mockTestMarksId, updateData) => {
     });
     return result;
   } catch (err) {
-    throw err;
+    throw Error(err);
   }
 };
 

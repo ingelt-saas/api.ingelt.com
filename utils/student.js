@@ -1,4 +1,4 @@
-const { student } = require("../models");
+const { student, mockTestMarks } = require("../models");
 const { Sequelize, Op } = require('sequelize');
 const studentUtil = {};
 
@@ -109,6 +109,25 @@ studentUtil.getStudentsByBatch = async (batchId) => {
     throw err;
   }
 };
+
+// band score by student id
+studentUtil.bandScore = async (studentId) => {
+  try {
+    const marks = await mockTestMarks.findAll({
+      where: { studentId },
+      attributes: [
+        [Sequelize.fn('AVG', Sequelize.col('listeningBands')), 'listeningBands'],
+        [Sequelize.fn('AVG', Sequelize.col('readingBands')), 'readingBands'],
+        [Sequelize.fn('AVG', Sequelize.col('writingBands')), 'writingBands'],
+        [Sequelize.fn('AVG', Sequelize.col('speakingBands')), 'speakingBands'],
+      ],
+      raw: true
+    });
+    return marks[0];
+  } catch (err) {
+    throw Error(err);
+  }
+}
 
 // GET by id
 studentUtil.readById = async (studentId) => {

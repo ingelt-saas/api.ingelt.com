@@ -11,6 +11,16 @@ assignmentUtil.create = async (newAssignment) => {
   }
 };
 
+// get assignments by batch id
+assignmentUtil.getAssignmentsByBatch = async (batchId) => {
+  try {
+    const assignments = await assignment.findAll({ where: { batchId }, order: [['id', 'DESC']] });
+    return assignments;
+  } catch (err) {
+    throw Error(err);
+  }
+}
+
 // GET all
 assignmentUtil.read = async () => {
   try {
