@@ -22,16 +22,6 @@ teacherService.get('/', async (req, res) => {
     }
 });
 
-// get teachers by batch id
-teacherService.get('/batch/:batchId', async (req, res) => {
-    try {
-        const result = await teacherUtil.getTeachersByBatch(req.params.batchId);
-        res.status(201).json(result);
-    } catch (err) {
-        res.status(400).json(err);
-    }
-});
-
 // get a teacher by teacher id and additional info 
 teacherService.get('/:teacherId', async (req, res) => {
     try {
@@ -40,10 +30,19 @@ teacherService.get('/:teacherId', async (req, res) => {
         // get complete batch and live batch by teacher id 
         const batches = await teacherUtil.liveAndCompleteBatches(req.params.teacherId);
 
-
-        res.status(201).json({ ...teacher, ...batches });
+        res.status(201).send({ teacher, ...batches });
     } catch (err) {
         res.status(400).send(err);
+    }
+});
+
+// get teachers by batch id
+teacherService.get('/batch/:batchId', async (req, res) => {
+    try {
+        const result = await teacherUtil.getTeachersByBatch(req.params.batchId);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(400).json(err);
     }
 });
 

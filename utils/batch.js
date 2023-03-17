@@ -33,9 +33,10 @@ batchUtil.batchesWithStuAndTea = async () => {
 
     // get students and teacher by batch 
     for (let batch of batches) {
+
       const students = await student.count({ where: { batchId: batch.id } });
-      const teachers = await teacher.count({ where: { batchId: { [Op.in]: batch.id } } });
-      batchesArr.push({ ...batch, students, teachers });
+      const teachers = await teacher.count({ where: { batchId: batch.id } });
+      batchesArr.push({ batch, students, teachers });
     }
     // return new batch array
     return batchesArr;
@@ -75,7 +76,7 @@ batchUtil.completeBatches = async () => {
       where: {
         active: false,
         endDate: {
-          [Op.lte]: Date.now
+          [Op.lte]: new Date()
         }
       }
     });

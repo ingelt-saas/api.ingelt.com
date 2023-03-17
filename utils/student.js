@@ -16,8 +16,9 @@ studentUtil.create = async (newStudent) => {
 studentUtil.read = async () => {
   try {
     const result = await student.findAll({
-      order: ['name', 'ASC']
+      order: [['id', 'ASC']]
     });
+    return result;
   } catch (err) {
     throw err;
   }
@@ -37,8 +38,8 @@ studentUtil.totalStudents = async () => {
 studentUtil.bestStudents = async () => {
   try {
     const result = await student.findAll({
-      attributes: [[Sequelize.fn('max', Sequelize.col('totalAverageBand'))]],
-      limit: 4
+      limit: 4,
+      order: [['totalAverageBand', 'DESC']],
     });
     return result;
   } catch (err) {

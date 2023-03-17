@@ -1,6 +1,6 @@
 const { teacher, batch, student } = require("../models");
+const { Op } = require('sequelize');
 const teacherUtil = {};
-const { Sequelize, Op } = require('sequelize');
 
 // POST
 teacherUtil.create = async (newTeacher) => {
@@ -17,7 +17,7 @@ teacherUtil.getTeachersByBatch = async (batchId) => {
   try {
     const result = await teacher.findAll({
       where: {
-        batch_id: batchId,
+        batchId: batchId,
       },
     });
     return result;
@@ -29,7 +29,7 @@ teacherUtil.getTeachersByBatch = async (batchId) => {
 // get all teachers 
 teacherUtil.read = async () => {
   try {
-    const result = await teacher.findAll({ order: ['name', 'ASC'] });
+    const result = await teacher.findAll({ order: [['name', 'ASC']] });
     return result;
   } catch (err) {
     throw err;
@@ -51,10 +51,10 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
   try {
 
     // get teacher by teacher id
-    const teacher = await teacher.findByPk(teacherId);
+    const teacherInfo = await teacher.findByPk(teacherId);
 
     // get batches
-    const batches = teacher.batchId;
+    const batches = teacherInfo.batchId;
     let liveBatches = 0;
     let completeBatches = 0;
 
@@ -62,16 +62,15 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
     for (let batchId of batches) {
 
       // get batch by batch id  
-      let batch = await batch.findByPk(batchId);
-      if (batch) {
+      let batchInfo = await batch.findByPk(batchId);
+      if (batchInfo) {
         // live batch check
-        if (batch.active) {
+        if (batchInfo.active) {
           liveBatches++;
         } else // complete batch check
-          if (!batch.active && (new Date().getTime(batch.endDate) < new Date().getTime())) {
+          if (!batchInfo.active && (new Date().getTime(batchInfo.endDate) < new Date().getTime())) {
             completeBatches++;
           }
-
       }
 
     }
@@ -120,8 +119,6 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
   }
 }
 
-// best teachers
-
 
 // total teachers
 teacherUtil.totalTeachers = async () => {
@@ -138,13 +135,10 @@ teacherUtil.totalTeachers = async () => {
 // PUT
 teacherUtil.update = async (teacherId, updateData) => {
   try {
-    const result = await teacher.update(updateData, {
-      where: {
-        id: teacherId,
-      },
-    });
+    const result = await teacher.update(updateData, { where: { id: teacherId } });
     return result;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };
