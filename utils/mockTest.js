@@ -1,4 +1,5 @@
-const { mockTest } = require("../models");
+const { Sequelize } = require("sequelize");
+const { mockTest, mockTestMarks } = require("../models");
 const mockTestUtil = {};
 
 // POST
@@ -24,6 +25,35 @@ mockTestUtil.getMockTestsByBatch = async (batchId) => {
     throw err;
   }
 };
+
+// get mock test and avg band
+mockTestUtil.mockTestAvgBand = async (batchId) => {
+  try {
+
+    const mockTests = await mockTest.findAll({ where: { batchId: batchId }, raw: true });
+    let newMockTestArr = [];
+
+    for (let test of mockTests) {
+      const testMarks = await mockTestMarks.findAll({
+        where: { mockTestId: test.id },
+        attributes: [
+          [Sequelize.fn('AVG', Sequelize.col('listeningBands')), 'listeningBands'],
+          [Sequelize.fn('AVG', Sequelize.col('readingBands')), 'readingBands'],
+          [Sequelize.fn('AVG', Sequelize.col('writingBands')), 'writingBands'],
+          [Sequelize.fn('AVG', Sequelize.col('speakingBands')), 'speakingBands'],
+        ]
+      });
+
+      newMockTestArr.push({ ...test, testMarks: testMarks[0] });
+    }
+
+    // return mock test
+    return newMockTestArr;
+
+  } catch (err) {
+    throw err;
+  }
+}
 
 // GET by id
 mockTestUtil.readById = async (mockTestId) => {

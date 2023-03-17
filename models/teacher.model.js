@@ -9,7 +9,7 @@ const teacherModel = (sequelize, DataTypes) => {
       },
 
       batchId: {
-        type: DataTypes.UUID,
+        type: DataTypes.UUID
       },
 
       name: {

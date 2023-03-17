@@ -97,6 +97,7 @@ const studentModel = (sequelize, DataTypes) => {
     averageBand: DataTypes.INTEGER,
 
     totalAverageBand: DataTypes.INTEGER,
+
   });
 };
 
