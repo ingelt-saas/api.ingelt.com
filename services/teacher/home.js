@@ -1,6 +1,8 @@
 const express = require('express');
 const teacherUtil = require('../../utils/teacher');
 const batchUtil = require('../../utils/batch');
+const assignmentUtil = require('../../utils/assignment');
+const studentUtil = require('../../utils/student');
 const homeService = express.Router();
 
 // get teacher 
@@ -45,6 +47,17 @@ homeService.get('/batches/:teacherId', async (req, res) => {
         res.status(201).json(result);
     } catch (err) {
         res.status(400).send(err);
+    }
+});
+
+// get students and assignments by batch id
+homeService.get('/assignmentsAndStudents/:batchId', async (req, res) => {
+    try {
+        const assignments = await assignmentUtil.getAssignmentsByBatch(req.params.batchId);
+        const students = await studentUtil.getStudentsByBatch(req.params.batchId);
+        res.status(200).json({ assignments, students });
+    } catch (err) {
+        req.status(400).send(err);
     }
 });
 
