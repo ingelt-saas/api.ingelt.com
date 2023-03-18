@@ -2,25 +2,25 @@ const express = require("express");
 const router = express.Router();
 
 // Admin Service Import
-const homeService = require('./home');
-const studentService = require('./student');
-const teacherService = require('./teacher');
-const batchService = require('./batch');
-const mockTestService = require('./mockTest');
+const homeService = require("./home");
+const studentService = require("./student");
+const teacherService = require("./teacher");
+const batchService = require("./batch");
+const mockTestService = require("./mockTest");
 
-// Home Route 
-router.use('/', homeService);
+// Home Route
+router.use("/", homeService);
 
 // Student Route
-router.use('/student', studentService);
+router.use("/student", studentService);
 
-// Teacher Route 
-router.use('/teacher', teacherService);
+// Teacher Route
+router.use("/teacher", teacherService);
 
-// Batch Route 
-router.use('/batch', batchService);
+// Batch Route
+router.use("/batch", batchService);
 
-// Mock Test Route 
-router.use('/mockTest', mockTestService);
+// Mock Test Route
+router.use("/mockTest", mockTestService);
 
 module.exports = router;
