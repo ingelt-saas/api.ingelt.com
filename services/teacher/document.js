@@ -7,7 +7,7 @@ documentService.get('/', async (req, res) => {
         const result = await documentUtil.read();
         res.status(200).json(result);
     } catch (err) {
-        res.status(400).send(err);
+        res.status(500).send(err);
     }
 });
 

@@ -14,7 +14,7 @@ documentUtil.create = async (newDoc) => {
 // READ
 documentUtil.read = async () => {
   try {
-    const result = await document.findAll({ order: ['id', 'DESC'] });
+    const result = await document.findAll({ order: [['id', 'DESC']] });
     return result;
   } catch (err) {
     throw err;

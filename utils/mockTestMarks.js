@@ -7,7 +7,7 @@ mockTestMarksUtil.create = async (newMockTestMarks) => {
     const result = await mockTestMarks.create(newMockTestMarks);
     return result;
   } catch (err) {
-    throw Error(err);
+    throw err;
   }
 };
 
@@ -21,7 +21,7 @@ mockTestMarksUtil.getMockTestMarksByMockTest = async (mockTestId) => {
     });
     return result;
   } catch (err) {
-    throw Error(err);
+    throw err;
   }
 };
 
@@ -35,7 +35,7 @@ mockTestMarksUtil.getMockTestMarksByStudent = async (studentId) => {
     });
     return result;
   } catch (err) {
-    throw Error(err);
+    throw err;
   }
 }
 
@@ -43,13 +43,13 @@ mockTestMarksUtil.getMockTestMarksByStudent = async (studentId) => {
 mockTestMarksUtil.getTestMarksWithStudent = async (mockTestId) => {
   try {
     const result = await mockTestMarks.findAll({
-      where: { id: mockTestId },
-      include: { model: student, required: true },
+      where: { mockTestId: mockTestId },
+      include: { model: student, as: 'student' },
       order: [['id', 'ASC']]
     });
     return result;
   } catch (err) {
-    throw Error(err);
+    throw err;
   }
 }
 
@@ -63,7 +63,7 @@ mockTestMarksUtil.update = async (mockTestMarksId, updateData) => {
     });
     return result;
   } catch (err) {
-    throw Error(err);
+    throw err;
   }
 };
 

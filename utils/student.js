@@ -125,7 +125,7 @@ studentUtil.bandScore = async (studentId) => {
     });
     return marks[0];
   } catch (err) {
-    throw Error(err);
+    throw err;
   }
 }
 

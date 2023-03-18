@@ -112,6 +112,7 @@ MockTest.belongsTo(Batch, {
 MockTest.hasMany(MockTestMarks);
 MockTestMarks.belongsTo(MockTest);
 Student.hasOne(MockTestMarks);
+MockTestMarks.belongsTo(Student);
 
 // ORGANISATION - ORGIMAGES
 Organisation.hasMany(OrgImages);

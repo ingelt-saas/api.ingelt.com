@@ -22,7 +22,7 @@ submissionUtil.getSubmissionByAssignment = async (assignmentId) => {
     const result = await submission.findAll({ where: { assignmentId }, order: [['id', 'ASC']] });
     return result;
   } catch (err) {
-    throw Error(err);
+    throw err;
   }
 }
 

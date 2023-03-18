@@ -16,7 +16,7 @@ notesService.post('/', async (req, res) => {
 notesService.get('/batch/:batchId', async (req, res) => {
     try {
         const result = await notesUtil.getNotesByBatch(req.params.batchId);
-        req.status(200).json(result);
+        res.status(200).json(result);
     } catch (err) {
         res.status(400).send(err);
     }

@@ -31,11 +31,21 @@ homeService.put('/updateClassLink/:batchId', async (req, res) => {
 homeService.get('/avgBand/:batchId', async (req, res) => {
     try {
         const batchId = req.params.batchId;
-        const result = await batchUtil.
+        const result = await batchUtil.avgBand(batchId);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).send(err);
     }
-})
+});
+
+// get all batches under the teacher
+homeService.get('/batches/:teacherId', async (req, res) => {
+    try {
+        const result = await batchUtil.getBatchesByTeacher(req.params.teacherId);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 
 module.exports = homeService;
