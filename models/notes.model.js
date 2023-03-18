@@ -8,14 +8,6 @@ const notesModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
-      uploadedBy: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "uploadedBy is required" },
-        },
-      },
-
       file: {
         type: DataTypes.STRING,
         allowNull: false,

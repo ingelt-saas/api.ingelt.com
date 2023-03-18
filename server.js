@@ -18,10 +18,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const ingeltServices = require("./services/ingelt");
 const studentServices = require("./services/student");
 const adminServices = require("./services/admin");
+const teacherServices = require("./services/teacher");
 
 app.use("/ingelt", ingeltServices);
 app.use("/student", studentServices);
 app.use("/admin", adminServices);
+app.use("/teacher", teacherServices);
 
 // DB and Server Config
 const PORT = process.env.PORT || 8000;

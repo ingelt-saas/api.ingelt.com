@@ -88,10 +88,10 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
 
   try {
     // get teacher by teacher id
-    const teacher = await teacher.findByPk(teacherId);
+    const teacherInfo = await teacher.findByPk(teacherId);
 
     // get batches
-    const batches = teacher.batchId;
+    const batches = teacherInfo.batchId;
     let taughtStudents = 0;
     let bandStudents = 0;
 
@@ -115,10 +115,10 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
     return { taughtStudents, bandStudents };
 
   } catch (err) {
+    console.log(err);
     throw err;
   }
 }
-
 
 // total teachers
 teacherUtil.totalTeachers = async () => {

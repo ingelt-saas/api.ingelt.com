@@ -7,9 +7,6 @@ const documentModel = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      orgId: {
-        type: DataTypes.STRING
-      },
       file: {
         type: DataTypes.STRING,
         allowNull: false,
