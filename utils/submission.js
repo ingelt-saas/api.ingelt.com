@@ -16,6 +16,16 @@ submissionUtil.getSubmissionByAssignOrStu = async (id) => {
   }
 };
 
+// get submission by assignment
+submissionUtil.getSubmissionByAssignment = async (assignmentId) => {
+  try {
+    const result = await submission.findAll({ where: { assignmentId }, order: [['id', 'ASC']] });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // get submission by per assignment and per student
 submissionUtil.getSubmissionByAssignAndStu = async (
   assignmentId,
@@ -49,6 +59,20 @@ submissionUtil.updateSubmissionByStudent = async (studentId, updateData) => {
     const result = await submission.update(updateData, {
       where: {
         student_id: studentId,
+      },
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// PUT
+submissionUtil.update = async (submissionId, updateData) => {
+  try {
+    const result = await submission.update(updateData, {
+      where: {
+        id: submissionId,
       },
     });
     return result;

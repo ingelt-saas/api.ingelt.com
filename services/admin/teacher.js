@@ -27,6 +27,7 @@ teacherService.get('/:teacherId', async (req, res) => {
     try {
         // get teacher 
         const teacher = await teacherUtil.readById(req.params.teacherId);
+        
         // get complete batch and live batch by teacher id 
         const batches = await teacherUtil.liveAndCompleteBatches(req.params.teacherId);
 

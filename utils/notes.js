@@ -1,10 +1,10 @@
-const { notesModel } = require("../models");
+const { notes } = require("../models");
 const notesUtil = {};
 
 // POST
 notesUtil.createNotes = async (note) => {
   try {
-    const newNote = await notesModel.create(note);
+    const newNote = await notes.create(note);
     return newNote;
   } catch (error) {
     throw error;
@@ -14,12 +14,12 @@ notesUtil.createNotes = async (note) => {
 // GET by batch id
 notesUtil.getNotesByBatch = async (batchId) => {
   try {
-    const notes = await notesModel.findAll({
+    const result = await notes.findAll({
       where: {
         batchId: batchId,
       },
     });
-    return notes;
+    return result;
   } catch (error) {
     throw error;
   }
@@ -28,7 +28,7 @@ notesUtil.getNotesByBatch = async (batchId) => {
 // GET by id
 notesUtil.readById = async (noteId) => {
   try {
-    const note = await notesModel.findByPk(noteId);
+    const note = await notes.findByPk(noteId);
     return note;
   } catch (error) {
     throw error;
@@ -38,7 +38,7 @@ notesUtil.readById = async (noteId) => {
 // DELETE
 notesUtil.deleteNotes = async (noteId) => {
   try {
-    const result = await notesModel.destroy({
+    const result = await notes.destroy({
       where: {
         id: noteId,
       },

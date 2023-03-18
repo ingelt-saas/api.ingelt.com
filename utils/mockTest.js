@@ -19,6 +19,7 @@ mockTestUtil.getMockTestsByBatch = async (batchId) => {
       where: {
         batchId: batchId,
       },
+      order: [['id', 'DESC']]
     });
     return result;
   } catch (err) {
