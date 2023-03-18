@@ -14,4 +14,13 @@ settingsService.put("/:studentId", async (req, res) => {
     }
 });
 
+// password update
+settingsService.put("/changePassword", async (req, res) => {
+    try {
+        // change password functionality
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 module.exports = settingsService;
