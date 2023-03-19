@@ -38,7 +38,6 @@ fs.readdirSync(__dirname)
     db[model.name] = model;
   });
 
-
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
@@ -54,7 +53,7 @@ db.batch = require("./batch.model")(sequelize, Sequelize);
 db.discussion = require("./discussion.model")(sequelize, Sequelize);
 db.document = require("./document.model")(sequelize, Sequelize);
 db.notes = require("./notes.model")(sequelize, Sequelize);
-db.organisation = require("./organisation.model")(sequelize, Sequelize);
+db.organisation = require("./organization.model")(sequelize, Sequelize);
 db.student = require("./student.model")(sequelize, Sequelize);
 db.submission = require("./submission.model")(sequelize, Sequelize);
 db.teacher = require("./teacher.model")(sequelize, Sequelize);

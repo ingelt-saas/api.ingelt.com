@@ -1,10 +1,10 @@
 {
     "development": {
-        "username": "nodejs",
-        "password": "nodejs",
-        "database": "nodejs",
+        "username": "root",
+        "password": "Nish2002",
+        "database": "ingelt_dev",
         "dialect": "mysql",
-        "logging": false
+        "logging": true
     },
     "development2": {
         "username": "admin",

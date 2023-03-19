@@ -48,7 +48,7 @@ Batch.belongsTo(Organisation, {
 
 // BATCH TEACHER
 Batch.hasMany(Teacher);
-Teacher.belongsToMany(Batch, { through: "BatchTeacher" });
+Teacher.belongsToMany(Batch, { through: "BatchesTeachers" });
 
 // BATCH STUDENT
 Batch.hasMany(Student);

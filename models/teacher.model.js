@@ -8,10 +8,6 @@ const teacherModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
-      batchId: {
-        type: DataTypes.UUID
-      },
-
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -21,7 +17,7 @@ const teacherModel = (sequelize, DataTypes) => {
       },
 
       gender: {
-        type: DataTypes.ENUM("Male", "Female", "Other"),
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: { msg: "gender is required" },
