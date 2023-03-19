@@ -18,7 +18,8 @@ homeService.get("/:studentId", async (req, res) => {
 homeService.get("/meetLink/:batchId", async (req, res) => {
   try {
     const result = await batchUtil.readById(req.params.batchId);
-    res.json(result);
+    const batchId = { classroomLink: result.classroomLink };
+    res.json(batchId);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -40,7 +41,20 @@ homeService.get("/mockTestMarks/:studentId", async (req, res) => {
     const marks = await mockTestMarksUtil.getMockTestMarksByStudent(
       req.params.studentId
     );
-    res.json(marks);
+
+    // Filter Out Marks Only + MockTestId
+    const result = [];
+    marks.map((obj) => {
+      result.push({
+        listeningBands: obj.listeningBands,
+        readingBands: obj.readingBands,
+        writingBands: obj.writingBands,
+        speakingBands: obj.speakingBands,
+        mockTestId: obj.mockTestId,
+      });
+    });
+
+    res.json(result);
   } catch (err) {
     res.status(400).send(err);
   }

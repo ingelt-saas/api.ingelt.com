@@ -2,7 +2,7 @@ const express = require("express");
 const notesUtil = require("../../utils/notes");
 const notesService = express.Router();
 
-// get notes by batch  id
+// get notes by batch id
 notesService.get("/batch/:batchId", async (req, res) => {
   try {
     const result = await notesUtil.getNotesByBatch(req.params.batchId);
