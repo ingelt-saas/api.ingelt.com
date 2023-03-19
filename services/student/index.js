@@ -19,9 +19,4 @@ router.use("/document", documentsService);
 router.use("/discussion", discussionsService);
 router.use("/settings", settingsService);
 
-// Test Student Services
-router.get("/test", (req, res) => {
-  res.send("Student Services Working Fine");
-});
-
 module.exports = router;

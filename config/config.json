@@ -4,7 +4,7 @@
         "password": "Nish2002",
         "database": "ingelt_dev",
         "dialect": "mysql",
-        "logging": true
+        "logging": false
     },
     "development2": {
         "username": "admin",
