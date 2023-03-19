@@ -13,17 +13,17 @@ This is the server side of InGelt Board. This script serves ReactJS based Fronte
 
 - Install libraries and dependencies
 
-  npm install
+`npm install`
 
 - Seed the DB for Testing
 
-  npx sequelize db:seed:all
+  `npx sequelize db:seed:all`
 
 - Start MySQL instance on your local machine
 
 - Start the development server
 
-  npm start
+  `npm start`
 
 ### Our Software uses following tech-stack:
 
