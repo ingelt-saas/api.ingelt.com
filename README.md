@@ -44,6 +44,8 @@ This is the server side of InGelt Board. This script serves ReactJS based Fronte
 
     / utils (contains all utils i.e. CRUD functions for all Models).
 
+    / seeders (contains dummy data for testing or Seeds).
+
     - server.js
     - Dockerfile
     - .env
