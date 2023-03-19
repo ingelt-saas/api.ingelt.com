@@ -24,7 +24,7 @@ discussionService.get("/batch/:batchId", async (req, res) => {
   }
 });
 
-// get discussion by  id
+// get discussion by id
 discussionService.get("/:discussionId", async (req, res) => {
   try {
     const result = await discussionUtil.readById(req.params.discussionId);
