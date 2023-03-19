@@ -13,7 +13,7 @@ This is the server side of InGelt Board. This script serves ReactJS based Fronte
 
 - Install libraries and dependencies
 
-`npm install`
+  `npm install`
 
 - Seed the DB for Testing
 
