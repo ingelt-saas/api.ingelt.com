@@ -16,6 +16,7 @@ const Teacher = db.teacher;
 const MockTest = db.mockTest;
 const MockTestMarks = db.mockTestMarks;
 const OrgImages = db.orgImages;
+const BatchesTeachers = db.BatchesTeachers;
 
 // Associations
 
@@ -47,8 +48,8 @@ Batch.belongsTo(Organisation, {
 });
 
 // BATCH TEACHER
-Batch.belongsToMany(Teacher, { through: "BatchesTeachers" });
-Teacher.belongsToMany(Batch, { through: "BatchesTeachers" });
+Batch.belongsToMany(Teacher, { through: BatchesTeachers });
+Teacher.belongsToMany(Batch, { through: BatchesTeachers });
 
 // BATCH STUDENT
 Batch.hasMany(Student);

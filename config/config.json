@@ -1,8 +1,8 @@
 {
     "development": {
-        "username": "root",
-        "password": "Nish2002",
-        "database": "ingelt_dev",
+        "username": "nodejs",
+        "password": "nodejs",
+        "database": "nodejs",
         "dialect": "mysql",
         "logging": false
     },

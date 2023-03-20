@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "sequelize-cli": "^6.6.0"
   },
   "dependencies": {
     "body-parser": "^1.20.1",
@@ -21,7 +22,6 @@
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.1.2",
     "path": "^0.12.7",
-    "sequelize": "^6.28.0",
-    "sequelize-cli": "^6.6.0"
+    "sequelize": "^6.28.0"
   }
 }

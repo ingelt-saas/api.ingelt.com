@@ -7,15 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-
-      orgId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "organization id is required" },
-        },
-      },
-
+      
       name: {
         type: DataTypes.STRING,
         allowNull: false,

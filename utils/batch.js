@@ -86,11 +86,17 @@ batchUtil.completeBatches = async () => {
   }
 }
 
-// get average band by by teacher
+// get average band by teacher
 batchUtil.avgBand = async (teacherId) => {
   try {
-    const teacherInfo = await teacher.findByPk(teacherId);
-    const batches = await batch.findAll({ where: { id: teacherInfo.batchId } });
+    const batches = await batch.findAll({
+      include: [
+        {
+          model: teacher,
+          where: { id: teacherId }
+        }
+      ]
+    });
     return batches;
   } catch (err) {
     throw err;
@@ -100,8 +106,15 @@ batchUtil.avgBand = async (teacherId) => {
 // get batches by teacher
 batchUtil.getBatchesByTeacher = async (teacherId) => {
   try {
-    const teacherInfo = await teacher.findByPk(teacherId);
-    const batches = await batch.findAll({ where: { id: teacherInfo.batchId } });
+    // const teacherInfo = await teacher.findByPk(teacherId);
+    const batches = await batch.findAll({
+      include: [
+        {
+          model: teacher,
+          where: { id: teacherId }
+        }
+      ]
+    });
     return batches;
   } catch (err) {
     throw err;

@@ -12,10 +12,10 @@ studentService.post("/", async (req, res) => {
   }
 });
 
-// get all student
-studentService.get("/", async (req, res) => {
+// get all student by batch
+studentService.get("/batch/:batchId", async (req, res) => {
   try {
-    const result = await studentUtil.read();
+    const result = await studentUtil.getStudentsByBatch(req.params.batchId);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
