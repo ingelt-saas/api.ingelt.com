@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-const { mockTest, mockTestMarks } = require("../models");
+const { mockTest, mockTestMarks, batch, organisation } = require("../models");
 const mockTestUtil = {};
 
 // POST
@@ -28,10 +28,20 @@ mockTestUtil.getMockTestsByBatch = async (batchId) => {
 };
 
 // get mock test and avg band
-mockTestUtil.mockTestAvgBand = async (batchId) => {
+mockTestUtil.mockTestAvgBand = async (batchId, orgId) => {
   try {
 
-    const mockTests = await mockTest.findAll({ where: { batchId: batchId }, raw: true });
+    const mockTests = await mockTest.findAll({
+      where: { batchId: batchId },
+      include: [{
+        model: batch,
+        where: { id: batchId },
+        required: true,
+        attributes: [],
+        include: { model: organisation, where: { id: orgId }, required: true, attributes: [] }
+      }],
+      raw: true
+    });
     let newMockTestArr = [];
 
     for (let test of mockTests) {

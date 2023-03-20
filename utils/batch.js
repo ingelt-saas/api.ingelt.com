@@ -1,4 +1,4 @@
-const { batch, student, teacher } = require("../models");
+const { batch, student, teacher, organisation } = require("../models");
 const batchUtil = {};
 const { Op } = require('sequelize');
 
@@ -25,10 +25,14 @@ batchUtil.read = async () => {
 };
 
 // get all batch and batch students and teacher
-batchUtil.batchesWithStuAndTea = async () => {
+batchUtil.batchesWithStuAndTea = async (orgId) => {
   try {
     // get all batches
-    const batches = await batch.findAll({ order: [["id", "DESC"]] });
+    const batches = await batch.findAll({
+      include: [{ model: organisation, where: { id: orgId }, required: true, attributes: [] }],
+      order: [["id", "DESC"]],
+      raw: true
+    });
     let batchesArr = []; // define new batch array
 
     // get students and teacher by batch 
@@ -55,13 +59,16 @@ batchUtil.readById = async (batchId) => {
   }
 };
 
-// get current batches
-batchUtil.currentBatches = async () => {
+// get current batches by organization
+batchUtil.currentBatches = async (orgId) => {
   try {
     const result = await batch.count({
       where: {
-        active: true
-      }
+        active: true,
+      },
+      include: [
+        { model: organisation, where: { id: orgId }, required: true }
+      ]
     });
     return result;
   } catch (err) {
@@ -69,8 +76,8 @@ batchUtil.currentBatches = async () => {
   }
 }
 
-// get complete batches
-batchUtil.completeBatches = async () => {
+// get complete batches by organization
+batchUtil.completeBatches = async (orgId) => {
   try {
     const result = await batch.count({
       where: {
@@ -78,7 +85,10 @@ batchUtil.completeBatches = async () => {
         endDate: {
           [Op.lte]: new Date()
         }
-      }
+      },
+      include: [
+        { model: organisation, where: { id: orgId }, required: true }
+      ]
     });
     return result;
   } catch (err) {

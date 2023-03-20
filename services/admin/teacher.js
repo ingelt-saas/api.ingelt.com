@@ -12,10 +12,10 @@ teacherService.post("/", async (req, res) => {
   }
 });
 
-// get all teacher
+// get all teacher in the organization
 teacherService.get("/", async (req, res) => {
   try {
-    const result = await teacherUtil.read();
+    const result = await teacherUtil.read(req.headers.organization);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).send(err);
@@ -33,7 +33,9 @@ teacherService.get("/:teacherId", async (req, res) => {
       req.params.teacherId
     );
 
-    res.status(201).send({ teacher, ...batches });
+    const students = await teacherUtil.taughtAndBandStudents(req.params.teacherId);
+
+    res.status(201).send({ teacher, ...batches, ...students });
   } catch (err) {
     res.status(400).send(err);
   }
