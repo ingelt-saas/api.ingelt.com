@@ -8,7 +8,7 @@ module.exports = {
       [
         {
           id: "BAT01",
-          orgId: 1,
+          organizationId: 1,
           name: "Batch 1",
           regDate: new Date(),
           active: true,
@@ -20,7 +20,7 @@ module.exports = {
         },
         {
           id: "BAT02",
-          orgId: 2,
+          organizationId: 2,
           name: "Batch 2",
           regDate: new Date(),
           active: true,
@@ -32,7 +32,7 @@ module.exports = {
         },
         {
           id: "BAT03",
-          orgId: 1,
+          organizationId: 1,
           name: "Batch 3",
           regDate: new Date(),
           active: true,

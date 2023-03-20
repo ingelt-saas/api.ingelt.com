@@ -48,12 +48,13 @@ studentUtil.bestStudents = async () => {
 }
 
 // enrollment student count by every single month
-studentUtil.enrollmentStudent = async () => {
+studentUtil.enrollmentStudent = async (batchId) => {
   try {
     const dates = await student.findAll({
       attributes: [
         [Sequelize.fn('DISTINCT', Sequelize.col('createdAt')), 'date'],
       ],
+      where: { batchId: batchId }
     });
 
     let result = [];

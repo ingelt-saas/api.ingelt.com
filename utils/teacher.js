@@ -1,12 +1,14 @@
-const { teacher, batch, student } = require("../models");
+const { teacher, batch, student, BatchesTeachers } = require("../models");
 const { Op } = require('sequelize');
 const teacherUtil = {};
 
 // POST
 teacherUtil.create = async (newTeacher) => {
   try {
-    const result = await teacher.create(newTeacher);
-    return result;
+
+    const teacherResult = await teacher.create(newTeacher);
+    const result = await BatchesTeachers.create({ batchId: newTeacher.batchId, teacherId: teacherResult.id, subject: newTeacher.subject });
+    return { ...teacherResult.get({ raw: true }), ...result.get({ raw: true }) };
   } catch (err) {
     throw err;
   }
@@ -16,6 +18,10 @@ teacherUtil.create = async (newTeacher) => {
 teacherUtil.getTeachersByBatch = async (batchId) => {
   try {
     const result = await teacher.findAll({
+      include: {
+        model: batch,
+        as: 'batches'
+      },
       where: {
         batchId: batchId,
       },
@@ -29,7 +35,13 @@ teacherUtil.getTeachersByBatch = async (batchId) => {
 // get all teachers 
 teacherUtil.read = async () => {
   try {
-    const result = await teacher.findAll({ order: [['name', 'ASC']] });
+    const result = await teacher.findAll({
+      include: {
+        model: batch,
+        as: 'batches'
+      },
+      order: [['name', 'ASC']]
+    });
     return result;
   } catch (err) {
     throw err;
@@ -39,7 +51,12 @@ teacherUtil.read = async () => {
 // GET by id
 teacherUtil.readById = async (teacherId) => {
   try {
-    const result = await teacher.findByPk(teacherId);
+    const result = await teacher.findByPk(teacherId, {
+      include: [{
+        model: batch,
+        as: 'batches'
+      }]
+    });
     return result;
   } catch (err) {
     throw err;
@@ -51,18 +68,21 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
   try {
 
     // get teacher by teacher id
-    const teacherInfo = await teacher.findByPk(teacherId);
+    const teacherInfo = await teacher.findByPk(teacherId, {
+      include: [{
+        model: batch,
+        as: 'batches'
+      }]
+    });
 
     // get batches
-    const batches = teacherInfo.batchId;
+    const batches = teacherInfo.batches;
     let liveBatches = 0;
     let completeBatches = 0;
 
     // get the batches a batch id and check which batch is live and which batch is complete
-    for (let batchId of batches) {
+    for (let batchInfo of batches) {
 
-      // get batch by batch id  
-      let batchInfo = await batch.findByPk(batchId);
       if (batchInfo) {
         // live batch check
         if (batchInfo.active) {
@@ -88,21 +108,26 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
 
   try {
     // get teacher by teacher id
-    const teacherInfo = await teacher.findByPk(teacherId);
+    const teacherInfo = await teacher.findByPk(teacherId, {
+      include: [{
+        model: batch,
+        as: 'batches'
+      }]
+    });
 
     // get batches
-    const batches = teacherInfo.batchId;
+    const batches = teacherInfo.batches;
     let taughtStudents = 0;
     let bandStudents = 0;
 
     // get students by batch id
-    for (let batchId of batches) {
+    for (let batch of batches) {
 
       // taught students 
-      taughtStudents = await student.count({ where: { batchId: batchId } });
+      taughtStudents = await student.count({ where: { batchId: batch.id } });
       bandStudents = await student.count({
         where: {
-          batchId: batchId,
+          batchId: batch.id,
           totalAverageBand: {
             [Op.gte]: 7.5
           }

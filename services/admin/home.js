@@ -2,6 +2,7 @@ const express = require("express");
 const studentUtil = require("../../utils/student");
 const batchUtil = require("../../utils/batch");
 const teacherUtil = require("../../utils/teacher");
+const { mockTestAvgBand } = require("../../utils/mockTest");
 const adminService = express.Router();
 
 // get total students, current batches , complete batches and total teachers
@@ -24,9 +25,9 @@ adminService.get("/", async (req, res) => {
 });
 
 // get enrollment data
-adminService.get("/enrollmentStudent", async (req, res) => {
+adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
   try {
-    const result = await studentUtil.enrollmentStudent();
+    const result = await studentUtil.enrollmentStudent(req.params.batchId);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
@@ -37,6 +38,16 @@ adminService.get("/enrollmentStudent", async (req, res) => {
 adminService.get("/bestStudents", async (req, res) => {
   try {
     const result = await studentUtil.bestStudents();
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+// average band per batch
+adminService.get('/avgBand/:batchId', async (req, res) => {
+  try {
+    const result = await mockTestAvgBand(req.params.batchId);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);

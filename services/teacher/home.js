@@ -10,14 +10,9 @@ homeService.get("/:teacherId", async (req, res) => {
   try {
     const teacherId = req.params.teacherId;
     const teacher = await teacherUtil.readById(teacherId);
-    const liveAndCompleteBatches = await teacherUtil.liveAndCompleteBatches(
-      teacherId
-    );
-    const taughtAndBandStudents = await teacherUtil.taughtAndBandStudents(
-      teacherId
-    );
+    const liveAndCompleteBatches = await teacherUtil.liveAndCompleteBatches(teacherId);
+    const taughtAndBandStudents = await teacherUtil.taughtAndBandStudents(teacherId);
 
-    console.log(teacher, liveAndCompleteBatches, taughtAndBandStudents);
     res
       .status(201)
       .json({ teacher, ...liveAndCompleteBatches, ...taughtAndBandStudents });
@@ -38,11 +33,10 @@ homeService.put("/updateClassLink/:batchId", async (req, res) => {
   }
 });
 
-// average band per batch
-homeService.get("/avgBand/:batchId", async (req, res) => {
+// average band by teacher
+homeService.get("/avgBand/:teacherId", async (req, res) => {
   try {
-    const batchId = req.params.batchId;
-    const result = await batchUtil.avgBand(batchId);
+    const result = await batchUtil.avgBand(req.params.teacherId);
     res.status(201).json(result);
   } catch (err) {
     console.log(err);
@@ -56,7 +50,6 @@ homeService.get("/batches/:teacherId", async (req, res) => {
     const result = await batchUtil.getBatchesByTeacher(req.params.teacherId);
     res.status(201).json(result);
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
