@@ -1,4 +1,4 @@
-const { student, mockTestMarks } = require("../models");
+const { student, mockTestMarks, batch, organisation } = require("../models");
 const { Sequelize, Op } = require('sequelize');
 const studentUtil = {};
 
@@ -24,20 +24,32 @@ studentUtil.read = async () => {
   }
 }
 
-// get total student 
-studentUtil.totalStudents = async () => {
+// get total student in the organization
+studentUtil.totalStudents = async (orgId) => {
   try {
-    const result = await student.count();
+    const result = await student.count({
+      include: [{
+        model: batch,
+        include: { model: organisation, where: { id: orgId } },
+        required: true
+      }]
+    });
     return result;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 }
 
-// best students 
-studentUtil.bestStudents = async () => {
+// best students in the organization
+studentUtil.bestStudents = async (orgId) => {
   try {
     const result = await student.findAll({
+      include: [{
+        model: batch,
+        required: true,
+        include: { model: organisation, where: { id: orgId }, required: true }
+      }],
       limit: 4,
       order: [['totalAverageBand', 'DESC']],
     });
@@ -47,27 +59,34 @@ studentUtil.bestStudents = async () => {
   }
 }
 
-// enrollment student count by every single month
-studentUtil.enrollmentStudent = async (batchId) => {
+// enrollment student count by every single month / enroll student by batch and organization
+studentUtil.enrollmentStudent = async (batchId, orgId) => {
+
   try {
-    const dates = await student.findAll({
-      attributes: [
-        [Sequelize.fn('DISTINCT', Sequelize.col('createdAt')), 'date'],
-      ],
-      where: { batchId: batchId }
+    const students = await student.findAll({
+      include: [{
+        model: batch,
+        where: { id: batchId },
+        required: true,
+        include: { model: organisation, where: { id: orgId }, required: true }
+      }],
+      raw: true
     });
 
     let result = [];
+
     // get years and month from dates array
-    if (Array.isArray(dates)) {
+    if (Array.isArray(students)) {
       const yearAndMonth = [];
 
       // delete duplicate year and month
-      for (let date of dates) {
+      for (let stu of students) {
         // extract year and month from date object
-        date = { ...date };
-        const year = new Date(date.dataValues.date).getFullYear();
-        const month = new Date(date.dataValues.date).getMonth() + 1;
+        let date = stu.createdAt;
+        date = new Date(date);
+
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
 
         // duplicate date check
         if (!yearAndMonth.find(i => i.year === year && i.month === month)) {
@@ -82,7 +101,8 @@ studentUtil.enrollmentStudent = async (batchId) => {
             [Op.and]: [
               Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('createdAt')), month),
               Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('createdAt')), year),
-            ]
+            ],
+            batchId: batchId
           }
         });
         // push the result array

@@ -12,10 +12,10 @@ documentService.post('/', async (req, res) => {
     }
 });
 
-// get all documents
+// get all documents by organization
 documentService.get('/', async (req, res) => {
     try {
-        const result = await documentUtil.read();
+        const result = await documentUtil.getDocsByOrg(req.headers.organization);
         res.status(200).json(result);
     } catch (err) {
         res.status(400).send(err);
