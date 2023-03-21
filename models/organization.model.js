@@ -37,14 +37,6 @@ const organisationModel = (sequelize, DataTypes) => {
         },
       },
 
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "password is required" },
-        },
-      },
-
       logo: {
         type: DataTypes.STRING,
         allowNull: true,

@@ -1,14 +1,20 @@
 const { teacher, batch, student, BatchesTeachers } = require("../models");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 const teacherUtil = {};
 
 // POST
 teacherUtil.create = async (newTeacher) => {
   try {
-
     const teacherResult = await teacher.create(newTeacher);
-    const result = await BatchesTeachers.create({ batchId: newTeacher.batchId, teacherId: teacherResult.id, subject: newTeacher.subject });
-    return { ...teacherResult.get({ raw: true }), ...result.get({ raw: true }) };
+    const result = await BatchesTeachers.create({
+      batchId: newTeacher.batchId,
+      teacherId: teacherResult.id,
+      subject: newTeacher.subject,
+    });
+    return {
+      ...teacherResult.get({ raw: true }),
+      ...result.get({ raw: true }),
+    };
   } catch (err) {
     throw err;
   }
@@ -20,7 +26,7 @@ teacherUtil.getTeachersByBatch = async (batchId) => {
     const result = await teacher.findAll({
       include: {
         model: batch,
-        as: 'batches'
+        as: "batches",
       },
       where: {
         batchId: batchId,
@@ -32,30 +38,32 @@ teacherUtil.getTeachersByBatch = async (batchId) => {
   }
 };
 
-// get all teachers 
+// get all teachers
 teacherUtil.read = async () => {
   try {
     const result = await teacher.findAll({
       include: {
         model: batch,
-        as: 'batches'
+        as: "batches",
       },
-      order: [['name', 'ASC']]
+      order: [["name", "ASC"]],
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // GET by id
 teacherUtil.readById = async (teacherId) => {
   try {
     const result = await teacher.findByPk(teacherId, {
-      include: [{
-        model: batch,
-        as: 'batches'
-      }]
+      include: [
+        {
+          model: batch,
+          as: "batches",
+        },
+      ],
     });
     return result;
   } catch (err) {
@@ -66,13 +74,14 @@ teacherUtil.readById = async (teacherId) => {
 // get live batches and complete batches by teacher id
 teacherUtil.liveAndCompleteBatches = async (teacherId) => {
   try {
-
     // get teacher by teacher id
     const teacherInfo = await teacher.findByPk(teacherId, {
-      include: [{
-        model: batch,
-        as: 'batches'
-      }]
+      include: [
+        {
+          model: batch,
+          as: "batches",
+        },
+      ],
     });
 
     // get batches
@@ -82,37 +91,38 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
 
     // get the batches a batch id and check which batch is live and which batch is complete
     for (let batchInfo of batches) {
-
       if (batchInfo) {
         // live batch check
         if (batchInfo.active) {
           liveBatches++;
-        } else // complete batch check
-          if (!batchInfo.active && (new Date().getTime(batchInfo.endDate) < new Date().getTime())) {
-            completeBatches++;
-          }
+        } // complete batch check
+        else if (
+          !batchInfo.active &&
+          new Date().getTime(batchInfo.endDate) < new Date().getTime()
+        ) {
+          completeBatches++;
+        }
       }
-
     }
 
     // return complete and live batches as a object
     return { completeBatches, liveBatches };
-
   } catch (err) {
     throw err;
   }
-}
+};
 
 // get taught students and band students by teacher id
 teacherUtil.taughtAndBandStudents = async (teacherId) => {
-
   try {
     // get teacher by teacher id
     const teacherInfo = await teacher.findByPk(teacherId, {
-      include: [{
-        model: batch,
-        as: 'batches'
-      }]
+      include: [
+        {
+          model: batch,
+          as: "batches",
+        },
+      ],
     });
 
     // get batches
@@ -122,45 +132,44 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
 
     // get students by batch id
     for (let batch of batches) {
-
-      // taught students 
+      // taught students
       taughtStudents = await student.count({ where: { batchId: batch.id } });
       bandStudents = await student.count({
         where: {
           batchId: batch.id,
           totalAverageBand: {
-            [Op.gte]: 7.5
-          }
-        }
+            [Op.gte]: 7.5,
+          },
+        },
       });
-
     }
 
     // return taught and band students as a object
     return { taughtStudents, bandStudents };
-
   } catch (err) {
     console.log(err);
     throw err;
   }
-}
+};
 
 // total teachers
 teacherUtil.totalTeachers = async () => {
   try {
     const result = await teacher.count({
-      active: true
+      active: true,
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // PUT
 teacherUtil.update = async (teacherId, updateData) => {
   try {
-    const result = await teacher.update(updateData, { where: { id: teacherId } });
+    const result = await teacher.update(updateData, {
+      where: { id: teacherId },
+    });
     return result;
   } catch (err) {
     console.log(err);

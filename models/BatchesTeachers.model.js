@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       subject: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
     },
     { timestamps: true }
