@@ -1,4 +1,10 @@
-const { teacher, batch, student, BatchesTeachers } = require("../models");
+const {
+  teacher,
+  batch,
+  student,
+  BatchesTeachers,
+  organisation,
+} = require("../models");
 const { Op } = require("sequelize");
 const teacherUtil = {};
 
@@ -38,13 +44,20 @@ teacherUtil.getTeachersByBatch = async (batchId) => {
   }
 };
 
-// get all teachers
-teacherUtil.read = async () => {
+// get all teachers in the organization
+teacherUtil.read = async (orgId) => {
   try {
     const result = await teacher.findAll({
       include: {
         model: batch,
         as: "batches",
+        required: true,
+        include: {
+          model: organisation,
+          where: { id: orgId },
+          required: true,
+          attributes: [],
+        },
       },
       order: [["name", "ASC"]],
     });
@@ -66,6 +79,16 @@ teacherUtil.readById = async (teacherId) => {
       ],
     });
     return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// batches updated by teacher
+teacherUtil.batchesUpdated = async (teacherId, updateData) => {
+  try {
+    // if check is batch id exists
+    // const searchBatch =
   } catch (err) {
     throw err;
   }
@@ -152,11 +175,22 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
   }
 };
 
-// total teachers
-teacherUtil.totalTeachers = async () => {
+// total teachers by organization
+teacherUtil.totalTeachers = async (orgId) => {
   try {
     const result = await teacher.count({
-      active: true,
+      where: { active: true },
+      include: [
+        {
+          model: batch,
+          include: {
+            model: organisation,
+            where: { id: orgId },
+            required: true,
+          },
+          required: true,
+        },
+      ],
     });
     return result;
   } catch (err) {

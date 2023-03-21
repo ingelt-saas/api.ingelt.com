@@ -26,7 +26,7 @@ documentUtil.getDocsByOrg = async (orgId) => {
   try {
     const result = await document.findAll({
       where: {
-        orgId: orgId,
+        organizationId: orgId,
       },
     });
     return result;
