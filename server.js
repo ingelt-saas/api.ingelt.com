@@ -34,7 +34,7 @@ const db = require("./models");
 require("./models/associations");
 
 // TODO: FORCE ALTER ONLY FOR DEV ENVIRONMENT { alter: true, force: true }
-db.sequelize.sync({ alter: true, force: true }).then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
   // App Listen
   app.listen(PORT, () => {
     console.log(`🚀 Server is running on port ${PORT}`);
