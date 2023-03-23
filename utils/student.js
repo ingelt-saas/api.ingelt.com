@@ -1,10 +1,16 @@
 const { student, mockTestMarks, batch, organisation } = require("../models");
-const { Sequelize, Op } = require('sequelize');
+const bcrypt = require("bcrypt");
+const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
 
 // POST
 studentUtil.create = async (newStudent) => {
   try {
+    // Encrypt Password and Set it
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newStudent.password, salt);
+    newStudent.password = hashedPassword;
+
     const result = await student.create(newStudent);
     return result;
   } catch (err) {
@@ -16,61 +22,74 @@ studentUtil.create = async (newStudent) => {
 studentUtil.read = async () => {
   try {
     const result = await student.findAll({
-      order: [['id', 'ASC']]
+      order: [["id", "ASC"]],
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // get total student in the organization
 studentUtil.totalStudents = async (orgId) => {
   try {
     const result = await student.count({
-      include: [{
-        model: batch,
-        include: { model: organisation, where: { id: orgId } },
-        required: true
-      }]
+      include: [
+        {
+          model: batch,
+          include: { model: organisation, where: { id: orgId } },
+          required: true,
+        },
+      ],
     });
     return result;
   } catch (err) {
     console.log(err);
     throw err;
   }
-}
+};
 
 // best students in the organization
 studentUtil.bestStudents = async (orgId) => {
   try {
     const result = await student.findAll({
-      include: [{
-        model: batch,
-        required: true,
-        include: { model: organisation, where: { id: orgId }, required: true }
-      }],
+      include: [
+        {
+          model: batch,
+          required: true,
+          include: {
+            model: organisation,
+            where: { id: orgId },
+            required: true,
+          },
+        },
+      ],
       limit: 4,
-      order: [['totalAverageBand', 'DESC']],
+      order: [["totalAverageBand", "DESC"]],
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // enrollment student count by every single month / enroll student by batch and organization
 studentUtil.enrollmentStudent = async (batchId, orgId) => {
-
   try {
     const students = await student.findAll({
-      include: [{
-        model: batch,
-        where: { id: batchId },
-        required: true,
-        include: { model: organisation, where: { id: orgId }, required: true }
-      }],
-      raw: true
+      include: [
+        {
+          model: batch,
+          where: { id: batchId },
+          required: true,
+          include: {
+            model: organisation,
+            where: { id: orgId },
+            required: true,
+          },
+        },
+      ],
+      raw: true,
     });
 
     let result = [];
@@ -89,7 +108,7 @@ studentUtil.enrollmentStudent = async (batchId, orgId) => {
         const month = date.getMonth() + 1;
 
         // duplicate date check
-        if (!yearAndMonth.find(i => i.year === year && i.month === month)) {
+        if (!yearAndMonth.find((i) => i.year === year && i.month === month)) {
           yearAndMonth.push({ year, month });
         }
       }
@@ -99,23 +118,28 @@ studentUtil.enrollmentStudent = async (batchId, orgId) => {
         const rows = await student.count({
           where: {
             [Op.and]: [
-              Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('createdAt')), month),
-              Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('createdAt')), year),
+              Sequelize.where(
+                Sequelize.fn("MONTH", Sequelize.col("createdAt")),
+                month
+              ),
+              Sequelize.where(
+                Sequelize.fn("YEAR", Sequelize.col("createdAt")),
+                year
+              ),
             ],
-            batchId: batchId
-          }
+            batchId: batchId,
+          },
         });
         // push the result array
         result.push({ year, month, count: rows });
       }
-
     }
 
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // GET all students by batch id
 studentUtil.getStudentsByBatch = async (batchId) => {
@@ -137,18 +161,21 @@ studentUtil.bandScore = async (studentId) => {
     const marks = await mockTestMarks.findAll({
       where: { studentId },
       attributes: [
-        [Sequelize.fn('AVG', Sequelize.col('listeningBands')), 'listeningBands'],
-        [Sequelize.fn('AVG', Sequelize.col('readingBands')), 'readingBands'],
-        [Sequelize.fn('AVG', Sequelize.col('writingBands')), 'writingBands'],
-        [Sequelize.fn('AVG', Sequelize.col('speakingBands')), 'speakingBands'],
+        [
+          Sequelize.fn("AVG", Sequelize.col("listeningBands")),
+          "listeningBands",
+        ],
+        [Sequelize.fn("AVG", Sequelize.col("readingBands")), "readingBands"],
+        [Sequelize.fn("AVG", Sequelize.col("writingBands")), "writingBands"],
+        [Sequelize.fn("AVG", Sequelize.col("speakingBands")), "speakingBands"],
       ],
-      raw: true
+      raw: true,
     });
     return marks[0];
   } catch (err) {
     throw err;
   }
-}
+};
 
 // GET by id
 studentUtil.readById = async (studentId) => {

@@ -1,9 +1,16 @@
 const { admin } = require("../models");
+const bcrypt = require("bcrypt");
 const adminUtil = {};
 
 // POST
 adminUtil.create = async (newAdmin) => {
   try {
+    // Encrypt Password and Set it
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newAdmin.password, salt);
+    newAdmin.password = hashedPassword;
+
+    // Saving Admin
     const result = await admin.create(newAdmin);
     return result;
   } catch (err) {

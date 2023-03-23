@@ -6,11 +6,18 @@ const {
   organisation,
 } = require("../models");
 const { Op } = require("sequelize");
+const bcrypt = require("bcrypt");
 const teacherUtil = {};
 
 // POST
 teacherUtil.create = async (newTeacher) => {
   try {
+    // Encrypt Password and Set it
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newTeacher.password, salt);
+    newTeacher.password = hashedPassword;
+
+    // Create teacher
     const teacherResult = await teacher.create(newTeacher);
     const result = await BatchesTeachers.create({
       batchId: newTeacher.batchId,

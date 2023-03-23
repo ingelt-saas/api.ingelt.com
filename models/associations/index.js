@@ -48,14 +48,13 @@ Batch.belongsTo(Organisation, {
 });
 
 // BATCH TEACHER
-Batch.belongsToMany(Teacher, { through: BatchesTeachers });
+Batch.hasMany(Teacher);
 Teacher.belongsToMany(Batch, { through: BatchesTeachers });
 
 // BATCH STUDENT
 Batch.hasMany(Student);
-Student.belongsTo(Batch, {
+Student.hasOne(Batch, {
   foreignKey: {
-    allowNull: false,
     type: Sequelize.UUID,
   },
 });

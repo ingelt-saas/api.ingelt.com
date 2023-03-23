@@ -8,10 +8,7 @@ const studentModel = (sequelize, DataTypes) => {
 
     batchId: {
       type: DataTypes.UUID,
-      allowNull: false,
-      validate: {
-        notNull: { msg: 'batch id is required' }
-      }
+      default: null,
     },
 
     name: {
@@ -25,6 +22,7 @@ const studentModel = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         notNull: { msg: "email is required" },
       },
@@ -41,6 +39,7 @@ const studentModel = (sequelize, DataTypes) => {
     phoneNo: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         notNull: { msg: "phone number is required" },
       },
@@ -48,47 +47,32 @@ const studentModel = (sequelize, DataTypes) => {
 
     gender: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "gender is required" },
-      },
     },
 
     city: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "city is required" },
-      },
     },
 
     state: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "state is required" },
-      },
     },
 
     country: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "country is required" },
-      },
     },
 
     pinCode: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "pincode number is required" },
-      },
     },
 
     dob: DataTypes.DATE,
 
     active: DataTypes.BOOLEAN,
+
+    status: {
+      type: DataTypes.STRING,
+      default: "PRE", // PRE - before applied | APPL - Applied | FEE - Fee Paid | ADM - Admitted | COM - Completed
+    },
 
     targetScore: DataTypes.FLOAT,
 
@@ -97,7 +81,6 @@ const studentModel = (sequelize, DataTypes) => {
     averageBand: DataTypes.INTEGER,
 
     totalAverageBand: DataTypes.INTEGER,
-
   });
 };
 

@@ -18,15 +18,12 @@ const teacherModel = (sequelize, DataTypes) => {
 
       gender: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "gender is required" },
-        },
       },
 
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           notNull: { msg: "email is required" },
         },
@@ -54,46 +51,24 @@ const teacherModel = (sequelize, DataTypes) => {
 
       city: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "city number is required" },
-        },
       },
 
       state: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "state number is required" },
-        },
       },
 
       country: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "country number is required" },
-        },
       },
 
       pincode: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "pincode number is required" },
-        },
       },
 
       workExp: DataTypes.FLOAT,
 
       active: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
-      },
-
-      syllabus: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
       },
     },
     {
