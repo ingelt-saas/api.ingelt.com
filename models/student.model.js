@@ -19,10 +19,11 @@ const studentModel = (sequelize, DataTypes) => {
       },
     },
 
+    fathersName: DataTypes.STRING,
+
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         notNull: { msg: "email is required" },
       },
@@ -39,7 +40,6 @@ const studentModel = (sequelize, DataTypes) => {
     phoneNo: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         notNull: { msg: "phone number is required" },
       },

@@ -1,13 +1,19 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const studentUtil = require("../../utils/student");
 const batchUtil = require("../../utils/batch");
 const mockTestMarksUtil = require("../../utils/mockTestMarks");
 const homeService = express.Router();
 
 // GET student by id
-homeService.get("/:studentId", async (req, res) => {
+homeService.get("/", async (req, res) => {
   try {
-    const result = await studentUtil.readById(req.params.studentId);
+    const token = req.headers.authorization.split(" ")[1];
+    const student = jwt.decode(token);
+
+    console.log(student);
+
+    const result = await studentUtil.readById(student.id);
     res.status(200).json(result);
   } catch (err) {
     res.status(400).send(err);

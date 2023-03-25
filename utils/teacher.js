@@ -17,8 +17,9 @@ teacherUtil.create = async (newTeacher) => {
     const hashedPassword = await bcrypt.hash(newTeacher.password, salt);
     newTeacher.password = hashedPassword;
 
-    // Create teacher
     const teacherResult = await teacher.create(newTeacher);
+
+    // Create Entry in Batch-Teacher
     const result = await BatchesTeachers.create({
       batchId: newTeacher.batchId,
       teacherId: teacherResult.id,
