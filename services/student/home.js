@@ -11,8 +11,6 @@ homeService.get("/", async (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const student = jwt.decode(token);
 
-    console.log(student);
-
     const result = await studentUtil.readById(student.id);
     res.status(200).json(result);
   } catch (err) {
@@ -32,9 +30,11 @@ homeService.get("/meetLink/:batchId", async (req, res) => {
 });
 
 // avg band
-homeService.get("/avgBand/:studentId", async (req, res) => {
+homeService.get("/bands", async (req, res) => {
   try {
-    const avgBand = await studentUtil.bandScore(req.params.studentId);
+    const token = req.headers.authorization.split(" ")[1];
+    const student = jwt.decode(token);
+    const avgBand = await studentUtil.bandScore(student.id);
     res.json(avgBand);
   } catch (err) {
     res.status(400).send(err);
@@ -42,11 +42,12 @@ homeService.get("/avgBand/:studentId", async (req, res) => {
 });
 
 // get mock test marks
-homeService.get("/mockTestMarks/:studentId", async (req, res) => {
+homeService.get("/mockTestMarks", async (req, res) => {
   try {
-    const marks = await mockTestMarksUtil.getMockTestMarksByStudent(
-      req.params.studentId
-    );
+    const token = req.headers.authorization.split(" ")[1];
+    const student = jwt.decode(token);
+
+    const marks = await mockTestMarksUtil.getMockTestMarksByStudent(student.id);
 
     // Filter Out Marks Only + MockTestId
     const result = [];

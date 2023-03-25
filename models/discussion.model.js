@@ -10,6 +10,7 @@ const discussionModel = (sequelize, DataTypes) => {
 
       batchId: {
         type: DataTypes.UUID,
+        unique: false,
         allowNull: false,
         validate: {
           notNull: { msg: "batch id is required" },
@@ -29,6 +30,8 @@ const discussionModel = (sequelize, DataTypes) => {
           notNull: { msg: "message is required" },
         },
       },
+
+      designation: DataTypes.STRING,
     },
     {
       timestamps: true,
