@@ -8,6 +8,7 @@ const studentModel = (sequelize, DataTypes) => {
 
     batchId: {
       type: DataTypes.UUID,
+      allowNull: true,
       default: null,
     },
 
