@@ -180,7 +180,9 @@ studentUtil.bandScore = async (studentId) => {
 // GET by id
 studentUtil.readById = async (studentId) => {
   try {
-    const result = await student.findByPk(studentId);
+    const result = await student.findByPk(studentId, {
+      include: [{ model: organisation }]
+    });
     return result;
   } catch (err) {
     throw err;
