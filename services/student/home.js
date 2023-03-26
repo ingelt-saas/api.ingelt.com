@@ -19,9 +19,12 @@ homeService.get("/", async (req, res) => {
 });
 
 // get meet link
-homeService.get("/meetLink/:batchId", async (req, res) => {
+homeService.get("/meetLink/", async (req, res) => {
   try {
-    const result = await batchUtil.readById(req.params.batchId);
+    const token = req.headers.authorization.split(" ")[1];
+    const student = jwt.decode(token);
+
+    const result = await batchUtil.readById(student.batchId);
     const batchId = { classroomLink: result.classroomLink };
     res.json(batchId);
   } catch (err) {
