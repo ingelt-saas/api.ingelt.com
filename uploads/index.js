@@ -12,7 +12,7 @@ const diskStorage = (uploadedPath) => {
         },
 
         fileFilter: (req, file, cb) => {
-            if (file.mimetype === "application/pdf" || file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+            if (file.mimetype === "application/pdf" || file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.mimetype === "image/png" || file.mimetype === "image/webp" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
                 cb(null, true);
             } else {
                 cb(null, false);

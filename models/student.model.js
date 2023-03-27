@@ -65,6 +65,7 @@ const studentModel = (sequelize, DataTypes) => {
     pinCode: {
       type: DataTypes.INTEGER,
     },
+    image: DataTypes.STRING,
 
     dob: DataTypes.DATE,
 
