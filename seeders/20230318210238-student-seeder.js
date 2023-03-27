@@ -33,7 +33,7 @@ module.exports = {
           name: "Donald Trump",
           email: "donald@trumporg.us",
           password: "123456",
-          phoneNo: "1234567890",
+          phoneNo: "1234567",
           gender: "Male",
           city: "New York",
           state: "New York",

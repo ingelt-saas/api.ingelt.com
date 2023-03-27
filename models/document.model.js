@@ -15,6 +15,8 @@ const documentModel = (sequelize, DataTypes) => {
         },
       },
 
+      subject: DataTypes.STRING,
+
       fileSize: DataTypes.STRING,
     },
     {

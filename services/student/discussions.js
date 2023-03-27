@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const discussionUtil = require("../../utils/discussion");
 const discussionService = express.Router();
 
@@ -13,23 +14,15 @@ discussionService.post("/", async (req, res) => {
 });
 
 // get all discussions by batch id
-discussionService.get("/batch/:batchId", async (req, res) => {
+discussionService.get("/all", async (req, res) => {
   try {
-    const result = await discussionUtil.getDiscussionsByBatch(
-      req.params.batchId
-    );
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-});
+    const token = req.headers.authorization.split(" ")[1];
+    const student = jwt.decode(token);
 
-// get discussion by id
-discussionService.get("/:discussionId", async (req, res) => {
-  try {
-    const result = await discussionUtil.readById(req.params.discussionId);
+    const result = await discussionUtil.getDiscussionsByBatch(student.batchId);
     res.status(201).json(result);
   } catch (err) {
+    console.log(err);
     res.status(400).json(err);
   }
 });

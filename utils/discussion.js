@@ -18,6 +18,7 @@ discussionUtil.getDiscussionsByBatch = async (batchId) => {
       where: {
         batchId: batchId,
       },
+      order: [["createdAt", "DESC"]],
     });
     return result;
   } catch (err) {

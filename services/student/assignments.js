@@ -1,11 +1,14 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const assignmentUtil = require("../../utils/assignment");
 const assignmentService = express.Router();
 
 // GET all assignment
-assignmentService.get("/all/:batchId", async (req, res) => {
+assignmentService.get("/all", async (req, res) => {
   try {
-    const batchId = req.params.batchId;
+    const student = req.headers.authorization.split(" ")[1];
+    const batchId = jwt.decode(student).batchId;
+
     const result = await assignmentUtil.getAssignmentsByBatch(batchId);
     res.status(201).json(result);
   } catch (err) {
