@@ -27,7 +27,7 @@ adminService.get("/", async (req, res) => {
 });
 
 // get enrollment data
-adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
+adminService.get("/enrollmentStudent", async (req, res) => {
   try {
     const result = await studentUtil.enrollmentStudent(req.params.batchId, req.headers.organization);
     res.status(200).json(result);
@@ -40,7 +40,7 @@ adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
 adminService.get("/bestStudents", async (req, res) => {
   try {
     const result = await studentUtil.bestStudents(req.headers.organization);
-    res.status(201).json(result);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
