@@ -1,10 +1,17 @@
 const express = require("express");
 const submissionService = express.Router();
 const submissionUtil = require("../../utils/submission");
+const uploadService = require('../../uploads/index');
 
 // create submission
-submissionService.post("/", async (req, res) => {
+submissionService.post("/", uploadService('submissions').single('file'), async (req, res) => {
   try {
+    const file = req.file;
+    const newSubmission = {
+      assignmentId: req.body.assignmentId,
+      studentId: req.body.studentId,
+      file: file.filename,
+    };
     const result = await submissionUtil.create(req.body);
     res.status(201).json(result);
   } catch (err) {
