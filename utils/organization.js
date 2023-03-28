@@ -1,4 +1,5 @@
-const { organization } = require("../models");
+const { Op } = require("sequelize");
+const { organization, studentApplied } = require("../models");
 const organizationUtil = {};
 
 // POST
@@ -32,6 +33,30 @@ organizationUtil.readById = async (organizationId) => {
     throw err;
   }
 };
+
+// apply 
+organizationUtil.apply = async (data) => {
+  try {
+    const result = await studentApplied.create(data);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// search organization
+organizationUtil.search = async (value) => {
+  try {
+    const result = await organization.findAll({
+      where: {
+        name: { [Op.like]: `%${value}%` }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // PUT
 organizationUtil.update = async (organizationId, updateData) => {

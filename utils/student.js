@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organisation } = require("../models");
+const { student, mockTestMarks, batch, organization } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -37,7 +37,7 @@ studentUtil.totalStudents = async (orgId) => {
       include: [
         {
           model: batch,
-          include: { model: organisation, where: { id: orgId } },
+          include: { model: organization, where: { id: orgId } },
           required: true,
         },
       ],
@@ -58,7 +58,7 @@ studentUtil.bestStudents = async (orgId) => {
           model: batch,
           required: true,
           include: {
-            model: organisation,
+            model: organization,
             where: { id: orgId },
             required: true,
           },
@@ -74,16 +74,15 @@ studentUtil.bestStudents = async (orgId) => {
 };
 
 // enrollment student count by every single month / enroll student by batch and organization
-studentUtil.enrollmentStudent = async (batchId, orgId) => {
+studentUtil.enrollmentStudent = async (orgId) => {
   try {
     const students = await student.findAll({
       include: [
         {
           model: batch,
-          where: { id: batchId },
           required: true,
           include: {
-            model: organisation,
+            model: organization,
             where: { id: orgId },
             required: true,
           },
@@ -180,7 +179,9 @@ studentUtil.bandScore = async (studentId) => {
 // GET by id
 studentUtil.readById = async (studentId) => {
   try {
-    const result = await student.findByPk(studentId);
+    const result = await student.findByPk(studentId, {
+      include: [{ model: organization }]
+    });
     return result;
   } catch (err) {
     throw err;

@@ -17,6 +17,7 @@ const MockTest = db.mockTest;
 const MockTestMarks = db.mockTestMarks;
 const OrgImages = db.orgImages;
 const BatchesTeachers = db.BatchesTeachers;
+const StudentApplied = db.studentApplied
 
 // Associations
 
@@ -122,3 +123,7 @@ OrgImages.belongsTo(Organisation, {
     type: Sequelize.UUID,
   },
 });
+
+// STUDENT APPLIED
+Student.belongsToMany(Organisation, { through: StudentApplied });
+Organisation.belongsToMany(Student, { through: StudentApplied });

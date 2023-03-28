@@ -43,7 +43,7 @@ adminService.get("/stats-one", async (req, res) => {
 });
 
 // get enrollment data
-adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
+adminService.get("/enrollmentStudent", async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const admin = jwt.decode(token);
@@ -63,12 +63,8 @@ adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
 // get best students in the organization
 adminService.get("/bestStudents", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const admin = jwt.decode(token);
-    const organizationId = admin.organizationId;
-
-    const result = await studentUtil.bestStudents(organizationId);
-    res.status(201).json(result);
+    const result = await studentUtil.bestStudents(req.headers.organization);
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);

@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
 
     submissionDate: DataTypes.DATE,
 
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: 'uploaded' // uploaded and submitted
+    },
+
     evaluated: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

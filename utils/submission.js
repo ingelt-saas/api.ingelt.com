@@ -53,6 +53,16 @@ submissionUtil.create = async (newSubmission) => {
   }
 };
 
+// read by id 
+submissionUtil.readById = async (submissionId) => {
+  try {
+    const result = (await submission.findByPk(submissionId)).get({ plain: true });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // PUT
 submissionUtil.updateSubmissionByStudent = async (studentId, updateData) => {
   try {
