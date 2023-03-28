@@ -22,8 +22,9 @@ module.exports = {
           active: true,
           targetScore: 7.0,
           previousScore: 6.5,
-          averageBand: 7.0,
-          totalAverageBand: 7.0,
+          averageBands: 7.0,
+          image:
+            "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?cs=srgb&dl=pexels-simon-robben-614810.jpg&fm=jpg",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -43,8 +44,9 @@ module.exports = {
           active: true,
           targetScore: 7.0,
           previousScore: 6.5,
-          averageBand: 5.0,
-          totalAverageBand: 6.0,
+          averageBands: 5.0,
+          image:
+            "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?cs=srgb&dl=pexels-simon-robben-614810.jpg&fm=jpg",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

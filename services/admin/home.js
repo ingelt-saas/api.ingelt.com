@@ -1,14 +1,30 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const adminUtil = require("../../utils/admin");
 const studentUtil = require("../../utils/student");
 const batchUtil = require("../../utils/batch");
 const teacherUtil = require("../../utils/teacher");
 const { mockTestAvgBand } = require("../../utils/mockTest");
 const adminService = express.Router();
 
-// get total students, current batches , complete batches and total teachers
+// Get Admin
 adminService.get("/", async (req, res) => {
-  const organizationId = req.headers.organization;
   try {
+    const token = req.headers.authorization.split(" ")[1];
+    const admin = jwt.decode(token);
+    res.status(200).json(admin);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+// get total students, current batches , complete batches and total teachers
+adminService.get("/stats-one", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const admin = jwt.decode(token);
+    const organizationId = admin.organizationId;
+
     const totalStudents = await studentUtil.totalStudents(organizationId);
     const currentBatches = await batchUtil.currentBatches(organizationId);
     const completeBatches = await batchUtil.completeBatches(organizationId);
@@ -29,9 +45,17 @@ adminService.get("/", async (req, res) => {
 // get enrollment data
 adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
   try {
-    const result = await studentUtil.enrollmentStudent(req.params.batchId, req.headers.organization);
+    const token = req.headers.authorization.split(" ")[1];
+    const admin = jwt.decode(token);
+    const organizationId = admin.organizationId;
+
+    const result = await studentUtil.enrollmentStudent(
+      req.params.batchId,
+      organizationId
+    );
     res.status(200).json(result);
   } catch (err) {
+    console.log(err);
     res.status(400).json(err);
   }
 });
@@ -39,17 +63,26 @@ adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
 // get best students in the organization
 adminService.get("/bestStudents", async (req, res) => {
   try {
-    const result = await studentUtil.bestStudents(req.headers.organization);
+    const token = req.headers.authorization.split(" ")[1];
+    const admin = jwt.decode(token);
+    const organizationId = admin.organizationId;
+
+    const result = await studentUtil.bestStudents(organizationId);
     res.status(201).json(result);
   } catch (err) {
+    console.log(err);
     res.status(400).json(err);
   }
 });
 
 // average band per batch
-adminService.get('/avgBand/:batchId', async (req, res) => {
+adminService.get("/avgBand/:batchId", async (req, res) => {
   try {
-    const result = await mockTestAvgBand(req.params.batchId, req.headers.organization);
+    const token = req.headers.authorization.split(" ")[1];
+    const admin = jwt.decode(token);
+    const organizationId = admin.organizationId;
+
+    const result = await mockTestAvgBand(req.params.batchId, organizationId);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
