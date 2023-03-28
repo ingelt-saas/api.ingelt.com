@@ -22,6 +22,27 @@ organizationService.get("/", async (req, res) => {
     }
 });
 
+// apply organization 
+organizationService.post('/apply', async (req, res) => {
+    try {
+        const result = await organizationUtil.apply(req.body);
+        res.status(201).send(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// search organizations
+organizationService.get('/search', async (req, res) => {
+    try {
+        const searchQuery = req.query.search;
+        const result = await organizationUtil.search(searchQuery);
+        res.send(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 // get a organization by organization id  
 organizationService.get("/:orgId", async (req, res) => {
     try {
