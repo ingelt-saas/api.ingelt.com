@@ -8,8 +8,8 @@ const authenticateStudent = async (req, res) => {
   const { email, password } = req.body;
 
   // Check if User with email exists and fetch that user
-  let studentValue = await student.findAll({ where: { email } });
-  studentValue = studentValue[0].dataValues;
+  let studentValue = (await student.findOne({ where: { email } }))?.get({ plain: true });
+  // studentValue = studentValue[0].dataValues;
 
   // If user does not exist, return error
   if (!studentValue) {

@@ -3,6 +3,7 @@ const fileUploadService = require("../../uploads");
 const studentUtil = require("../../utils/student");
 const settingsService = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // PUT student by id
 settingsService.put("/", async (req, res) => {
