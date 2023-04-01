@@ -2,6 +2,8 @@ const express = require("express");
 const fileUploadService = require("../../uploads");
 const studentUtil = require("../../utils/student");
 const settingsService = express.Router();
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // PUT student by id
 settingsService.put("/", async (req, res) => {
@@ -30,9 +32,22 @@ settingsService.put('/updateProfile', fileUploadService('profile').single('image
 });
 
 // password update
-settingsService.put("/changePassword", async (req, res) => {
+settingsService.put("/updatePassword", async (req, res) => {
   try {
+
+    const student = req.headers.authorization.split(" ")[1];
+    const studentId = jwt.decode(student).id;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const previousPassword = req.body.previousPassword;
+
     // change password functionality
+    if (await bcrypt.compare(previousPassword, studentId.password)) {
+      const result = await studentUtil.update(studentId, { password: hashedPassword });
+      res.json(result);
+    } else {
+      res.json({ status: 'bad', message: 'Previous password does not match' });
+    }
   } catch (err) {
     res.status(400).send(err);
   }
