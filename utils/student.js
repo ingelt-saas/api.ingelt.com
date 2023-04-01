@@ -65,7 +65,7 @@ studentUtil.bestStudents = async (orgId) => {
         },
       ],
       limit: 4,
-      order: [["totalAverageBand", "DESC"]],
+      order: [["averageBands", "DESC"]],
     });
     return result;
   } catch (err) {

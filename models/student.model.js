@@ -30,6 +30,11 @@ const studentModel = (sequelize, DataTypes) => {
       },
     },
 
+    image: {
+      type: DataTypes.STRING,
+      default: null,
+    },
+
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -81,9 +86,7 @@ const studentModel = (sequelize, DataTypes) => {
 
     previousScore: DataTypes.FLOAT,
 
-    averageBand: DataTypes.INTEGER,
-
-    totalAverageBand: DataTypes.INTEGER,
+    averageBands: DataTypes.FLOAT,
   });
 };
 
