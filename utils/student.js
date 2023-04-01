@@ -49,6 +49,25 @@ studentUtil.totalStudents = async (orgId) => {
   }
 };
 
+// get All Students in an Organization
+studentUtil.allStuByOrgId = async (orgId) => {
+  try {
+    const result = await student.findAll({
+      include: [
+        {
+          model: batch,
+          include: { model: organization, where: { id: orgId } },
+          required: true,
+        },
+      ],
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 // best students in the organization
 studentUtil.bestStudents = async (orgId) => {
   try {
@@ -180,7 +199,7 @@ studentUtil.bandScore = async (studentId) => {
 studentUtil.readById = async (studentId) => {
   try {
     const result = await student.findByPk(studentId, {
-      include: [{ model: organization }]
+      include: [{ model: organization }],
     });
     return result;
   } catch (err) {

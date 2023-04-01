@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const teacherUtil = require("../../utils/teacher");
 const teacherService = express.Router();
 
@@ -15,7 +16,9 @@ teacherService.post("/", async (req, res) => {
 // get all teacher in the organization
 teacherService.get("/", async (req, res) => {
   try {
-    const result = await teacherUtil.read(req.headers.organization);
+    const token = req.headers.authorization.split(" ")[1];
+    const organizationId = jwt.decode(token).organizationId;
+    const result = await teacherUtil.read(organizationId);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).send(err);
@@ -33,7 +36,9 @@ teacherService.get("/:teacherId", async (req, res) => {
       req.params.teacherId
     );
 
-    const students = await teacherUtil.taughtAndBandStudents(req.params.teacherId);
+    const students = await teacherUtil.taughtAndBandStudents(
+      req.params.teacherId
+    );
 
     res.status(201).send({ teacher, ...batches, ...students });
   } catch (err) {

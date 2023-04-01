@@ -26,8 +26,10 @@ adminService.get("/stats-one", async (req, res) => {
     const organizationId = admin.organizationId;
 
     const totalStudents = await studentUtil.totalStudents(organizationId);
-    const currentBatches = await batchUtil.currentBatches(organizationId);
-    const completeBatches = await batchUtil.completeBatches(organizationId);
+    const currentBatches = await batchUtil.currentBatchesCount(organizationId);
+    const completeBatches = await batchUtil.completeBatchesCount(
+      organizationId
+    );
     const totalTeachers = await teacherUtil.totalTeachers(organizationId);
     const result = {
       totalStudents,

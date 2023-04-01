@@ -1,6 +1,6 @@
 const { batch, student, teacher, organisation } = require("../models");
 const batchUtil = {};
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 
 // POST
 batchUtil.create = async (newBatch) => {
@@ -29,15 +29,21 @@ batchUtil.batchesWithStuAndTea = async (orgId) => {
   try {
     // get all batches
     const batches = await batch.findAll({
-      include: [{ model: organisation, where: { id: orgId }, required: true, attributes: [] }],
+      include: [
+        {
+          model: organisation,
+          where: { id: orgId },
+          required: true,
+          attributes: [],
+        },
+      ],
       order: [["id", "DESC"]],
-      raw: true
+      raw: true,
     });
     let batchesArr = []; // define new batch array
 
-    // get students and teacher by batch 
+    // get students and teacher by batch
     for (let batch of batches) {
-
       const students = await student.count({ where: { batchId: batch.id } });
       const teachers = await teacher.count({ where: { batchId: batch.id } });
       batchesArr.push({ batch, students, teachers });
@@ -47,7 +53,7 @@ batchUtil.batchesWithStuAndTea = async (orgId) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
 // GET by id
 batchUtil.readById = async (batchId) => {
@@ -59,42 +65,53 @@ batchUtil.readById = async (batchId) => {
   }
 };
 
-// get current batches by organization
-batchUtil.currentBatches = async (orgId) => {
+// get all current batches by organization
+batchUtil.batchesActive = async (orgId) => {
+  try {
+    const result = await batch.findAll({
+      where: {
+        active: true,
+      },
+      include: [{ model: organisation, where: { id: orgId }, required: true }],
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// get COUNT current batches by organization
+batchUtil.currentBatchesCount = async (orgId) => {
   try {
     const result = await batch.count({
       where: {
         active: true,
       },
-      include: [
-        { model: organisation, where: { id: orgId }, required: true }
-      ]
+      include: [{ model: organisation, where: { id: orgId }, required: true }],
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
-// get complete batches by organization
-batchUtil.completeBatches = async (orgId) => {
+// get COUNT complete batches by organization
+batchUtil.completeBatchesCount = async (orgId) => {
   try {
     const result = await batch.count({
       where: {
         active: false,
         endDate: {
-          [Op.lte]: new Date()
-        }
+          [Op.lte]: new Date(),
+        },
       },
-      include: [
-        { model: organisation, where: { id: orgId }, required: true }
-      ]
+      include: [{ model: organisation, where: { id: orgId }, required: true }],
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // get average band by teacher
 batchUtil.avgBand = async (teacherId) => {
@@ -103,15 +120,15 @@ batchUtil.avgBand = async (teacherId) => {
       include: [
         {
           model: teacher,
-          where: { id: teacherId }
-        }
-      ]
+          where: { id: teacherId },
+        },
+      ],
     });
     return batches;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // get batches by teacher
 batchUtil.getBatchesByTeacher = async (teacherId) => {
@@ -121,15 +138,15 @@ batchUtil.getBatchesByTeacher = async (teacherId) => {
       include: [
         {
           model: teacher,
-          where: { id: teacherId }
-        }
-      ]
+          where: { id: teacherId },
+        },
+      ],
     });
     return batches;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // PUT
 batchUtil.update = async (batchId, updateData) => {
