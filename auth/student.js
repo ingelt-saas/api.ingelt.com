@@ -76,4 +76,86 @@ const authorizationStudent = async (req, res) => {
   }
 }
 
-module.exports = { authenticateStudent, studentEmailCheck, authorizationStudent };
+// student reset email check
+const studentResetEmailCheck = async (req, res) => {
+
+  const email = req.body.email;
+
+  const randomCodeFunc = () => {
+    let chars = '0123456789';
+    let result = '';
+    for (let i = 6; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
+  }
+  let randomCode = randomCodeFunc();
+  const token = jwt.sign({ email: email, code: randomCode }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+
+  try {
+    const user = await student.findOne({ where: { email: email } });
+    if (!user) {
+      res.status(404).send({ message: 'Student not found.' });
+    } else {
+      res.send({ token });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+// student confirmation code verify
+const studentResetCodeVerify = async (req, res) => {
+  const token = req.body.token;
+  const email = req.body.email;
+  const code = req.body.code;
+  try {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
+      if (err) {
+        res.status(401).send({ message: 'Verification token time failed' });
+      } else {
+        if (decode.email === email && parseInt(decode.code) === parseInt(code)) {
+          res.send({ message: 'Successfully verify' });
+        } else {
+          res.status(401).send({ message: 'Invalid Code' });
+        }
+      }
+    });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+// student confirmation code verify
+const studentResetPasswordUpdate = async (req, res) => {
+
+  const token = req.body.token;
+  let password = req.body.password;
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decode) => {
+      if (err) {
+        res.status(401).send({ message: 'Verification token time failed' });
+      } else {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const result = await student.update({ password: hashedPassword }, {
+          where: { email: decode.email }
+        });
+        res.send(result);
+      }
+    });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+module.exports = {
+  authenticateStudent,
+  studentEmailCheck,
+  authorizationStudent,
+  studentResetEmailCheck,
+  studentResetCodeVerify,
+  studentResetPasswordUpdate
+};
