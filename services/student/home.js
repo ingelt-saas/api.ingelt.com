@@ -10,7 +10,8 @@ homeService.get("/", async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const student = jwt.decode(token);
-    res.status(200).json(student);
+    const result = await studentUtil.readById(student.id);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).send(err);
   }

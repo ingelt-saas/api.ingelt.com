@@ -53,7 +53,7 @@ submissionService.delete('/:submissionId', async (req, res) => {
     // get the file
     const findSubmission = await submissionUtil.readById(req.params.submissionId);
     // delete file
-    await deleteFile(`uploads/submissions/${findSubmission?.file}`);
+    findSubmission?.file && await deleteFile(`uploads/submissions/${findSubmission?.file}`);
     // delete data from db
     const result = await submissionUtil.delete(req.params.submissionId);
     res.json(result);
