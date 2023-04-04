@@ -4,6 +4,9 @@ const studentUtil = require("../../utils/student");
 const settingsService = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const path = require("path");
+const awsUpload = require('../../aws/upload');
+const deleteFile = require("../../uploads/deleteFile");
 
 // PUT student by id
 settingsService.put("/", async (req, res) => {
@@ -24,8 +27,16 @@ settingsService.put('/updateProfile', fileUploadService('profile').single('image
     const student = req.headers.authorization.split(" ")[1];
     const studentId = jwt.decode(student).id;
     const file = req.file;
-    await studentUtil.update(studentId, { image: file.filename });
-    res.send({ filename: file.filename });
+
+    awsUpload(path.join(__dirname, file.path), 'student/profile', file.filename, async (err, data) => {
+      deleteFile(`profile/${file.filename}`); // file delete
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        await studentUtil.update(studentId, { image: data.Location }); // update image in db
+        res.json({ filename: data.Location });
+      }
+    });
   } catch (err) {
     res.status(400).send(err);
   }
