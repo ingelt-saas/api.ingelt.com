@@ -2,6 +2,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { student } = require("../models");
+const passwordReset = require("../mail/passwordReset");
 
 const authenticateStudent = async (req, res) => {
 
@@ -81,23 +82,21 @@ const studentResetEmailCheck = async (req, res) => {
 
   const email = req.body.email;
 
-  const randomCodeFunc = () => {
-    let chars = '0123456789';
-    let result = '';
-    for (let i = 6; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
-    return result;
-  }
-  let randomCode = randomCodeFunc();
-  const token = jwt.sign({ email: email, code: randomCode }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
-  });
-
   try {
-    const user = await student.findOne({ where: { email: email } });
-    if (!user) {
+
+    const user = await student.findOne({ where: { email: email } }); // find student using email
+
+    if (!user) { // if the student doesn't exist
       res.status(404).send({ message: 'Student not found.' });
     } else {
-      res.send({ token });
+
+      const token = jwt.sign({ email: email }, process.env.JWT_SECRET, {
+        expiresIn: "2h",
+      });
+
+      const resetlink = `${process.env.CLIENT_URL || 'http://localhost:3000'}/auth/reset-password?token=${token}`;
+      await passwordReset(email, resetlink); // password reset email
+      res.send({ message: 'Successfully you got a reset mail.' });
     }
   } catch (err) {
     res.status(400).send(err);
@@ -107,18 +106,12 @@ const studentResetEmailCheck = async (req, res) => {
 // student confirmation code verify
 const studentResetCodeVerify = async (req, res) => {
   const token = req.body.token;
-  const email = req.body.email;
-  const code = req.body.code;
   try {
     jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
       if (err) {
         res.status(401).send({ message: 'Verification token time failed' });
       } else {
-        if (decode.email === email && parseInt(decode.code) === parseInt(code)) {
-          res.send({ message: 'Successfully verify' });
-        } else {
-          res.status(401).send({ message: 'Invalid Code' });
-        }
+        res.send({ message: 'Successfully verify' });
       }
     });
   } catch (err) {
