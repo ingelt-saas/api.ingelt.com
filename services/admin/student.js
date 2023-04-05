@@ -12,6 +12,17 @@ studentService.post("/", async (req, res) => {
   }
 });
 
+// search student 
+studentService.get('/search', async (req, res) => {
+  const value = req.query.s;
+  try {
+    const result = await studentUtil.search(value);
+    res.send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // get all student by batch
 studentService.get("/batch/:batchId", async (req, res) => {
   try {

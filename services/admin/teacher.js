@@ -22,6 +22,17 @@ teacherService.get("/", async (req, res) => {
   }
 });
 
+// search teacher
+teacherService.get('/search', async (req, res) => {
+  try {
+    const searchQuery = req.query.s;
+    const result = await teacherUtil.search(searchQuery);
+    res.send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+})
+
 // get a teacher by teacher id and additional info
 teacherService.get("/:teacherId", async (req, res) => {
   try {

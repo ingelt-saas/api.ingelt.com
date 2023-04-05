@@ -75,6 +75,20 @@ teacherUtil.read = async (orgId) => {
   }
 };
 
+// search teacher
+teacherUtil.search = async (searchQuery) => {
+  try {
+    const result = await teacher.findAll({
+      where: {
+        name: { [Op.like]: `%${searchQuery}%` }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // GET by id
 teacherUtil.readById = async (teacherId) => {
   try {

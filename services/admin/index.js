@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const verifyJWT = require("../../middleware/verifyJWT");
 
 // Admin Service Import
 const homeService = require("./home");
