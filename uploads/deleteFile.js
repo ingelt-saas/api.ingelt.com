@@ -1,21 +1,17 @@
 const fs = require('fs');
 
-const deleteFile = (filePath) => new Promise((resolve, reject) => {
+const deleteFile = (filePath) => {
     try {
-        if (fs.existsSync(filePath)) {
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve('File deleted successfully');
-                }
-            });
-        } else {
-            resolve('');
-        }
+        fs.unlink(`uploads/${filePath}`, (err) => {
+            if (err) {
+                throw err;
+            } else {
+                return 'File deleted successfully';
+            }
+        });
     } catch (err) {
-        reject(err);
+        throw err;
     }
-});
+};
 
 module.exports = deleteFile;
