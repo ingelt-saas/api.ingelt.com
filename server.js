@@ -28,6 +28,10 @@ app.use("/teacher", teacherServices);
 const auth = require("./auth");
 app.use("/auth", auth);
 
+// get images route
+const image = require('./assets/getimage');
+app.use('/images', image);
+
 // DB and Server Config
 const PORT = process.env.PORT || 8000;
 const db = require("./models");
