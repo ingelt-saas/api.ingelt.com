@@ -16,5 +16,6 @@ router.use("/student", studentService);
 router.use("/teacher", teacherService);
 router.use("/batch", batchService);
 router.use("/mockTest", mockTestService);
+router.use("/assignment", mockTestService);
 
 module.exports = router;

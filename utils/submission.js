@@ -19,7 +19,7 @@ submissionUtil.getSubmissionByAssignOrStu = async (id) => {
 // get submission by assignment
 submissionUtil.getSubmissionByAssignment = async (assignmentId) => {
   try {
-    const result = await submission.findAll({ where: { assignmentId }, order: [['id', 'ASC']] });
+    const result = await submission.findAll({ where: { assignmentId }, order: [['id', 'ASC']], plain: true });
     return result;
   } catch (err) {
     throw err;
