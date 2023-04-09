@@ -21,7 +21,7 @@ const organisationModel = (sequelize, DataTypes) => {
         allowNull: true,
       },
 
-      phoneNumber: {
+      phoneNo: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

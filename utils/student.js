@@ -30,6 +30,20 @@ studentUtil.read = async () => {
   }
 };
 
+// search students
+studentUtil.search = async (searchValue) => {
+  try {
+    const result = await student.findAll({
+      where: {
+        name: { [Op.like]: `%${searchValue}%` }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // get total student in the organization
 studentUtil.totalStudents = async (orgId) => {
   try {

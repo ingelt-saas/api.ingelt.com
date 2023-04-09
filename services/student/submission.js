@@ -1,11 +1,9 @@
 const express = require("express");
 const submissionService = express.Router();
 const submissionUtil = require("../../utils/submission");
-const uploadService = require('../../uploads/index');
-const deleteFile = require("../../uploads/deleteFile");
 
 // create submission
-submissionService.post("/", uploadService('submissions').single('file'), async (req, res) => {
+submissionService.post("/", async (req, res) => {
   try {
 
     const student = req.headers.authorization.split(" ")[1];

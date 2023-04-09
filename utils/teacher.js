@@ -34,20 +34,28 @@ teacherUtil.create = async (newTeacher) => {
   }
 };
 
+// add teacher in a batch
+teacherUtil.addTeacherInBatch = async (data) => {
+  try {
+    const result = await BatchesTeachers.create(data);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // GET all teacher by batch id
 teacherUtil.getTeachersByBatch = async (batchId) => {
   try {
-    const result = await teacher.findAll({
+    const result = await BatchesTeachers.findAll({
+      where: { batchId: batchId },
       include: {
-        model: batch,
-        as: "batches",
-      },
-      where: {
-        batchId: batchId,
+        model: teacher
       },
     });
     return result;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };
@@ -74,6 +82,20 @@ teacherUtil.read = async (orgId) => {
     throw err;
   }
 };
+
+// search teacher
+teacherUtil.search = async (searchQuery) => {
+  try {
+    const result = await teacher.findAll({
+      where: {
+        name: { [Op.like]: `%${searchQuery}%` }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // GET by id
 teacherUtil.readById = async (teacherId) => {
@@ -104,6 +126,7 @@ teacherUtil.batchesUpdated = async (teacherId, updateData) => {
 
 // get live batches and complete batches by teacher id
 teacherUtil.liveAndCompleteBatches = async (teacherId) => {
+
   try {
     // get teacher by teacher id
     const teacherInfo = await teacher.findByPk(teacherId, {
@@ -168,7 +191,7 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
       bandStudents = await student.count({
         where: {
           batchId: batch.id,
-          totalAverageBand: {
+          averageBands: {
             [Op.gte]: 7.5,
           },
         },
@@ -205,6 +228,52 @@ teacherUtil.totalTeachers = async (orgId) => {
     throw err;
   }
 };
+
+// delete teacher form batch
+teacherUtil.deleteTeacherFromBatch = async (batchId, teacherId) => {
+  try {
+    const result = await BatchesTeachers.destroy({
+      where: {
+        batchId: batchId,
+        teacherId: teacherId,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// teacher subject update
+teacherUtil.teacherSubjectUpdate = async (batchId, teacherId, subject) => {
+  try {
+    const getSubject = await BatchesTeachers.findOne({
+      where: {
+        batchId: batchId,
+        teacherId: teacherId,
+      },
+      plain: true,
+    });
+
+    let newSubjects = [];
+    const subjects = getSubject.subject.split(';');
+    if (subjects.includes(subject)) {
+      newSubjects = subjects.filter(i => i !== subject);
+    } else {
+      newSubjects = [...subjects, subject];
+    }
+
+    const result = await BatchesTeachers.update({ subject: newSubjects.join(';') }, {
+      where: {
+        batchId: batchId,
+        teacherId: teacherId,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // PUT
 teacherUtil.update = async (teacherId, updateData) => {

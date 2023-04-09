@@ -1,13 +1,13 @@
 const s3 = require('./config/aws');
 
-module.exports = (file, filePath, filename, callback) => {
+module.exports = (file, filePath, callback) => {
     try {
-
+        const filename = `${Date.now()}-${new Date().getSeconds()}`;
         const params = {
-            Bucket: 'ingelt-storage',
+            Bucket: process.env.AWS_S3_BUCKET,
             Key: `${filePath}/${filename}`,
-            Body: file,
-            ACL: 'public-read-write'
+            Body: file.buffer,
+            ContentType: file.mimetype
         }
         return s3.upload(params, callback);
     } catch (err) {
