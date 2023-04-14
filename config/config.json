@@ -8,6 +8,13 @@
     },
     "development2": {
         "username": "root",
+        "password": "8565887271",
+        "database": "ingelt_server",
+        "dialect": "mysql",
+        "logging": false
+    },
+    "development3": {
+        "username": "root",
         "password": "Nish2002",
         "database": "ingelt_dev",
         "dialect": "mysql",
