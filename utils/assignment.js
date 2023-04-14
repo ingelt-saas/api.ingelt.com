@@ -14,7 +14,7 @@ assignmentUtil.create = async (newAssignment) => {
 // get assignments by batch id
 assignmentUtil.getAssignmentsByBatch = async (batchId) => {
   try {
-    const result = await assignment.findAll({ where: { batchId: batchId }, order: [['id', 'DESC']] });
+    const result = await assignment.findAll({ where: { batchId: batchId }, order: [['id', 'DESC']], plain: true });
     return result;
   } catch (err) {
     throw err;

@@ -14,39 +14,14 @@ studentService.post("/", async (req, res) => {
   }
 });
 
-// get all batches name using organization id
-studentService.get("/batches", async (req, res) => {
+// search student
+studentService.get("/search", async (req, res) => {
+  const value = req.query.s;
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const orgId = jwt.decode(token).organizationId;
-
-    // All Batches
-    let result = await batchUtil.batchesActive(orgId);
-    result = result.map((batch) => {
-      return {
-        id: batch.id,
-        name: batch.name,
-      };
-    });
-
-    res.status(201).json(result);
+    const result = await studentUtil.search(value);
+    res.send(result);
   } catch (err) {
-    console.log(err);
-    res.status(400).json(err);
-  }
-});
-
-// get all students by orgId
-studentService.get("/all", async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const orgId = jwt.decode(token).organizationId;
-
-    const result = await studentUtil.allStuByOrgId(orgId);
-    res.status(201).json(result);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json(err);
+    res.status(400).send(err);
   }
 });
 

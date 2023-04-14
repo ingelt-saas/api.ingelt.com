@@ -1,12 +1,14 @@
 const express = require("express");
-const fileUploadService = require("../../uploads");
 const studentUtil = require("../../utils/student");
 const settingsService = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const path = require("path");
 const awsUpload = require('../../aws/upload');
-const deleteFile = require("../../uploads/deleteFile");
+const { memoryStorage } = require("multer");
+const multer = require("multer");
+
+const storage = memoryStorage();
+const upload = multer({ storage });
 
 // PUT student by id
 settingsService.put("/", async (req, res) => {
@@ -22,19 +24,18 @@ settingsService.put("/", async (req, res) => {
 });
 
 // update profile picture
-settingsService.put('/updateProfile', fileUploadService('profile').single('image'), async (req, res) => {
+settingsService.put('/updateProfile', upload.single('image'), async (req, res) => {
   try {
     const student = req.headers.authorization.split(" ")[1];
     const studentId = jwt.decode(student).id;
     const file = req.file;
 
-    awsUpload(path.join(__dirname, file.path), 'student/profile', file.filename, async (err, data) => {
-      deleteFile(`profile/${file.filename}`); // file delete
+    awsUpload(file, 'student/profile', async (err, data) => {
       if (err) {
         res.status(400).send(err);
       } else {
-        await studentUtil.update(studentId, { image: data.Location }); // update image in db
-        res.json({ filename: data.Location });
+        await studentUtil.update(studentId, { image: data.key }); // update image in db
+        res.json({ filename: data.key });
       }
     });
   } catch (err) {

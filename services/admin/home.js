@@ -65,7 +65,7 @@ adminService.get("/enrollmentStudent", async (req, res) => {
 // get best students in the organization
 adminService.get("/bestStudents", async (req, res) => {
   try {
-    const result = await studentUtil.bestStudents(req.headers.organization);
+    const result = await studentUtil.bestStudents(req.decoded.id);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
