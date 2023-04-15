@@ -1,11 +1,11 @@
-const mailer = require('./config/nodemailer');
+const mailer = require("./config/nodemailer");
 
 module.exports = (email, resetlink) => {
-    const options = {
-        from: process.env.EMAIL || "ingeltemails@gmail.com",
-        to: email,
-        subject: 'InGelt Password Reset Link',
-        html: `<!doctype html>
+  const options = {
+    from: process.env.EMAIL || "ingeltemails@gmail.com",
+    to: email,
+    subject: "InGelt Password Reset Link",
+    html: `<!doctype html>
                 <html lang="en-US">
                     <head>
                         <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
@@ -85,6 +85,6 @@ module.exports = (email, resetlink) => {
                         <!--/100% body table-->
                     </body>
                 </html>`,
-    };
-    return mailer.transporter.sendMail(options);
-}
+  };
+  return mailer.transporter.sendMail(options);
+};

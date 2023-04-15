@@ -14,6 +14,7 @@ const orgService = require("./organization");
 const submissionService = require("./submission");
 const teacherService = require("./teacher");
 const adminService = require("./admin");
+const subscriberService = require("./subscriber");
 
 // InGelt Admin Router
 router.use("/admin", adminService);
@@ -51,6 +52,7 @@ router.use("/submission", submissionService);
 // InGelt Teacher Router
 router.use("/teacher", teacherService);
 
-
+// InGelt Subscriber Router
+router.use("/subscriber", subscriberService);
 
 module.exports = router;
