@@ -11,6 +11,6 @@ module.exports = (file, filePath, callback) => {
         }
         return s3.upload(params, callback);
     } catch (err) {
-        return err;
+        throw err;
     }
 }
