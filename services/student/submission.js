@@ -55,7 +55,7 @@ submissionService.delete("/:submissionId", async (req, res) => {
       req.params.submissionId
     );
     // delete file
-    findSubmission?.file &&
+    findSubmission.file &&
       (await deleteFile(`uploads/submissions/${findSubmission.file}`));
     // delete data from db
     const result = await submissionUtil.delete(req.params.submissionId);

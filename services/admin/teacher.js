@@ -13,15 +13,15 @@ teacherService.post("/", async (req, res) => {
   }
 });
 
-// add teacher in a batch 
-teacherService.post('/add-batch', async (req, res) => {
+// add teacher in a batch
+teacherService.post("/add-batch", async (req, res) => {
   try {
     const result = await teacherUtil.addTeacherInBatch(req.body);
     res.send(result);
   } catch (err) {
     res.status(err).send(err);
   }
-})
+});
 
 // get all teacher in the organization
 teacherService.get("/", async (req, res) => {
@@ -36,7 +36,7 @@ teacherService.get("/", async (req, res) => {
 });
 
 // search teacher
-teacherService.get('/search', async (req, res) => {
+teacherService.get("/search", async (req, res) => {
   try {
     const searchQuery = req.query.s;
     const result = await teacherUtil.search(searchQuery);
@@ -44,13 +44,15 @@ teacherService.get('/search', async (req, res) => {
   } catch (err) {
     res.status(400).send(err);
   }
-})
+});
 
 // get a teacher by teacher id and additional info
 teacherService.get("/:teacherId", async (req, res) => {
   try {
     // get teacher
-    const teacher = (await teacherUtil.readById(req.params.teacherId))?.get({ plain: true });
+    const teacher = (await teacherUtil.readById(req.params.teacherId)).get({
+      plain: true,
+    });
 
     // get complete batch and live batch by teacher id
     const batches = await teacherUtil.liveAndCompleteBatches(
@@ -79,12 +81,16 @@ teacherService.get("/batch/:batchId", async (req, res) => {
 });
 
 // teacher subject updated
-teacherService.put('/:batchId/:teacherId', async (req, res) => {
+teacherService.put("/:batchId/:teacherId", async (req, res) => {
   const batchId = req.params.batchId;
   const teacherId = req.params.teacherId;
   const subject = req.body.subject;
   try {
-    const result = await teacherUtil.teacherSubjectUpdate(batchId, teacherId, subject);
+    const result = await teacherUtil.teacherSubjectUpdate(
+      batchId,
+      teacherId,
+      subject
+    );
     res.send(result);
   } catch (err) {
     res.status(400).send(err);
@@ -101,10 +107,13 @@ teacherService.put("/:teacherId", async (req, res) => {
   }
 });
 
-// delete teacher from a batch 
-teacherService.delete('/:batchId/:teacherId', async (req, res) => {
+// delete teacher from a batch
+teacherService.delete("/:batchId/:teacherId", async (req, res) => {
   try {
-    const result = await teacherUtil.deleteTeacherFromBatch(req.params.batchId, req.params.teacherId);
+    const result = await teacherUtil.deleteTeacherFromBatch(
+      req.params.batchId,
+      req.params.teacherId
+    );
     res.send(result);
   } catch (err) {
     res.status(400).send(err);
