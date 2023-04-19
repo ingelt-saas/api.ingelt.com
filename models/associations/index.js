@@ -115,6 +115,15 @@ MockTest.belongsTo(Batch, {
   },
 });
 
+// MOCKTEST - TEACHER
+Teacher.hasMany(MockTest);
+MockTest.belongsTo(Teacher, {
+  foreignKey: {
+    allowNull: false,
+    type: Sequelize.UUID,
+  },
+});
+
 // MOCKTESTMARKS - MOCKTEST - STUDENT
 MockTest.hasMany(MockTestMarks);
 MockTestMarks.belongsTo(MockTest);
