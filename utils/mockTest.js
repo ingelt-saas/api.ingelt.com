@@ -27,6 +27,22 @@ mockTestUtil.getMockTestsByBatch = async (batchId) => {
   }
 };
 
+// get mocktest by teacher and batch 
+mockTestUtil.getMockTestsByTeaAndBatch = async (teacherId, batchId) => {
+  try {
+    const result = await mockTest.findAll({
+      where: {
+        teacherId: teacherId,
+        batchId: batchId,
+      },
+      order: [['createdAt', 'DESC']]
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // get mock test and avg band
 mockTestUtil.mockTestAvgBand = async (batchId, orgId) => {
   try {
