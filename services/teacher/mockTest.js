@@ -13,10 +13,11 @@ mockTestService.post('/', async (req, res) => {
     }
 });
 
-// get mock test by batch
+// get mock test by batch and teacher
 mockTestService.get('/batch/:batchId', async (req, res) => {
     try {
-        const result = await mockTestUtil.getMockTestsByBatch(req.params.batchId);
+        const teacherId = req.decoded.id;
+        const result = await mockTestUtil.getMockTestsByTeaAndBatch(teacherId, req.params.batchId);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).send(err);

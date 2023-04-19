@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organization } = require("../models");
+const { student, mockTestMarks, batch, organization, mockTest } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -217,7 +217,10 @@ studentUtil.readById = async (studentId) => {
         {
           model: batch,
           attributes: ['name', 'id'],
-          include: { model: organization },
+          include: [
+            { model: organization, attributes: ['name', 'id'] },
+            { model: mockTest, attributes: ['name', 'id'] }
+          ],
         }
       ],
     });
