@@ -213,7 +213,13 @@ studentUtil.bandScore = async (studentId) => {
 studentUtil.readById = async (studentId) => {
   try {
     const result = await student.findByPk(studentId, {
-      include: [{ model: organization }],
+      include: [
+        {
+          model: batch,
+          attributes: ['name', 'id'],
+          include: { model: organization },
+        }
+      ],
     });
     return result;
   } catch (err) {
