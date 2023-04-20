@@ -7,7 +7,7 @@ subscriberUtil.create = async (data) => {
     const newSubscriber = await subscriber.create(data);
     return newSubscriber;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

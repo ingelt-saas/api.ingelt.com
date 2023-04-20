@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organization } = require("../models");
+const { student, mockTestMarks, batch, organization, mockTest } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -213,7 +213,16 @@ studentUtil.bandScore = async (studentId) => {
 studentUtil.readById = async (studentId) => {
   try {
     const result = await student.findByPk(studentId, {
-      include: [{ model: organization }],
+      include: [
+        {
+          model: batch,
+          attributes: ['name', 'id'],
+          include: [
+            { model: organization, attributes: ['name', 'id'] },
+            { model: mockTest, attributes: ['name', 'id'] }
+          ],
+        }
+      ],
     });
     return result;
   } catch (err) {
