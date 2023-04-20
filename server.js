@@ -29,12 +29,12 @@ const auth = require("./auth");
 app.use("/auth", auth);
 
 // get images route
-const image = require('./assets/getimage');
-app.use('/images', image);
+const image = require("./assets/getimage");
+app.use("/images", image);
 
 // mail service
-const mailService = require('./mail');
-app.use('/mail', mailService);
+const mailService = require("./mail");
+app.use("/mail", mailService);
 
 // DB and Server Config
 const PORT = process.env.PORT || 8000;
