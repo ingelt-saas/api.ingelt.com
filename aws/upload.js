@@ -1,4 +1,4 @@
-const s3 = require('./config/aws');
+const s3 = require("./config/aws");
 
 module.exports = (file, filePath, callback) => {
     try {
@@ -11,6 +11,6 @@ module.exports = (file, filePath, callback) => {
         }
         return s3.upload(params, callback);
     } catch (err) {
-        throw err;
+        return err;
     }
 }
