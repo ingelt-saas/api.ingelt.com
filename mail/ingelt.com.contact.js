@@ -7,6 +7,8 @@ const contactMail = async (data) => {
     subject: "Contact Queries",
     text: `
         Name: ${data?.name}
+
+        Phone Number: ${data?.phone}
         
         Email: ${data?.email}
 
