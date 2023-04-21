@@ -6,13 +6,13 @@ const contactMail = async (data) => {
         to: 'nish2002.sharma@gmail.com',
         subject: 'Contact Queries',
         text: `
-        Name: ${data?.name}
+        Name: ${data.name}
         
-        Email: ${data?.email}
+        Email: ${data.email}
 
-        Subject: ${data?.subject}
+        Subject: ${data.subject}
 
-        Message: ${data?.message}
+        Message: ${data.message}
         
         `,
     }

@@ -1,4 +1,4 @@
-const { assignment } = require("../models");
+const { assignment, submission } = require("../models");
 const assignmentUtil = {};
 
 // POST
@@ -15,6 +15,24 @@ assignmentUtil.create = async (newAssignment) => {
 assignmentUtil.getAssignmentsByBatch = async (batchId) => {
   try {
     const result = await assignment.findAll({ where: { batchId: batchId }, order: [['id', 'DESC']], plain: true });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// get assignments and assignment submission by batch 
+assignmentUtil.getAssignmentAndSubmission = async (batchId) => {
+  try {
+    const result = await assignment.findAll({
+      where: {
+        batchId: batchId,
+      },
+      include: [
+        { model: submission, required: false, attributes: ['id'] }
+      ],
+      order: [['createdAt', 'ASC']]
+    });
     return result;
   } catch (err) {
     throw err;
