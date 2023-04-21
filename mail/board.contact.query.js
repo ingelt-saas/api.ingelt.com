@@ -3,18 +3,14 @@ const mailer = require("./config/nodemailer");
 const contactMail = async (data) => {
   const options = {
     from: process.env.EMAIL || "ingeltemails@gmail.com",
-    to: "ingeltmarketing@gmail.com",
-    subject: "Contact Queries",
+    to: "contact@ingelt.com",
+    subject: "board.ingelt.com Contact Query",
     text: `
-        Name: ${data.name}
-
-        Phone Number: ${data.phone}
+        Name: ${data?.name}
         
-        Email: ${data.email}
+        Email: ${data?.email}
 
-        Subject: ${data.subject}
-
-        Message: ${data.message}
+        Message: ${data?.message}
         
         `,
   };
