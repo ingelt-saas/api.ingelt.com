@@ -1,4 +1,6 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const batchUtil = require("../../utils/batch");
 const studentUtil = require("../../utils/student");
 const studentService = express.Router();
 
@@ -12,8 +14,8 @@ studentService.post("/", async (req, res) => {
   }
 });
 
-// search student 
-studentService.get('/search', async (req, res) => {
+// search student
+studentService.get("/search", async (req, res) => {
   const value = req.query.s;
   try {
     const result = await studentUtil.search(value);

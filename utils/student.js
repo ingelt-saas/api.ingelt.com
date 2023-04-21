@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organization } = require("../models");
+const { student, mockTestMarks, batch, organization, mockTest } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -48,6 +48,25 @@ studentUtil.search = async (searchValue) => {
 studentUtil.totalStudents = async (orgId) => {
   try {
     const result = await student.count({
+      include: [
+        {
+          model: batch,
+          include: { model: organization, where: { id: orgId } },
+          required: true,
+        },
+      ],
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+// get All Students in an Organization
+studentUtil.allStuByOrgId = async (orgId) => {
+  try {
+    const result = await student.findAll({
       include: [
         {
           model: batch,
@@ -194,7 +213,16 @@ studentUtil.bandScore = async (studentId) => {
 studentUtil.readById = async (studentId) => {
   try {
     const result = await student.findByPk(studentId, {
-      include: [{ model: organization }]
+      include: [
+        {
+          model: batch,
+          attributes: ['name', 'id'],
+          include: [
+            { model: organization, attributes: ['name', 'id'] },
+            { model: mockTest, attributes: ['name', 'id'] }
+          ],
+        }
+      ],
     });
     return result;
   } catch (err) {

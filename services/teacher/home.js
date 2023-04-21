@@ -34,9 +34,10 @@ homeService.put("/updateClassLink/:batchId", async (req, res) => {
 });
 
 // average band by teacher
-homeService.get("/avgBand/:teacherId", async (req, res) => {
+homeService.get("/avgBand", async (req, res) => {
   try {
-    const result = await batchUtil.avgBand(req.params.teacherId);
+    const teacherId = req.decoded.id
+    const result = await batchUtil.avgBand(teacherId);
     res.status(201).json(result);
   } catch (err) {
     console.log(err);
