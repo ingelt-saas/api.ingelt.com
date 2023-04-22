@@ -17,7 +17,7 @@ const MockTest = db.mockTest;
 const MockTestMarks = db.mockTestMarks;
 const OrgImages = db.orgImages;
 const BatchesTeachers = db.BatchesTeachers;
-const StudentApplied = db.studentApplied
+const StudentApplied = db.studentApplied;
 
 // Associations
 
