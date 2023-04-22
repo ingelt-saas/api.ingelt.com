@@ -7,7 +7,7 @@ const Admin = db.admin;
 const Assignment = db.assignment;
 const Batch = db.batch;
 const Discussion = db.discussion;
-const Document = db.document;
+const Library = db.library;
 const Notes = db.notes;
 const Organisation = db.organisation;
 const Student = db.student;
@@ -24,15 +24,6 @@ const StudentApplied = db.studentApplied;
 // ORGANISATION ADMIN
 Organisation.hasOne(Admin);
 Admin.belongsTo(Organisation, {
-  foreignKey: {
-    allowNull: false,
-    type: Sequelize.UUID,
-  },
-});
-
-// ORGANISATION DOCUMENT
-Organisation.hasMany(Document);
-Document.belongsTo(Organisation, {
   foreignKey: {
     allowNull: false,
     type: Sequelize.UUID,
@@ -57,7 +48,6 @@ BatchesTeachers.belongsTo(Batch);
 Teacher.hasMany(BatchesTeachers);
 BatchesTeachers.belongsTo(Teacher);
 
-
 // BATCH STUDENT
 Batch.hasMany(Student);
 Student.hasOne(Batch, {
@@ -66,25 +56,9 @@ Student.hasOne(Batch, {
   },
 });
 
-// BATCH - DISCUSSION
-Batch.hasMany(Discussion);
-Discussion.belongsTo(Batch, {
-  foreignKey: {
-    allowNull: false,
-    type: Sequelize.UUID,
-  },
-});
-
 // BATCH - NOTES - TEACHER
-Batch.hasMany(Notes);
-Teacher.hasMany(Notes);
-Notes.belongsTo(Batch, {
-  foreignKey: {
-    allowNull: false,
-    type: Sequelize.UUID,
-  },
-});
-Notes.belongsTo(Teacher, {
+Organisation.hasMany(Notes);
+Notes.belongsTo(Organisation, {
   foreignKey: {
     allowNull: false,
     type: Sequelize.UUID,

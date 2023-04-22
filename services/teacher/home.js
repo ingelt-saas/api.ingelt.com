@@ -58,7 +58,7 @@ homeService.get("/batches/:teacherId", async (req, res) => {
 // get students and assignments by batch id
 homeService.get("/assignmentsAndStudents/:batchId", async (req, res) => {
   try {
-    const assignments = await assignmentUtil.getAssignmentsByBatch(
+    const assignments = await assignmentUtil.getAssignmentAndSubmission(
       req.params.batchId
     );
     const students = await studentUtil.getStudentsByBatch(req.params.batchId);
