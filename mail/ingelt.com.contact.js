@@ -6,15 +6,15 @@ const contactMail = async (data) => {
     to: "ingeltmarketing@gmail.com",
     subject: "Contact Queries",
     text: `
-        Name: ${data?.name}
+        Name: ${data.name}
 
-        Phone Number: ${data?.phone}
+        Phone Number: ${data.phone}
         
-        Email: ${data?.email}
+        Email: ${data.email}
 
-        Subject: ${data?.subject}
+        Subject: ${data.subject}
 
-        Message: ${data?.message}
+        Message: ${data.message}
         
         `,
   };
