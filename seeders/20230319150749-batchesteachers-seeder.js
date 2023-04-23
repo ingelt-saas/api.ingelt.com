@@ -9,24 +9,45 @@ module.exports = {
         {
           batchId: "BAT01",
           teacherId: "TEA001",
-          subject: "Maths",
+          subject: "Reading",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           batchId: "BAT01",
           teacherId: "TEA002",
-          subject: "Science",
+          subject: "Writing",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          batchId: "BAT01",
+          teacherId: "TEA003",
+          subject: "Listening",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          batchId: "BAT01",
+          teacherId: "TEA004",
+          subject: "Speaking",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           batchId: "BAT02",
           teacherId: "TEA001",
-          subject: "Maths",
+          subject: "Reading",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          batchId: "BAT02",
+          teacherId: "TEA004",
+          subject: "Writing",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
       ],
       {}
     );

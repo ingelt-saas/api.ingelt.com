@@ -8,15 +8,6 @@ const discussionModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
-      batchId: {
-        type: DataTypes.UUID,
-        unique: false,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "batch id is required" },
-        },
-      },
-
       senderId: {
         type: DataTypes.UUID,
       },

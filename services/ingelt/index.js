@@ -6,10 +6,10 @@ const studentService = require("./student");
 const assignmentService = require("./assignment");
 const batchService = require("./batch");
 const discussionService = require("./discussion");
-const docService = require("./document");
 const mockTestService = require("./mockTest");
 const testMarksService = require("./mockTestMarks");
 const notesService = require("./notes");
+const libraryService = require("./library");
 const orgService = require("./organization");
 const submissionService = require("./submission");
 const teacherService = require("./teacher");
@@ -31,9 +31,6 @@ router.use("/batch", batchService);
 // InGelt Discussion Router
 router.use("/discussion", discussionService);
 
-// InGelt Document Router
-router.use("/document", docService);
-
 // InGelt Mock Test Router
 router.use("/mocktest", mockTestService);
 
@@ -42,6 +39,9 @@ router.use("/mocktestmarks", testMarksService);
 
 // InGelt Notes Router
 router.use("/notes", notesService);
+
+// InGelt Library Router
+router.use("/library", libraryService);
 
 // InGelt Organization Router
 router.use("/organization", orgService);

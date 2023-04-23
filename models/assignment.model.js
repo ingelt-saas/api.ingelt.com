@@ -14,6 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
 
+    teacherId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      validate: {
+        notNull: { msg: "teacher id is required" },
+      },
+    },
+
     name: {
       type: DataTypes.STRING,
       allowNull: false,

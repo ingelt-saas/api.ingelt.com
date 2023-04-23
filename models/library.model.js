@@ -1,6 +1,6 @@
-const documentModel = (sequelize, DataTypes) => {
+const libraryModel = (sequelize, DataTypes) => {
   return sequelize.define(
-    "document",
+    "library",
     {
       id: {
         type: DataTypes.UUID,
@@ -25,4 +25,4 @@ const documentModel = (sequelize, DataTypes) => {
   );
 };
 
-module.exports = documentModel;
+module.exports = libraryModel;
