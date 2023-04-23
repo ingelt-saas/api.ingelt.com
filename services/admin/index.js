@@ -9,6 +9,7 @@ const libraryService = require("./library");
 const batchService = require("./batch");
 const mockTestService = require("./mockTest");
 const settingsService = require("./settings");
+const authenticateAdmin = require("../../auth/admin");
 
 router.use("/", homeService);
 router.use("/student", studentService);
@@ -18,5 +19,8 @@ router.use("/batch", batchService);
 router.use("/mockTest", mockTestService);
 router.use("/assignment", mockTestService);
 router.use("/settings", settingsService);
+
+// authentication service 
+router.post('/auth', authenticateAdmin);
 
 module.exports = router;

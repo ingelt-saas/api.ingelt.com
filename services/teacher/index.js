@@ -11,6 +11,7 @@ const libraryService = require("./library");
 const settingService = require("./setting");
 const studentService = require("./student");
 const submissionService = require("./submission");
+const authenticateTeacher = require("../../auth/teacher");
 
 router.use("/", homeService);
 router.use("/discussion", discussionService);
@@ -21,5 +22,8 @@ router.use("/library", libraryService);
 router.use("/setting", settingService);
 router.use("/student", studentService);
 router.use("/submission", submissionService);
+
+// authentication route
+router.post("/auth", authenticateTeacher);
 
 module.exports = router;

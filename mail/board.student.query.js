@@ -18,7 +18,7 @@ const studentMail = async (data) => {
 
         Currently: ${data?.currentlyDoing}
         
-        IELTS Test Planned: ${data?.email}
+        IELTS Test Planned: ${data?.studentDuration}
         `,
   };
 
