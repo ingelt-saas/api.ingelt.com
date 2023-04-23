@@ -3,12 +3,15 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { teacher } = require("../models");
 
-const authenticateteacher = async (req, res) => {
+const authenticateTeacher = async (req, res) => {
   const { email, password } = req.body;
 
   // Check if User with email exists and fetch that user
   let teacherValue = await teacher.findAll({ where: { email } });
-  teacherValue = teacherValue[0].dataValues;
+
+  if (teacherValue) {
+    teacherValue = teacherValue.get({ plain: true });
+  }
 
   // If user does not exist, return error
   if (!teacherValue) {
@@ -36,4 +39,4 @@ const authenticateteacher = async (req, res) => {
   }
 };
 
-module.exports = authenticateteacher;
+module.exports = authenticateTeacher;

@@ -4,11 +4,15 @@ const bcrypt = require("bcrypt");
 const { admin } = require("../models");
 
 const authenticateAdmin = async (req, res) => {
+
   const { email, password } = req.body;
 
   // Check if User with email exists and fetch that user
-  let adminValue = await admin.findAll({ where: { email } });
-  adminValue = adminValue[0].dataValues;
+  let adminValue = await admin.findOne({ where: { email } });
+
+  if (adminValue) {
+    adminValue = adminValue.get({ plain: true });
+  }
 
   // If user does not exist, return error
   if (!adminValue) {
