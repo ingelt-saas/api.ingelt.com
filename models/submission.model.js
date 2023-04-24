@@ -6,14 +6,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
 
-    assignmentId: {
-      type: DataTypes.UUID,
-    },
-
-    studentId: {
-      type: DataTypes.UUID,
-    },
-
     file: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -25,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     submissionDate: DataTypes.DATE,
 
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
+      values: ['uploaded', 'submitted'],
       defaultValue: 'uploaded' // uploaded and submitted
     },
 

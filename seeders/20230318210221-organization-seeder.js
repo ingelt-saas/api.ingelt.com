@@ -7,7 +7,7 @@ module.exports = {
       "organizations",
       [
         {
-          id: 1,
+          id: "ORG1",
           name: "organisation one",
           images: "https://picsum.photos/200",
           phoneNo: "1234567890",
@@ -40,7 +40,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
+          id: "ORG2",
           name: "organisation two",
           images: "https://picsum.photos/200",
           phoneNo: "1234567890",
@@ -73,7 +73,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 3,
+          id: "ORG3",
           name: "organisation three",
           images: "https://picsum.photos/200",
           phoneNo: "1234567890",

@@ -9,7 +9,7 @@ module.exports = {
         {
           id: "NOTE001",
           batchId: "BAT01",
-          teacherId: "TEA001",
+          uploadedBy: "ADM01",
           file: "file1",
           fileSize: "1MB",
           subject: "listening",
@@ -19,7 +19,7 @@ module.exports = {
         {
           id: "NOTE002",
           batchId: "BAT01",
-          teacherId: "TEA001",
+          uploadedBy: "ADM01",
           file: "file2",
           fileSize: "2MB",
           subject: "reading",
@@ -29,7 +29,7 @@ module.exports = {
         {
           id: "NOTE010",
           batchId: "BAT02",
-          teacherId: "TEA001",
+          uploadedBy: "ADM01",
           file: "file10",
           fileSize: "2MB",
           subject: "reading",
@@ -39,7 +39,7 @@ module.exports = {
         {
           id: "NOTE003",
           batchId: "BAT02",
-          teacherId: "TEA002",
+          uploadedBy: "TEA002",
           file: "file3",
           fileSize: "3MB",
           subject: "writing",
@@ -49,7 +49,7 @@ module.exports = {
         {
           id: "NOTE004",
           batchId: "BAT02",
-          teacherId: "TEA002",
+          uploadedBy: "TEA002",
           file: "file4",
           fileSize: "4MB",
           subject: "speaking",
@@ -59,7 +59,7 @@ module.exports = {
         {
           id: "NOTE005",
           batchId: "BAT03",
-          teacherId: "TEA003",
+          uploadedBy: "TEA003",
           file: "file5",
           fileSize: "5MB",
           subject: "listening",
@@ -69,7 +69,7 @@ module.exports = {
         {
           id: "NOTE006",
           batchId: "BAT03",
-          teacherId: "TEA003",
+          uploadedBy: "TEA003",
           file: "file6",
           fileSize: "6MB",
           subject: "reading",
@@ -79,7 +79,7 @@ module.exports = {
         {
           id: "NOTE007",
           batchId: "BAT04",
-          teacherId: "TEA004",
+          uploadedBy: "TEA004",
           file: "file7",
           fileSize: "7MB",
           subject: "writing",

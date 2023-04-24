@@ -8,7 +8,7 @@ module.exports = {
       [
         {
           id: "ADM01",
-          organizationId: 1,
+          organizationId: "ORG1",
           name: "John Doe",
           email: "johndoe@email.com",
           password: "password",
@@ -18,7 +18,7 @@ module.exports = {
         },
         {
           id: "ADM02",
-          organizationId: 2,
+          organizationId: "ORG2",
           name: "Jane Doe",
           email: "janedoe@email.com",
           password: "password",
@@ -28,7 +28,7 @@ module.exports = {
         },
         {
           id: "ADM03",
-          organizationId: 3,
+          organizationId: "ORG3",
           name: "John Davis",
           email: "davis@email.com",
           password: "password",

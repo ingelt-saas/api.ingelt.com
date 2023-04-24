@@ -70,16 +70,15 @@ const studentModel = (sequelize, DataTypes) => {
     pinCode: {
       type: DataTypes.INTEGER,
     },
-    
-    image: DataTypes.STRING,
 
     dob: DataTypes.DATE,
 
     active: DataTypes.BOOLEAN,
 
     status: {
-      type: DataTypes.STRING,
-      default: "PRE", // PRE - before applied | APPL - Applied | FEE - Fee Paid | ADM - Admitted | COM - Completed
+      type: DataTypes.ENUM,
+      values: ['PRE', 'APPL', 'FEE', 'ADM', 'COM'],
+      defaultValue: "PRE", // PRE - before applied | APPL - Applied | FEE - Fee Paid | ADM - Admitted | COM - Completed
     },
 
     targetScore: DataTypes.FLOAT,

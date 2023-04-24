@@ -22,7 +22,10 @@ const discussionModel = (sequelize, DataTypes) => {
         },
       },
 
-      designation: DataTypes.STRING,
+      designation: {
+        type: DataTypes.ENUM,
+        values: ['student', 'teacher', 'admin']
+      }
     },
     {
       timestamps: true,

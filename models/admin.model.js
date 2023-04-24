@@ -32,11 +32,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
 
-      organizationId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
-
       picture: {
         type: DataTypes.STRING,
       },

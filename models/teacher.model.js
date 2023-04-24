@@ -18,6 +18,8 @@ const teacherModel = (sequelize, DataTypes) => {
 
       gender: {
         type: DataTypes.STRING,
+        values: ['Male', 'Female', 'Other'],
+        defaultValue: null,
       },
 
       email: {
@@ -60,7 +62,7 @@ const teacherModel = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
 
-      pincode: {
+      pinCode: {
         type: DataTypes.STRING,
       },
 

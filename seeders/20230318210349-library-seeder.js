@@ -4,11 +4,11 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     Example: await queryInterface.bulkInsert(
-      "documents",
+      "libraries",
       [
         {
           id: "DOC004",
-          organizationId: 1,
+          organizationId: "ORG1",
           file: "document 1",
           fileSize: "1MB",
           subject: "listening",
@@ -17,7 +17,7 @@ module.exports = {
         },
         {
           id: "DOC002",
-          organizationId: 1,
+          organizationId: "ORG1",
           file: "document 2",
           fileSize: "1MB",
           subject: "reading",
@@ -26,7 +26,7 @@ module.exports = {
         },
         {
           id: "DOC003",
-          organizationId: 1,
+          organizationId: "ORG2",
           file: "document 3",
           fileSize: "1MB",
           subject: "writing",
