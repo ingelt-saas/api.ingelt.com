@@ -212,18 +212,23 @@ studentUtil.bandScore = async (studentId) => {
 // GET by id
 studentUtil.readById = async (studentId) => {
   try {
-    const result = await student.findByPk(studentId, {
-      include: [
-        {
-          model: batch,
-          attributes: ['name', 'id'],
-          include: [
-            { model: organization, attributes: ['name', 'id'] },
-            { model: mockTest, attributes: ['name', 'id'] }
-          ],
-        }
-      ],
+    let result = await student.findOne({
+      where: {
+        id: studentId,
+      },
+      include: {
+        model: batch,
+        attributes: ['name', 'id'],
+        include: [
+          { model: organization, attributes: ['name', 'id'] },
+          { model: mockTest, attributes: ['name', 'id'] }
+        ],
+      }
     });
+    if (result) {
+      result = result.get({ plain: true });
+    }
+    delete result?.password;
     return result;
   } catch (err) {
     throw err;

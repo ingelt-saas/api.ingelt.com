@@ -24,6 +24,16 @@ app.use("/student", studentServices);
 app.use("/admin", adminServices);
 app.use("/teacher", teacherServices);
 
+const bcrypt = require('bcrypt');
+
+const pwd = async () => {
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash('123456', salt);
+  console.log(hashedPassword);
+}
+
+// pwd();
+
 // Auth Config
 const auth = require("./auth");
 app.use("/auth", auth);
