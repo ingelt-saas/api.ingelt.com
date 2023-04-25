@@ -8,7 +8,7 @@ const organisationModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
-      owner_name: {
+      ownerName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
