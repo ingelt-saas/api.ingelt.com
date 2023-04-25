@@ -212,13 +212,10 @@ studentUtil.bandScore = async (studentId) => {
 // GET by id
 studentUtil.readById = async (studentId) => {
   try {
-    let result = await student.findOne({
-      where: {
-        id: studentId,
-      },
+    let result = await student.findByPk(studentId, {
       include: {
         model: batch,
-        attributes: ['name', 'id'],
+        required: false,
         include: [
           { model: organization, attributes: ['name', 'id'] },
           { model: mockTest, attributes: ['name', 'id'] }

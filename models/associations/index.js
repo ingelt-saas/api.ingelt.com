@@ -58,7 +58,7 @@ BatchesTeachers.belongsTo(Teacher);
 
 // BATCH STUDENT
 Batch.hasMany(Student);
-Student.hasOne(Batch, {
+Student.belongsTo(Batch, {
   foreignKey: {
     type: Sequelize.UUID,
   },
@@ -84,6 +84,15 @@ Notes.belongsTo(Batch, {
 // BATCH - ASSIGNMENT
 Batch.hasMany(Assignment);
 Assignment.belongsTo(Batch, {
+  foreignKey: {
+    allowNull: false,
+    type: Sequelize.UUID,
+  },
+});
+
+// TEACHER - ASSIGNMENTS
+Teacher.hasMany(Assignment);
+Assignment.belongsTo(Teacher, {
   foreignKey: {
     allowNull: false,
     type: Sequelize.UUID,
