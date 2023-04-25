@@ -8,6 +8,14 @@ const organisationModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
+      owner_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Owner Name is required" },
+        },
+      },
+
       name: {
         type: DataTypes.STRING,
         allowNull: false,
