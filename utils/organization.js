@@ -16,7 +16,7 @@ organizationUtil.create = async (newOrganization) => {
 organizationUtil.read = async () => {
   try {
     const result = await organization.findAll({
-      order: [["id", "DESC"]],
+      order: [["createdAt", "ASC"]],
     });
     return result;
   } catch (err) {
@@ -34,7 +34,7 @@ organizationUtil.readById = async (organizationId) => {
   }
 };
 
-// apply 
+// apply
 organizationUtil.apply = async (data) => {
   try {
     const result = await studentApplied.create(data);
@@ -42,21 +42,21 @@ organizationUtil.apply = async (data) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
 // search organization
 organizationUtil.search = async (value) => {
   try {
     const result = await organization.findAll({
       where: {
-        name: { [Op.like]: `%${value}%` }
-      }
+        name: { [Op.like]: `%${value}%` },
+      },
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // PUT
 organizationUtil.update = async (organizationId, updateData) => {
@@ -74,7 +74,6 @@ organizationUtil.update = async (organizationId, updateData) => {
 
 // DELETE
 organizationUtil.delete = async (organizationId) => {
-
   try {
     const result = await organization.destroy({
       where: {
