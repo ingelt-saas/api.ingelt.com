@@ -16,17 +16,18 @@ const notesModel = (sequelize, DataTypes) => {
         },
       },
 
-      subject: DataTypes.STRING,
-
+      subject: {
+        type: DataTypes.ENUM,
+        values: ['reading', 'writing', 'speaking', 'listening']
+      },
+      fileSize: DataTypes.STRING,
       uploadedBy: {
         type: DataTypes.STRING,
-        // allowNull: false,
-        // validate: {
-        //   notNull: { msg: "uploaded-by is required" },
-        // },
-      },
-
-      fileSize: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          msg: 'uploader name is required.',
+        }
+      }
     },
     {
       timestamps: true,

@@ -54,6 +54,7 @@ db.discussion = require("./discussion.model")(sequelize, Sequelize);
 db.library = require("./library.model")(sequelize, Sequelize);
 db.notes = require("./notes.model")(sequelize, Sequelize);
 db.organisation = require("./organization.model")(sequelize, Sequelize);
+db.orgImages = require("./orgImages.model")(sequelize, Sequelize);
 db.student = require("./student.model")(sequelize, Sequelize);
 db.submission = require("./submission.model")(sequelize, Sequelize);
 db.teacher = require("./teacher.model")(sequelize, Sequelize);

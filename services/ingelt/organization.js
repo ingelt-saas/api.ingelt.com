@@ -1,16 +1,53 @@
 const express = require("express");
 const organizationUtil = require("../../utils/organization");
+const { memoryStorage } = require("multer");
+const multer = require("multer");
 const organizationService = express.Router();
+const storage = memoryStorage();
+const upload = multer({ storage });
+const awsUpload = require('../../aws/upload');
+const orgImagesUtils = require("../../utils/orgImages");
 
 // create new organization 
-organizationService.post("/", async (req, res) => {
-    try {
-        const result = await organizationUtil.create(req.body);
-        res.status(201).json(result);
-    } catch (err) {
-        res.status(400).json(err);
-    }
-});
+organizationService.post("/",
+    upload.fields([{ name: 'orgImages', maxCount: 5 }, { name: 'logo' }, { name: 'panPicture' }]),
+    async (req, res) => {
+
+        const uploadFileToS3 = (file, filepath) => new Promise((resolve, reject) => {
+            awsUpload(file, filepath, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+
+        try {
+            const newInstitute = req.body;
+            const logo = req.files.logo[0]; // institute logo
+            const panPicture = req.files.panPicture[0]; // institute pan picture
+            const orgImages = req.files.orgImages; // institute images
+
+            const uploadLogo = await uploadFileToS3(logo, 'institute'); // upload to aws
+            newInstitute.logo = uploadLogo.Key; // set key in newInstitute object
+
+            const uploadPanPic = await uploadFileToS3(panPicture, 'institute'); // upload to aws
+            newInstitute.panPicture = uploadPanPic.Key; // set key in newInstitute object
+
+            let uploadOrgImages = await uploadFileToS3(orgImages, 'institute'); // upload to aws 
+
+            let result = await organizationUtil.create(newInstitute); // insert new institute
+
+            uploadOrgImages = uploadOrgImages.map(i => ({ name: i.Key, organizationId: result.id }));
+
+            result = await orgImagesUtils.create(uploadOrgImages); // insert institute images
+
+            res.status(201).json(result);
+        } catch (err) {
+            res.status(400).json(err);
+        }
+    });
 
 // get all organization 
 organizationService.get("/", async (req, res) => {

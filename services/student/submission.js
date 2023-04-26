@@ -11,8 +11,8 @@ const deleteFile = require('../../aws/delete');
 // create submission
 submissionService.post("/", upload.single('file'), async (req, res) => {
   try {
-    const student = req.headers.authorization.split(" ")[1];
-    const studentId = jwt.decode(student).id;
+
+    const studentId = req.decoded.id;
     const file = req.file;
 
     // upload to aws 
@@ -26,6 +26,7 @@ submissionService.post("/", upload.single('file'), async (req, res) => {
           file: data.Key,
         };
         const result = await submissionUtil.create(newSubmission);
+
         res.status(201).json(result);
       }
     });
@@ -36,12 +37,12 @@ submissionService.post("/", upload.single('file'), async (req, res) => {
 });
 
 // get submission by student and assignment
-submissionService.get('assignment/:assignmentId', async (req, res) => {
+submissionService.get('/assignment/:assignmentId', async (req, res) => {
   try {
     const studentId = req.decoded.id;
     const assignmentId = req.params.assignmentId;
     const result = await submissionUtil.getSubmissionByAssignAndStu(assignmentId, studentId);
-    return result;
+    res.send(result);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -80,7 +81,7 @@ submissionService.delete("/:submissionId", async (req, res) => {
     const findSubmission = await submissionUtil.readById(
       req.params.submissionId
     );
-    
+
     // delete file
     findSubmission?.file && await deleteFile(findSubmission.file);
 

@@ -32,7 +32,7 @@ submissionUtil.getSubmissionByAssignAndStu = async (
   studentId
 ) => {
   try {
-    const result = await submission.findAll({
+    const result = await submission.findOne({
       where: {
         [Op.and]: [{ assignmentId: assignmentId }, { studentId: studentId }],
       },

@@ -26,7 +26,6 @@ module.exports = async (Key) => {
     });
     return clientUrl;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };

@@ -5,7 +5,10 @@ const organizationUtil = {};
 // POST
 organizationUtil.create = async (newOrganization) => {
   try {
-    const result = await organization.create(newOrganization);
+    let result = await organization.create(newOrganization);
+    if (result) {
+      result = result.get({ plain: true });
+    }
     return result;
   } catch (err) {
     throw err;

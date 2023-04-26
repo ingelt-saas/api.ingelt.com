@@ -14,9 +14,44 @@ assignmentUtil.create = async (newAssignment) => {
 // get assignments by batch id
 assignmentUtil.getAssignmentsByBatch = async (batchId) => {
   try {
-    const result = await assignment.findAll({ where: { batchId: batchId }, order: [['id', 'DESC']], plain: true });
+    const result = await assignment.findAll({
+      where: { batchId: batchId },
+      order: [['id', 'DESC']],
+    });
     return result;
   } catch (err) {
+    throw err;
+  }
+}
+
+// get assignments by batch and student 
+assignmentUtil.getAssignmentsByBatchAndStu = async (batchId, studentId) => {
+  try {
+    
+    let result = await assignment.findAll({
+      where: { batchId: batchId },
+      include: {
+        model: submission,
+        required: false,
+        where: {
+          studentId: studentId,
+          status: 'submitted'
+        },
+      },
+      nest: true,
+      raw: true,
+      order: [['createdAt', 'DESC']],
+    });
+
+    const newResult = [];
+    for (let item of result) {
+      item.submissions = item.submissions.id ? item.submissions : null;
+      newResult.push(item);
+    }
+
+    return newResult;
+  } catch (err) {
+    console.log(err)
     throw err;
   }
 }

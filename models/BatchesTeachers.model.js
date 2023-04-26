@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     "BatchesTeachers",
     {
       subject: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM,
+        values: ['reading', 'writing', 'speaking', 'listening']
       },
     },
     { timestamps: true }

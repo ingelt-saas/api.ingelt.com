@@ -8,7 +8,7 @@ const organisationModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
-      owner_name: {
+      ownerName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -113,7 +113,8 @@ const organisationModel = (sequelize, DataTypes) => {
       },
 
       modeOfClasses: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM,
+        values: ['online', 'offline', 'hybrid']
       },
 
       plan: {

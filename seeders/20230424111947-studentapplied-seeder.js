@@ -1,29 +1,40 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     Example: await queryInterface.bulkInsert(
-      "orgImages",
+      "studentApplieds",
       [
         {
-          id: "ORGIMG001",
+          id: 'APPLI1',
           organizationId: "ORG1",
-          name: "image1",
+          studentId: "USER001",
+          status: 'applied',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: "ORGIMG002",
+          id: 'APPLI2',
           organizationId: "ORG2",
-          name: "image2",
+          studentId: "USER003",
+          status: 'applied',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: "ORGIMG003",
+          id: 'APPLI3',
           organizationId: "ORG2",
-          name: "image3",
+          studentId: "USER002",
+          status: 'applied',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'APPLI4',
+          organizationId: "ORG3",
+          studentId: "USER006",
+          status: 'applied',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -39,5 +50,5 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-  },
+  }
 };
