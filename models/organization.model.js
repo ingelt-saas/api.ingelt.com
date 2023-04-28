@@ -10,10 +10,10 @@ const organisationModel = (sequelize, DataTypes) => {
 
       ownerName: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "Owner Name is required" },
-        },
+        // allowNull: false,
+        // validate: {
+        //   notNull: { msg: "Owner Name is required" },
+        // },
       },
 
       name: {
