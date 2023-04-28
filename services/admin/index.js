@@ -12,6 +12,9 @@ const settingsService = require("./settings");
 const authenticateAdmin = require("../../auth/admin");
 const verifyJWT = require("../../middleware/verifyJWT");
 
+// authentication service 
+router.post('/auth', authenticateAdmin);
+
 router.use("/", verifyJWT, homeService);
 router.use("/student", verifyJWT, studentService);
 router.use("/teacher", verifyJWT, teacherService);
@@ -20,8 +23,5 @@ router.use("/batch", verifyJWT, batchService);
 router.use("/mockTest", verifyJWT, mockTestService);
 router.use("/assignment", verifyJWT, mockTestService);
 router.use("/settings", verifyJWT, settingsService);
-
-// authentication service 
-router.post('/auth', authenticateAdmin);
 
 module.exports = router;
