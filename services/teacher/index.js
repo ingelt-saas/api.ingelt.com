@@ -14,6 +14,9 @@ const submissionService = require("./submission");
 const authenticateTeacher = require("../../auth/teacher");
 const verifyJWT = require("../../middleware/verifyJWT");
 
+// authentication route
+router.post("/auth", authenticateTeacher);
+
 router.use("/", verifyJWT, homeService);
 router.use("/discussion", verifyJWT, discussionService);
 router.use("/assignment", verifyJWT, assignmentService);
@@ -24,7 +27,5 @@ router.use("/setting", verifyJWT, settingService);
 router.use("/student", verifyJWT, studentService);
 router.use("/submission", verifyJWT, submissionService);
 
-// authentication route
-router.post("/auth", authenticateTeacher);
 
 module.exports = router;

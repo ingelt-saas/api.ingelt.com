@@ -16,6 +16,20 @@ submissionUtil.getSubmissionByAssignOrStu = async (id) => {
   }
 };
 
+// get submission by student 
+submissionUtil.getSubmissionByStudent = async (studentId) => {
+  try {
+    const result = await submission.findAll({
+      where: {
+        studentId: studentId,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // get submission by assignment
 submissionUtil.getSubmissionByAssignment = async (assignmentId) => {
   try {
