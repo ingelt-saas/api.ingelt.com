@@ -100,7 +100,7 @@ teacherUtil.search = async (searchQuery) => {
 // GET by id
 teacherUtil.readById = async (teacherId) => {
   try {
-    const result = await teacher.findByPk(teacherId, {
+    let result = await teacher.findByPk(teacherId, {
       include: [
         {
           model: batch,
@@ -108,6 +108,10 @@ teacherUtil.readById = async (teacherId) => {
         },
       ],
     });
+    if (result) {
+      result = result.get({ plain: true });
+      delete result.password;
+    }
     return result;
   } catch (err) {
     throw err;
@@ -129,7 +133,10 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
 
   try {
     // get teacher by teacher id
-    const teacherInfo = await teacher.findByPk(teacherId, {
+    let teacherInfo = await teacher.findOne({
+      where: {
+        id: teacherId,
+      },
       include: [
         {
           model: batch,
@@ -137,6 +144,10 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
         },
       ],
     });
+
+    if (teacherInfo) {
+      teacherInfo = teacherInfo.get({ plain: true });
+    }
 
     // get batches
     const batches = teacherInfo.batches;

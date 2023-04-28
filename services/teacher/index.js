@@ -12,16 +12,17 @@ const settingService = require("./setting");
 const studentService = require("./student");
 const submissionService = require("./submission");
 const authenticateTeacher = require("../../auth/teacher");
+const verifyJWT = require("../../middleware/verifyJWT");
 
-router.use("/", homeService);
-router.use("/discussion", discussionService);
-router.use("/assignment", assignmentService);
-router.use("/mockTest", mockTestService);
-router.use("/notes", notesService);
-router.use("/library", libraryService);
-router.use("/setting", settingService);
-router.use("/student", studentService);
-router.use("/submission", submissionService);
+router.use("/", verifyJWT, homeService);
+router.use("/discussion", verifyJWT, discussionService);
+router.use("/assignment", verifyJWT, assignmentService);
+router.use("/mockTest", verifyJWT, mockTestService);
+router.use("/notes", verifyJWT, notesService);
+router.use("/library", verifyJWT, libraryService);
+router.use("/setting", verifyJWT, settingService);
+router.use("/student", verifyJWT, studentService);
+router.use("/submission", verifyJWT, submissionService);
 
 // authentication route
 router.post("/auth", authenticateTeacher);

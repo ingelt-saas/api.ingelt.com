@@ -117,6 +117,7 @@ batchUtil.completeBatchesCount = async (orgId) => {
 batchUtil.avgBand = async (teacherId) => {
   try {
     const batches = await batch.findAll({
+      order: [['name', 'ASC']],
       include: [
         {
           model: teacher,
