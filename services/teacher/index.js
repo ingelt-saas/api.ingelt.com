@@ -13,6 +13,7 @@ const studentService = require("./student");
 const submissionService = require("./submission");
 const authenticateTeacher = require("../../auth/teacher");
 const verifyJWT = require("../../middleware/verifyJWT");
+const file = require("../../aws/file");
 
 // authentication route
 router.post("/auth", authenticateTeacher);
@@ -27,5 +28,13 @@ router.use("/setting", verifyJWT, settingService);
 router.use("/student", verifyJWT, studentService);
 router.use("/submission", verifyJWT, submissionService);
 
+// file or image route 
+router.get('/files', async (req, res) => {
+    try {
+        const key = req.headers.awskey;
+        const result = await file(key);
+        res.send(result);
+    } catch (err) { res.send('') }
+});
 
 module.exports = router;

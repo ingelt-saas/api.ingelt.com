@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organization, mockTest } = require("../models");
+const { student, mockTestMarks, batch, organization, mockTest, teacher } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -18,6 +18,34 @@ studentUtil.create = async (newStudent) => {
   }
 };
 
+// students under by  teacher
+studentUtil.readByTeacher = async (teacherId, pageNo, limit) => {
+
+  try {
+    const result = await student.findAndCountAll({
+      include: {
+        model: batch,
+        required: true,
+        attributes: ['name', 'id'],
+        include: {
+          model: teacher,
+          required: true,
+          attributes: ['name', 'id'],
+          where: {
+            id: teacherId,
+          }
+        }
+      },
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    console.log(err)
+    throw err;
+  }
+}
+
 // READ
 studentUtil.read = async () => {
   try {
@@ -30,12 +58,25 @@ studentUtil.read = async () => {
   }
 };
 
-// search students
-studentUtil.search = async (searchValue) => {
+// search students by teacher id 
+studentUtil.search = async (teacherId, searchValue) => {
   try {
     const result = await student.findAll({
       where: {
         name: { [Op.like]: `%${searchValue}%` }
+      },
+      include: {
+        model: batch,
+        required: true,
+        attributes: [],
+        include: {
+          model: teacher,
+          required: true,
+          attributes: [],
+          where: {
+            id: teacherId,
+          }
+        }
       }
     });
     return result;

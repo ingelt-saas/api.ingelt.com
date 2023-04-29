@@ -132,46 +132,41 @@ teacherUtil.batchesUpdated = async (teacherId, updateData) => {
 teacherUtil.liveAndCompleteBatches = async (teacherId) => {
 
   try {
-    // get teacher by teacher id
-    let teacherInfo = await teacher.findOne({
+
+    const completeBatches = await batch.count({
       where: {
-        id: teacherId,
+        active: false,
+        endDate: {
+          [Op.lte]: new Date()
+        }
       },
-      include: [
-        {
-          model: batch,
-          as: "batches",
-        },
-      ],
-    });
-
-    if (teacherInfo) {
-      teacherInfo = teacherInfo.get({ plain: true });
-    }
-
-    // get batches
-    const batches = teacherInfo.batches;
-    let liveBatches = 0;
-    let completeBatches = 0;
-
-    // get the batches a batch id and check which batch is live and which batch is complete
-    for (let batchInfo of batches) {
-      if (batchInfo) {
-        // live batch check
-        if (batchInfo.active) {
-          liveBatches++;
-        } // complete batch check
-        else if (
-          !batchInfo.active &&
-          new Date().getTime(batchInfo.endDate) < new Date().getTime()
-        ) {
-          completeBatches++;
+      include: {
+        model: teacher,
+        Request: true,
+        where: {
+          id: teacherId,
         }
       }
-    }
+    });
+
+    const liveBatches = await batch.count({
+      where: {
+        active: true,
+      },
+      include: {
+        model: teacher,
+        required: true,
+        where: {
+          id: teacherId,
+        }
+      }
+    });
 
     // return complete and live batches as a object
     return { completeBatches, liveBatches };
+
+    // new Date().getTime(batchInfo.endDate) < new Date().getTime()
+
   } catch (err) {
     throw err;
   }
@@ -180,37 +175,43 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
 // get taught students and band students by teacher id
 teacherUtil.taughtAndBandStudents = async (teacherId) => {
   try {
-    // get teacher by teacher id
-    const teacherInfo = await teacher.findByPk(teacherId, {
-      include: [
-        {
-          model: batch,
-          as: "batches",
-        },
-      ],
+
+    const bandStudents = await student.count({
+      where: {
+        averageBands: {
+          [Op.gte]: 7.5,
+        }
+      },
+      include: {
+        model: batch,
+        required: true,
+        include: {
+          model: teacher,
+          required: true,
+          where: {
+            id: teacherId
+          }
+        }
+      }
     });
 
-    // get batches
-    const batches = teacherInfo.batches;
-    let taughtStudents = 0;
-    let bandStudents = 0;
-
-    // get students by batch id
-    for (let batch of batches) {
-      // taught students
-      taughtStudents = await student.count({ where: { batchId: batch.id } });
-      bandStudents = await student.count({
-        where: {
-          batchId: batch.id,
-          averageBands: {
-            [Op.gte]: 7.5,
-          },
-        },
-      });
-    }
+    const taughtStudents = await student.count({
+      include: {
+        model: batch,
+        required: true,
+        include: {
+          model: teacher,
+          required: true,
+          where: {
+            id: teacherId
+          }
+        }
+      }
+    });
 
     // return taught and band students as a object
     return { taughtStudents, bandStudents };
+
   } catch (err) {
     console.log(err);
     throw err;

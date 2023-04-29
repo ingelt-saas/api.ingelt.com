@@ -8,13 +8,14 @@ const homeService = express.Router();
 // get teacher by teacher panel
 homeService.get('/', async (req, res) => {
   try {
+
     const teacherId = req.decoded.id;
     const teacher = await teacherUtil.readById(teacherId);
     const liveAndCompleteBatches = await teacherUtil.liveAndCompleteBatches(teacherId);
     const taughtAndBandStudents = await teacherUtil.taughtAndBandStudents(teacherId);
 
     res
-      .status(201)
+      .status(200)
       .json({ ...teacher, ...liveAndCompleteBatches, ...taughtAndBandStudents });
   } catch (err) {
     console.log(err);
