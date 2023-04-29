@@ -1,4 +1,4 @@
-const { admin } = require("../models");
+const { admin, organization } = require("../models");
 const bcrypt = require("bcrypt");
 const adminUtil = {};
 
@@ -33,7 +33,19 @@ adminUtil.read = async () => {
 // GET by id
 adminUtil.readById = async (adminId) => {
   try {
-    const result = await admin.findByPk(adminId);
+    let result = await admin.findOne({
+      where: {
+        id: adminId,
+      },
+      include: {
+        model: organization,
+        required: false,
+      }
+    });
+    if (result) {
+      result = result.get({ plain: true });
+      delete result.password;
+    }
     return result;
   } catch (err) {
     throw err;

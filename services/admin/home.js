@@ -10,9 +10,9 @@ const adminService = express.Router();
 // Get Admin
 adminService.get("/", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const admin = jwt.decode(token);
-    res.status(200).json(admin);
+    const adminId = req.decoded.id;
+    const result = await adminUtil.readById(adminId)
+    res.send(result);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -45,14 +45,14 @@ adminService.get("/stats-one", async (req, res) => {
 });
 
 // get enrollment data
-adminService.get("/enrollmentStudent", async (req, res) => {
+adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const admin = jwt.decode(token);
-    const organizationId = admin.organizationId;
+
+    const batchId = req.params.batchId;
+    const organizationId = req.decoded.organizationId;
 
     const result = await studentUtil.enrollmentStudent(
-      req.params.batchId,
+      batchId,
       organizationId
     );
     res.status(200).json(result);

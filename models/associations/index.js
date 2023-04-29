@@ -143,12 +143,7 @@ MockTestMarks.belongsTo(Student);
 
 // ORGANISATION - ORGIMAGES
 Organisation.hasMany(OrgImages);
-OrgImages.belongsTo(Organisation, {
-  foreignKey: {
-    allowNull: false,
-    type: Sequelize.UUID,
-  },
-});
+OrgImages.belongsTo(Organisation);
 
 // STUDENT APPLIED
 Student.belongsToMany(Organisation, { through: StudentApplied });

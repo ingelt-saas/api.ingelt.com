@@ -53,7 +53,7 @@ organizationService.post("/",
 organizationService.get("/", async (req, res) => {
     try {
         const result = await organizationUtil.read();
-        res.status(201).json(result);
+        res.status(200).send(result);
     } catch (err) {
         res.status(400).json(err);
     }

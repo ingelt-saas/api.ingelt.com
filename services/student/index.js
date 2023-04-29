@@ -13,6 +13,10 @@ const { authenticateStudent } = require("../../auth/student");
 const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
 
+
+// authentication route
+router.post("/auth", authenticateStudent);
+
 // Student Services Router
 router.use("/", verifyJWT, homeService);
 router.use("/assignment", verifyJWT, assignmentsService);
@@ -30,8 +34,5 @@ router.get('/files', async (req, res) => {
         res.send(result);
     } catch (err) { res.send('') }
 });
-
-// authentication route
-router.post("/auth", authenticateStudent);
 
 module.exports = router;

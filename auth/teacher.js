@@ -7,7 +7,7 @@ const authenticateTeacher = async (req, res) => {
   const { email, password } = req.body;
 
   // Check if User with email exists and fetch that user
-  let teacherValue = await teacher.findAll({ where: { email } });
+  let teacherValue = await teacher.findOne({ where: { email } });
 
   if (teacherValue) {
     teacherValue = teacherValue.get({ plain: true });

@@ -10,17 +10,18 @@ const batchService = require("./batch");
 const mockTestService = require("./mockTest");
 const settingsService = require("./settings");
 const authenticateAdmin = require("../../auth/admin");
-
-router.use("/", homeService);
-router.use("/student", studentService);
-router.use("/teacher", teacherService);
-router.use("/library", libraryService);
-router.use("/batch", batchService);
-router.use("/mockTest", mockTestService);
-router.use("/assignment", mockTestService);
-router.use("/settings", settingsService);
+const verifyJWT = require("../../middleware/verifyJWT");
 
 // authentication service 
 router.post('/auth', authenticateAdmin);
+
+router.use("/", verifyJWT, homeService);
+router.use("/student", verifyJWT, studentService);
+router.use("/teacher", verifyJWT, teacherService);
+router.use("/library", verifyJWT, libraryService);
+router.use("/batch", verifyJWT, batchService);
+router.use("/mockTest", verifyJWT, mockTestService);
+router.use("/assignment", verifyJWT, mockTestService);
+router.use("/settings", verifyJWT, settingsService);
 
 module.exports = router;

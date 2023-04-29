@@ -5,6 +5,34 @@ const assignmentUtil = require("../../utils/assignment");
 const studentUtil = require("../../utils/student");
 const homeService = express.Router();
 
+// get teacher by teacher panel
+homeService.get('/', async (req, res) => {
+  try {
+    const teacherId = req.decoded.id;
+    const teacher = await teacherUtil.readById(teacherId);
+    const liveAndCompleteBatches = await teacherUtil.liveAndCompleteBatches(teacherId);
+    const taughtAndBandStudents = await teacherUtil.taughtAndBandStudents(teacherId);
+
+    res
+      .status(201)
+      .json({ ...teacher, ...liveAndCompleteBatches, ...taughtAndBandStudents });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+
+// average band by teacher
+homeService.get("/avgBand", async (req, res) => {
+  try {
+    const teacherId = req.decoded.id
+    const result = await batchUtil.avgBand(teacherId);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // get teacher
 homeService.get("/:teacherId", async (req, res) => {
   try {
@@ -22,6 +50,7 @@ homeService.get("/:teacherId", async (req, res) => {
   }
 });
 
+
 // update meeting link
 homeService.put("/updateClassLink/:batchId", async (req, res) => {
   try {
@@ -29,18 +58,6 @@ homeService.put("/updateClassLink/:batchId", async (req, res) => {
     const result = await batchUtil.update(batchId, req.body);
     res.status(201).json(result);
   } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-// average band by teacher
-homeService.get("/avgBand", async (req, res) => {
-  try {
-    const teacherId = req.decoded.id
-    const result = await batchUtil.avgBand(teacherId);
-    res.status(201).json(result);
-  } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });

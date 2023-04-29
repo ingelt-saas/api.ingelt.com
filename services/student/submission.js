@@ -51,11 +51,10 @@ submissionService.get('/assignment/:assignmentId', async (req, res) => {
 // get submission by student
 submissionService.get("/", async (req, res) => {
   try {
-    const student = req.headers.authorization.split(" ")[1];
-    const studentId = jwt.decode(student).id;
 
-    const result = await submissionUtil.getSubmissionByAssignOrStu(studentId);
-    res.status(201).json(result);
+    const studentId = req.decoded.id;
+    const result = await submissionUtil.getSubmissionByStudent(studentId);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).send(err);
   }

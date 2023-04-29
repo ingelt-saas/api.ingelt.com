@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { organization, studentApplied } = require("../models");
+const { organization, studentApplied, orgImages } = require("../models");
 const organizationUtil = {};
 
 // POST
@@ -18,10 +18,25 @@ organizationUtil.create = async (newOrganization) => {
 // GET all
 organizationUtil.read = async () => {
   try {
-    const result = await organization.findAll({
-      order: [["createdAt", "ASC"]],
+
+    let organizations = await organization.findAll({
+      order: [["name", "ASC"]]
     });
-    return result;
+
+    const resultArr = [];
+
+    // get org images
+    for (let org of [...organizations]) {
+      const result = await orgImages.findAll({
+        where: {
+          organizationId: org.id,
+        }
+      });
+      org.images = result;
+      resultArr.push(org);
+    }
+
+    return resultArr;
   } catch (err) {
     throw err;
   }
@@ -54,6 +69,10 @@ organizationUtil.search = async (value) => {
       where: {
         name: { [Op.like]: `%${value}%` },
       },
+      include: {
+        model: orgImages,
+        required: false,
+      }
     });
     return result;
   } catch (err) {
