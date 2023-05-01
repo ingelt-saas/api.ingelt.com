@@ -9,7 +9,8 @@ module.exports = async (file, filePath, callback) => {
             params = [];
             let index = 0;
             for (let f of file) {
-                const filename = `${Date.now()}-${index}`;
+                let ext = f.mimetype.split('/')[1];
+                const filename = `${Date.now()}-${index}.${ext}`;
                 params.push({
                     Bucket: Bucket,
                     Key: `${filePath}/${filename}`,
@@ -19,7 +20,8 @@ module.exports = async (file, filePath, callback) => {
                 index++;
             }
         } else {
-            const filename = `${Date.now()}-${new Date().getSeconds()}`;
+            let ext = file.mimetype.split('/')[1];
+            const filename = `${Date.now()}-${new Date().getSeconds()}.${ext}`;
             params = {
                 Bucket: Bucket,
                 Key: `${filePath}/${filename}`,

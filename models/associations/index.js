@@ -64,22 +64,15 @@ Student.belongsTo(Batch, {
   },
 });
 
-// BATCH - NOTES
-Batch.hasMany(Notes);
-Notes.belongsTo(Batch, {
+// ORGANISATION - NOTES
+Organisation.hasMany(Notes);
+Notes.belongsTo(Organisation, {
   foreignKey: {
     allowNull: false,
     type: Sequelize.UUID,
   },
 });
 
-// // TEACHER - NOTES
-// Teacher.hasMany(Notes);
-// Notes.belongsTo(Teacher, { as: 'uploader' });
-
-// // ADMIN NOTES
-// Admin.hasMany(Notes);
-// Notes.belongsTo(Admin, { as: 'uploader' })
 
 // BATCH - ASSIGNMENT
 Batch.hasMany(Assignment);
@@ -100,7 +93,6 @@ Assignment.belongsTo(Teacher, {
 });
 
 // SUBMISSION - ASSIGNMENT - STUDENT
-
 Assignment.hasMany(Submission);
 Student.hasMany(Submission);
 Submission.belongsTo(Assignment, {
@@ -117,9 +109,9 @@ Submission.belongsTo(Student, {
   },
 });
 
-// MOCKTEST - BATCH
-Batch.hasMany(MockTest);
-MockTest.belongsTo(Batch, {
+// MOCKTEST - ORGABNISATION
+Organisation.hasMany(MockTest);
+MockTest.belongsTo(Organisation, {
   foreignKey: {
     allowNull: false,
     type: Sequelize.UUID,

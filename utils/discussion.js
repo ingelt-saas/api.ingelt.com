@@ -11,6 +11,21 @@ discussionUtil.create = async (newDiscussion) => {
   }
 };
 
+// get discussion by organization
+discussionUtil.getDiscussionsByOrg = async (orgId) => {
+  try {
+    const result = await discussion.findAndCountAll({
+      where: {
+        organizationId: orgId,
+      },
+      order: [['createdAt', 'ASC']]
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // GET all by batch id
 discussionUtil.getDiscussionsByBatch = async (batchId) => {
   try {

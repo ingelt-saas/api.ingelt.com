@@ -12,6 +12,22 @@ mockTestUtil.create = async (newMockTest) => {
   }
 };
 
+// get mock test by org and teacher
+mockTestUtil.getMockTestsByTeaAndOrg = async (orgId, teacherId) => {
+  try {
+    const result = await mockTest.findAll({
+      where: {
+        organizationId: orgId,
+        teacherId: teacherId,
+      },
+      order: [['createdAt', 'DESC']]
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // GET all Mocktests by batch
 mockTestUtil.getMockTestsByBatch = async (batchId) => {
   try {

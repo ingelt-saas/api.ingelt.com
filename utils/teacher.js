@@ -100,6 +100,25 @@ teacherUtil.search = async (searchQuery) => {
 // GET by id
 teacherUtil.readById = async (teacherId) => {
   try {
+
+    const organization = await organisation.findOne({
+      include: {
+        model: batch,
+        required: true,
+        attributes: [],
+        include: {
+          model: teacher,
+          required: true,
+          attributes: [],
+          where: {
+            id: teacherId,
+          }
+        }
+      },
+      attributes: ['name', 'id', 'email'],
+      raw: true,
+    });
+
     let result = await teacher.findByPk(teacherId, {
       include: [
         {
@@ -112,6 +131,7 @@ teacherUtil.readById = async (teacherId) => {
       result = result.get({ plain: true });
       delete result.password;
     }
+    result.organization = organization;
     return result;
   } catch (err) {
     throw err;

@@ -5,11 +5,13 @@ const mockTestModel = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-
-    batchId: {
-      type: DataTypes.UUID,
+    testDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'test date is required' }
+      }
     },
-
     name: {
       type: DataTypes.STRING,
       allowNull: false,

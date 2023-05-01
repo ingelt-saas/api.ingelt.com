@@ -1,5 +1,5 @@
 const s3 = require('./config/aws');
-module.exports = (Key, callback) => {
+const deleteFile = (Key, callback) => {
     try {
         const params = {
             Bucket: process.env.AWS_S3_BUCKET,
@@ -9,4 +9,6 @@ module.exports = (Key, callback) => {
     } catch (err) {
         throw err;
     }
-}
+};
+
+module.exports = deleteFile;
