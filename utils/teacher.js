@@ -97,6 +97,19 @@ teacherUtil.search = async (searchQuery) => {
   }
 }
 
+// read by id with password 
+teacherUtil.readByIdWithPWD = async (teacherId) => {
+  try {
+    let result = await teacher.findByPk(teacherId);
+    if (result) {
+      result = result.get({ plain: true });
+    }
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // GET by id
 teacherUtil.readById = async (teacherId) => {
   try {

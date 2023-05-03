@@ -35,7 +35,7 @@ router.use("/assignment", verifyJWT, assignmentService);
 router.use("/mockTest", verifyJWT, mockTestService);
 router.use("/notes", verifyJWT, notesService);
 router.use("/library", verifyJWT, libraryService);
-router.use("/setting", verifyJWT, settingService);
+router.use("/settings", verifyJWT, settingService);
 router.use("/student", verifyJWT, studentService);
 router.use("/submission", verifyJWT, submissionService);
 

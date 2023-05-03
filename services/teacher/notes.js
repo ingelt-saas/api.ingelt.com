@@ -65,14 +65,10 @@ notesService.delete('/:noteId', async (req, res) => {
             getNote = getNote.dataValues;
         }
 
-        deleteFile(getNote.file, async (err) => {
-            if (err) {
-                res.status(400).send(err);
-            } else {
-                await notesUtil.deleteNotes(noteId);
-                res.sendStatus(202);
-            }
-        })
+        getNote?.file && await deleteFile(getNote.file);
+
+        await notesUtil.deleteNotes(noteId);
+        res.sendStatus(202);
 
     } catch (err) {
         res.status(400).send(err);

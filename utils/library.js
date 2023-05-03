@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { library } = require("../models");
 const libraryUtil = {};
 
@@ -12,14 +13,35 @@ libraryUtil.create = async (newDoc) => {
 };
 
 // READ
-libraryUtil.read = async () => {
+libraryUtil.read = async (pageNo, limit) => {
   try {
-    const result = await library.findAll({ order: [["id", "DESC"]] });
+    const result = await library.findAndCountAll({
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      order: [["id", "DESC"]],
+    });
     return result;
   } catch (err) {
     throw err;
   }
 };
+
+// search
+libraryUtil.search = async (searchQuery) => {
+  try {
+    const result = await library.findAll({
+      where: {
+        [Op.or]: [
+          { file: { [Op.like]: `%${searchQuery}%` } },
+          { subject: { [Op.like]: `%${searchQuery}%` } },
+        ]
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // GET by id
 libraryUtil.readById = async (docId) => {
