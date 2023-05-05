@@ -18,7 +18,6 @@ homeService.get('/', async (req, res) => {
       .status(200)
       .json({ ...teacher, ...liveAndCompleteBatches, ...taughtAndBandStudents });
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -82,7 +81,7 @@ homeService.get("/assignmentsAndStudents/:batchId", async (req, res) => {
     const students = await studentUtil.getStudentsByBatch(req.params.batchId);
     res.status(200).json({ assignments, students });
   } catch (err) {
-    req.status(400).send(err);
+    res.status(400).send(err);
   }
 });
 

@@ -6,22 +6,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
 
-    batchId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "batch id is required" },
-      },
-    },
-
-    teacherId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "teacher id is required" },
-      },
-    },
-
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -30,12 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
 
-    assignedDate: {
+    uploadedDate: {
       type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "assigned date is required" },
-      },
+      defaultValue: Date.now
     },
 
     endDate: DataTypes.DATE,
@@ -45,6 +26,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: "file is required" },
+      },
+    },
+    fileSize: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { msg: "file size is required" },
       },
     },
   });

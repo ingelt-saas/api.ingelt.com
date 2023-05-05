@@ -18,10 +18,10 @@ discussionService.post('/', async (req, res) => {
 })
 
 // get discussion by org id
-discussionService.get('/organization', async (req, res) => {
+discussionService.get('/get-all', async (req, res) => {
     try {
-        const orgId = req.headers.orgid;
-        const result = await discussionUtil.getDiscussionsByOrg(orgId);
+        const { pageno, limit } = req.query;
+        const result = await discussionUtil.read(parseInt(pageno), parseInt(limit));
         res.status(200).json(result);
     } catch (err) {
         res.status(400).send(err);

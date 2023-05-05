@@ -27,15 +27,17 @@ libraryUtil.read = async (pageNo, limit) => {
 };
 
 // search
-libraryUtil.search = async (searchQuery) => {
+libraryUtil.search = async (searchQuery, pageNo, limit) => {
   try {
-    const result = await library.findAll({
+    const result = await library.findAndCountAll({
       where: {
         [Op.or]: [
-          { file: { [Op.like]: `%${searchQuery}%` } },
+          { name: { [Op.like]: `%${searchQuery}%` } },
           { subject: { [Op.like]: `%${searchQuery}%` } },
         ]
-      }
+      },
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {

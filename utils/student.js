@@ -258,8 +258,8 @@ studentUtil.readById = async (studentId) => {
         model: batch,
         required: false,
         include: [
-          { model: organization, attributes: ['name', 'id'] },
-          { model: mockTest, attributes: ['name', 'id'] }
+          // { model: organization, attributes: ['name', 'id'] },
+          // { model: mockTest, attributes: ['name', 'id'] }
         ],
       }
     });

@@ -38,6 +38,26 @@ mockTestService.get('/batch/:batchId', async (req, res) => {
     }
 });
 
+// search mock test marks by student 
+mockTestService.get('/search/:mockTestId', async (req, res) => {
+    try {
+        const mockTestId = req.params.mockTestId;
+        const orgId = req.headers.organizationid;
+        const { s, pageno, limit } = req.query;
+        const searchData = {
+            pageNo: parseInt(pageno),
+            limit: parseInt(limit),
+            searchQuery: s,
+            orgId: orgId,
+            mockTestId: mockTestId,
+        };
+        const result = await mockTestMarksUtil.searchByStudent(searchData);
+        res.send(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 // save mock test marks
 mockTestService.post('/mockTestMarks', async (req, res) => {
     try {
@@ -65,7 +85,7 @@ mockTestService.get('/mockTestMarks/:mockTestId', async (req, res) => {
     try {
         const orgId = req.headers.organizationid;
         const { pageno, limit } = req.query;
-        const marks = await mockTestMarksUtil.getTestMarksWithStudent(req.params.mockTestId, orgId, pageno, limit);
+        const marks = await mockTestMarksUtil.getTestMarksWithStudent(req.params.mockTestId, orgId, parseInt(pageno), parseInt(limit));
         res.status(200).json(marks);
     } catch (err) {
         res.status(400).send(err);

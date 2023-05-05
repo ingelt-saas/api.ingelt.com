@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { mockTestMarks, student, batch, organisation } = require("../models");
 const mockTestMarksUtil = {};
 
@@ -40,7 +41,7 @@ mockTestMarksUtil.getMockTestMarksByStudent = async (studentId) => {
 }
 
 // get mock test marks and student details by mock test id
-mockTestMarksUtil.getTestMarksWithStudent = async (mockTestId, orgId, pageno, limit) => {
+mockTestMarksUtil.getTestMarksWithStudent = async (mockTestId, orgId, pageNo, limit) => {
   try {
     const result = await student.findAndCountAll({
       include: [
@@ -65,13 +66,52 @@ mockTestMarksUtil.getTestMarksWithStudent = async (mockTestId, orgId, pageno, li
         }
       ],
       attributes: ['name', 'email', 'image', 'id'],
-      // offset: (0 + pageno - 1) * 0 + limit,
-      // limit: limit,
+      offset: (pageNo - 1) * limit,
+      limit: limit,
       order: [[{ model: mockTestMarks }, 'updatedAt', 'ASC']],
     });
     return result;
   } catch (err) {
     console.log(err);
+    throw err;
+  }
+}
+
+// search mock test marks by student name
+mockTestMarksUtil.searchByStudent = async ({ mockTestId, pageNo, limit, orgId, searchQuery }) => {
+  try {
+    const result = await student.findAndCountAll({
+      where: {
+        name: { [Op.like]: `%${searchQuery}%` }
+      },
+      include: [
+        {
+          model: batch,
+          required: true,
+          attributes: [],
+          include: {
+            model: organisation,
+            required: true,
+            where: {
+              id: orgId,
+            }
+          }
+        },
+        {
+          model: mockTestMarks,
+          required: false,
+          where: {
+            mockTestId: mockTestId,
+          }
+        }
+      ],
+      attributes: ['name', 'email', 'image', 'id'],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      order: [[{ model: mockTestMarks }, 'updatedAt', 'ASC']],
+    });
+    return result;
+  } catch (err) {
     throw err;
   }
 }

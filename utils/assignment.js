@@ -1,4 +1,5 @@
-const { assignment, submission } = require("../models");
+const { Op } = require("sequelize");
+const { assignment, submission, teacher, organisation, batch, student } = require("../models");
 const assignmentUtil = {};
 
 // POST
@@ -10,6 +11,65 @@ assignmentUtil.create = async (newAssignment) => {
     throw err;
   }
 };
+
+// get all assignment by teacher
+assignmentUtil.getAssignmentsByTeacher = async (teacherId, pageNo, limit) => {
+  try {
+    const result = await assignment.findAndCountAll({
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      where: {
+        teacherId: teacherId,
+      },
+      order: [['createdAt', 'DESC']]
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// get assignment by student
+assignmentUtil.getAssignmentsByStudent = async (studentId) => {
+  try {
+    const result = await assignment.findAll({
+      include: {
+        model: organisation,
+        required: true,
+        include: {
+          model: batch,
+          required: true,
+          include: {
+            model: student,
+            required: true,
+            where: {
+              id: studentId,
+            }
+          }
+        }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// search assignment
+assignmentUtil.searchAssignmentByTeacher = async (teacherId, searchQuery) => {
+  try {
+    const result = await assignment.findAll({
+      where: {
+        teacherId: teacherId,
+        name: { [Op.like]: `%${searchQuery}%` }
+      },
+      order: [['createdAt', 'DESC']]
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // get assignments by batch id
 assignmentUtil.getAssignmentsByBatch = async (batchId) => {
@@ -27,7 +87,7 @@ assignmentUtil.getAssignmentsByBatch = async (batchId) => {
 // get assignments by batch and student 
 assignmentUtil.getAssignmentsByBatchAndStu = async (batchId, studentId) => {
   try {
-    
+
     let result = await assignment.findAll({
       where: { batchId: batchId },
       include: {

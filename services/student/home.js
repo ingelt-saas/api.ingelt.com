@@ -8,9 +8,8 @@ const homeService = express.Router();
 // GET student by id
 homeService.get("/", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const student = jwt.decode(token);
-    const result = await studentUtil.readById(student.id);
+    const studentId = req.decoded.id;
+    const result = await studentUtil.readById(studentId);
     res.status(200).json(result);
   } catch (err) {
     res.status(400).send(err);

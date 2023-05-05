@@ -8,6 +8,13 @@ const notesModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "name is required" },
+        },
+      },
       file: {
         type: DataTypes.STRING,
         allowNull: false,

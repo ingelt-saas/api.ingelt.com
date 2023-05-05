@@ -19,6 +19,7 @@ notesService.post('/', upload.single('file'), async (req, res) => {
                 const newNote = req.body;
                 newNote.uploaderId = req.decoded.id;
                 newNote.uploaderName = req.decoded.name;
+                newNote.name = file.originalname;
                 newNote.file = data.Key;
                 newNote.fileSize = file.size;
                 const result = await notesUtil.createNotes(newNote);
@@ -34,9 +35,9 @@ notesService.post('/', upload.single('file'), async (req, res) => {
 // search notes 
 notesService.get('/search', async (req, res) => {
     try {
-        const { s } = req.query;
+        const { s, pageno, limit } = req.query;
         const orgId = req.headers.orgid;
-        const result = await notesUtil.search(orgId, s);
+        const result = await notesUtil.search(orgId, s, parseInt(pageno), parseInt(limit));
         res.send(result);
     } catch (err) {
         res.status(400).send(err);

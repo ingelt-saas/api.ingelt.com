@@ -39,9 +39,9 @@ Batch.belongsTo(Organisation, {
   },
 });
 
-// ORGANISATION - DISCUSSION
-Organisation.hasMany(Discussion);
-Discussion.belongsTo(Organisation)
+// // ORGANISATION - DISCUSSION
+// Organisation.hasMany(Discussion);
+// Discussion.belongsTo(Organisation)
 
 // ORGANISATION - LIBRARY
 Organisation.hasMany(Library);
@@ -74,9 +74,18 @@ Notes.belongsTo(Organisation, {
 });
 
 
-// BATCH - ASSIGNMENT
-Batch.hasMany(Assignment);
-Assignment.belongsTo(Batch, {
+// // BATCH - ASSIGNMENT
+// Batch.hasMany(Assignment);
+// Assignment.belongsTo(Batch, {
+//   foreignKey: {
+//     allowNull: false,
+//     type: Sequelize.UUID,
+//   },
+// });
+
+// ORGNISATION - ASSIGNMENT
+Organisation.hasMany(Assignment);
+Assignment.belongsTo(Organisation, {
   foreignKey: {
     allowNull: false,
     type: Sequelize.UUID,

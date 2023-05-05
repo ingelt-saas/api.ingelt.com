@@ -45,17 +45,19 @@ notesUtil.getNotesByBatch = async (batchId) => {
 };
 
 // search notes in the organization
-notesUtil.search = async (orgId, searchQuery) => {
+notesUtil.search = async (orgId, searchQuery, pageNo, limit) => {
   try {
-    const result = await notes.findAll({
+    const result = await notes.findAndCountAll({
       where: {
         organizationId: orgId,
         [Op.or]: {
-          file: { [Op.like]: `%${searchQuery}%` },
+          name: { [Op.like]: `%${searchQuery}%` },
           uploaderName: { [Op.like]: `%${searchQuery}%` },
           subject: { [Op.like]: `%${searchQuery}%` },
         }
-      }
+      },
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {

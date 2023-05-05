@@ -20,7 +20,7 @@ settingService.post('/profileImage', upload.single('image'), async (req, res) =>
         awsUpload(file, 'teacher/profile', async (err, data) => {
             if (err) {
                 res.status(400).send(err);
-            } else {c
+            } else {
                 await teacherUtil.update(teacherId, { image: data?.Key });
                 teacher?.image && await deleteFile(teacher.image); // delete previous image
                 res.send({ image: data?.Key });
