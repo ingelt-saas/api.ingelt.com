@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
     uploadedDate: {
       type: DataTypes.DATE,
-      defaultValue: Date.now
+      defaultValue: Date.now,
     },
 
     endDate: DataTypes.DATE,
@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     fileSize: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
       validate: {
         notNull: { msg: "file size is required" },
       },

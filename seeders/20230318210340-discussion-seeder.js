@@ -8,7 +8,6 @@ module.exports = {
       [
         {
           id: "BAT0USER001DISC1",
-          organizationId: "ORG1",
           senderId: "USER001",
           senderName: "John Doe",
           message: "Hello, I am John Doe",
@@ -18,7 +17,6 @@ module.exports = {
         },
         {
           id: "BAT0USER001DISC2",
-          organizationId: "ORG1",
           senderId: "USER001",
           senderName: "Jane Austen",
           designation: "student",
