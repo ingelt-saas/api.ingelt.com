@@ -13,6 +13,7 @@ const discussionModel = (sequelize, DataTypes) => {
       },
 
       senderName: DataTypes.STRING,
+      senderImage: DataTypes.STRING,
 
       message: {
         type: DataTypes.STRING,

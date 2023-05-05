@@ -1,4 +1,4 @@
-const { submission } = require("../models");
+const { submission, student } = require("../models");
 const { Op } = require("sequelize");
 const submissionUtil = {};
 
@@ -31,9 +31,23 @@ submissionUtil.getSubmissionByStudent = async (studentId) => {
 }
 
 // get submission by assignment
-submissionUtil.getSubmissionByAssignment = async (assignmentId) => {
+submissionUtil.getSubmissionByAssignment = async (assignmentId, pageNo, limit) => {
   try {
-    const result = await submission.findAll({ where: { assignmentId }, order: [['id', 'ASC']], plain: true });
+    const result = await submission.findAndCountAll({
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      where: {
+        assignmentId: assignmentId,
+        status: 'submitted'
+      },
+      include: {
+        model: student,
+        required: true,
+      },
+      order: [
+        ['evaluated', 'ASC'],
+      ],
+    });
     return result;
   } catch (err) {
     throw err;
@@ -56,6 +70,28 @@ submissionUtil.getSubmissionByAssignAndStu = async (
     throw err;
   }
 };
+
+// search submission
+submissionUtil.searchSubmission = async (assignmentId, searchQuery) => {
+  try {
+    const result = await submission.findAll({
+      where: {
+        assignmentId: assignmentId,
+        status: 'submitted',
+      },
+      include: {
+        model: student,
+        required: true,
+        where: {
+          name: { [Op.like]: `%${searchQuery}%` }
+        }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // POST
 submissionUtil.create = async (newSubmission) => {

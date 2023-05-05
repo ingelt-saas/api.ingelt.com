@@ -6,8 +6,21 @@ const submissionUtil = require('../../utils/submission');
 submissionService.get('/assignment/:assignmentId', async (req, res) => {
     try {
         const assignmentId = req.params.assignmentId;
-        const submission = await submissionUtil.getSubmissionByAssignment(assignmentId);
-        res.status(201).json(submission);
+        const { pageno, limit } = req.query;
+        const submission = await submissionUtil.getSubmissionByAssignment(assignmentId, parseInt(pageno), parseInt(limit));
+        res.status(200).json(submission);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// search submission
+submissionService.get('/search/:assignmentId', async (req, res) => {
+    try {
+        const assignmentId = req.params.assignmentId;
+        const { s } = req.query;
+        const result = await submissionUtil.searchSubmission(assignmentId, s);
+        res.send(result);
     } catch (err) {
         res.status(400).send(err);
     }

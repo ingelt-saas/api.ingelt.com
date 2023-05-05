@@ -5,11 +5,9 @@ const assignmentService = express.Router();
 // GET all assignment
 assignmentService.get("/all", async (req, res) => {
   try {
-
-    const batchId = req.decoded.batchId;
     const studentId = req.decoded.id;
-    const result = await assignmentUtil.getAssignmentsByBatchAndStu(batchId, studentId);
-    res.status(201).json(result);
+    const result = await assignmentUtil.getAssignmentsByStudent(studentId);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }

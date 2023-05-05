@@ -8,6 +8,13 @@ const notesModel = (sequelize, DataTypes) => {
         primaryKey: true,
       },
 
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "name is required" },
+        },
+      },
       file: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -16,18 +23,27 @@ const notesModel = (sequelize, DataTypes) => {
         },
       },
 
+      uploaderName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "uploader name is required" },
+        },
+      },
+
+      uploaderId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "uploader id is required" },
+        },
+      },
+
       subject: {
         type: DataTypes.ENUM,
         values: ['reading', 'writing', 'speaking', 'listening']
       },
       fileSize: DataTypes.STRING,
-      uploadedBy: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          msg: 'uploader name is required.',
-        }
-      }
     },
     {
       timestamps: true,

@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { teacher } = require("../models");
 
 const authenticateTeacher = async (req, res) => {
+  
   const { email, password } = req.body;
 
   // Check if User with email exists and fetch that user

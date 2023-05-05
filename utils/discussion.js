@@ -11,6 +11,34 @@ discussionUtil.create = async (newDiscussion) => {
   }
 };
 
+discussionUtil.read = async (pageNo, limit) => {
+  try {
+    const result = await discussion.findAndCountAll({
+      order: [['createdAt', 'ASC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// get discussion by organization
+discussionUtil.getDiscussionsByOrg = async (orgId) => {
+  try {
+    const result = await discussion.findAndCountAll({
+      where: {
+        organizationId: orgId,
+      },
+      order: [['createdAt', 'ASC']]
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // GET all by batch id
 discussionUtil.getDiscussionsByBatch = async (batchId) => {
   try {

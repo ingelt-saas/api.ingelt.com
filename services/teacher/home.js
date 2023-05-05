@@ -8,16 +8,16 @@ const homeService = express.Router();
 // get teacher by teacher panel
 homeService.get('/', async (req, res) => {
   try {
+
     const teacherId = req.decoded.id;
     const teacher = await teacherUtil.readById(teacherId);
     const liveAndCompleteBatches = await teacherUtil.liveAndCompleteBatches(teacherId);
     const taughtAndBandStudents = await teacherUtil.taughtAndBandStudents(teacherId);
 
     res
-      .status(201)
+      .status(200)
       .json({ ...teacher, ...liveAndCompleteBatches, ...taughtAndBandStudents });
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -81,7 +81,7 @@ homeService.get("/assignmentsAndStudents/:batchId", async (req, res) => {
     const students = await studentUtil.getStudentsByBatch(req.params.batchId);
     res.status(200).json({ assignments, students });
   } catch (err) {
-    req.status(400).send(err);
+    res.status(400).send(err);
   }
 });
 

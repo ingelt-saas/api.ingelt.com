@@ -1,4 +1,5 @@
-const { notes } = require("../models");
+const { Op } = require("sequelize");
+const { notes, teacher, admin } = require("../models");
 const notesUtil = {};
 
 // POST
@@ -10,6 +11,24 @@ notesUtil.createNotes = async (note) => {
     throw error;
   }
 };
+
+// get notes by organization
+notesUtil.getNotesByOrg = async (orgId, pageNo, limit) => {
+  try {
+    const result = await notes.findAndCountAll({
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      where: {
+        organizationId: orgId,
+      },
+      order: [['createdAt', 'DESC']],
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 // GET by batch id
 notesUtil.getNotesByBatch = async (batchId) => {
@@ -24,6 +43,27 @@ notesUtil.getNotesByBatch = async (batchId) => {
     throw error;
   }
 };
+
+// search notes in the organization
+notesUtil.search = async (orgId, searchQuery, pageNo, limit) => {
+  try {
+    const result = await notes.findAndCountAll({
+      where: {
+        organizationId: orgId,
+        [Op.or]: {
+          name: { [Op.like]: `%${searchQuery}%` },
+          uploaderName: { [Op.like]: `%${searchQuery}%` },
+          subject: { [Op.like]: `%${searchQuery}%` },
+        }
+      },
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // GET by id
 notesUtil.readById = async (noteId) => {

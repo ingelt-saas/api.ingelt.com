@@ -17,14 +17,6 @@ const file = require("../../aws/file");
 // authentication route
 router.post("/auth", authenticateStudent);
 
-// Student Services Router
-router.use("/", verifyJWT, homeService);
-router.use("/assignment", verifyJWT, assignmentsService);
-router.use("/library", verifyJWT, libraryService);
-router.use("/submission", verifyJWT, submissionService);
-router.use("/notes", verifyJWT, notesService);
-router.use("/discussion", verifyJWT, discussionsService);
-router.use("/settings", verifyJWT, settingsService);
 
 // get document
 router.get('/files', async (req, res) => {
@@ -34,5 +26,15 @@ router.get('/files', async (req, res) => {
         res.send(result);
     } catch (err) { res.send('') }
 });
+
+// Student Services Router
+router.use("/", verifyJWT, homeService);
+router.use("/assignment", verifyJWT, assignmentsService);
+router.use("/library", verifyJWT, libraryService);
+router.use("/submission", verifyJWT, submissionService);
+router.use("/notes", verifyJWT, notesService);
+router.use("/discussion", verifyJWT, discussionsService);
+router.use("/settings", verifyJWT, settingsService);
+
 
 module.exports = router;

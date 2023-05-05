@@ -38,6 +38,10 @@ const teacherModel = (sequelize, DataTypes) => {
         },
       },
 
+      image: {
+        type: DataTypes.STRING,
+        defaultValue: null,
+      },
       expertise: DataTypes.STRING,
 
       dob: DataTypes.DATE,
