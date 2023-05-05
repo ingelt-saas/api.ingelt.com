@@ -2,6 +2,7 @@ const express = require('express');
 const studentService = express.Router();
 const studentUtil = require('../../utils/student');
 const mockTestMarksUtil = require('../../utils/mockTestMarks');
+const teacherUtil = require('../../utils/teacher');
 
 // get all student under by teacher 
 studentService.get('/getAll', async (req, res) => {
@@ -17,7 +18,8 @@ studentService.get('/getAll', async (req, res) => {
             limit = parseInt(limit);
         }
 
-        const result = await studentUtil.readByTeacher(req.decoded.id, pageNo, limit);
+        const teacher = await teacherUtil.readById(req.decoded.id);
+        const result = await studentUtil.readByOrg(teacher?.organization.id, pageNo, limit);
         res.send(result);
     } catch (err) {
         res.status(400).send(err);

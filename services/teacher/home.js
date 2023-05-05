@@ -50,7 +50,6 @@ homeService.get("/:teacherId", async (req, res) => {
   }
 });
 
-
 // update meeting link
 homeService.put("/updateClassLink/:batchId", async (req, res) => {
   try {

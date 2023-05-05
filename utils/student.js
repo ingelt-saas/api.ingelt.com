@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organization, mockTest, teacher } = require("../models");
+const { student, mockTestMarks, batch, organization, mockTest, teacher, organisation } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -19,7 +19,7 @@ studentUtil.create = async (newStudent) => {
 };
 
 // students under by  teacher
-studentUtil.readByTeacher = async (teacherId, pageNo, limit) => {
+studentUtil.readByOrg = async (orgId, pageNo, limit) => {
 
   try {
     const result = await student.findAndCountAll({
@@ -28,11 +28,11 @@ studentUtil.readByTeacher = async (teacherId, pageNo, limit) => {
         required: true,
         attributes: ['name', 'id'],
         include: {
-          model: teacher,
+          model: organisation,
           required: true,
           attributes: ['name', 'id'],
           where: {
-            id: teacherId,
+            id: orgId,
           }
         }
       },
