@@ -1,5 +1,5 @@
 {
-    "development3": {
+    "development": {
         "username": "nodejs",
         "password": "nodejs",
         "database": "nodejs",
@@ -13,12 +13,12 @@
         "dialect": "mysql",
         "logging": false
     },
-    "development": {
+    "development3": {
         "username": "root",
         "password": "Nish2002",
         "database": "ingelt_dev",
         "dialect": "mysql",
-        "logging": true
+        "logging": false
     },
     "test": {
         "username": "admin",
