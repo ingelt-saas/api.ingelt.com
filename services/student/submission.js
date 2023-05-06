@@ -51,7 +51,6 @@ submissionService.get('/assignment/:assignmentId', async (req, res) => {
 // get submission by student
 submissionService.get("/", async (req, res) => {
   try {
-
     const studentId = req.decoded.id;
     const result = await submissionUtil.getSubmissionByStudent(studentId);
     res.status(200).json(result);

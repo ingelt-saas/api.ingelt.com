@@ -30,24 +30,89 @@ assignmentUtil.getAssignmentsByTeacher = async (teacherId, pageNo, limit) => {
 }
 
 // get assignment by student
-assignmentUtil.getAssignmentsByStudent = async (studentId) => {
+assignmentUtil.getAssignmentsByStudent = async (studentId, pageNo, limit) => {
   try {
-    const result = await assignment.findAll({
-      include: {
-        model: organisation,
-        required: true,
-        include: {
-          model: batch,
+    const result = await assignment.findAndCountAll({
+      include: [
+        {
+          model: organisation,
           required: true,
+          attributes: ['name', 'id'],
           include: {
-            model: student,
+            model: batch,
             required: true,
-            where: {
-              id: studentId,
+            attributes: ['name', 'id'],
+            include: {
+              model: student,
+              required: true,
+              attributes: [],
+              where: {
+                id: studentId,
+              }
             }
           }
+        },
+        {
+          model: submission,
+          required: false,
+          where: {
+            studentId: studentId,
+            status: 'submitted'
+          }
         }
-      }
+      ],
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      raw: true,
+      nest: true,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// search assignment by student
+assignmentUtil.searchAssignmentsByStudent = async (studentId, searchQuery, pageNo, limit) => {
+  try {
+    const result = await assignment.findAndCountAll({
+      where: {
+        name: { [Op.like]: `%${searchQuery}%` }
+      },
+      include: [
+        {
+          model: organisation,
+          required: true,
+          attributes: ['name', 'id'],
+          include: {
+            model: batch,
+            required: true,
+            attributes: ['name', 'id'],
+            include: {
+              model: student,
+              required: true,
+              attributes: [],
+              where: {
+                id: studentId,
+              }
+            }
+          }
+        },
+        {
+          model: submission,
+          required: false,
+          where: {
+            studentId: studentId,
+            status: 'submitted'
+          }
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      raw: true,
+      nest: true,
     });
     return result;
   } catch (err) {

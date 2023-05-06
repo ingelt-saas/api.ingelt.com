@@ -43,7 +43,7 @@ const notesModel = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ['reading', 'writing', 'speaking', 'listening']
       },
-      fileSize: DataTypes.STRING,
+      fileSize: DataTypes.INTEGER,
     },
     {
       timestamps: true,

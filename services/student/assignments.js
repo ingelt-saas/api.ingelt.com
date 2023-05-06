@@ -6,7 +6,8 @@ const assignmentService = express.Router();
 assignmentService.get("/all", async (req, res) => {
   try {
     const studentId = req.decoded.id;
-    const result = await assignmentUtil.getAssignmentsByStudent(studentId);
+    const { pageno, limit } = req.query;
+    const result = await assignmentUtil.getAssignmentsByStudent(studentId, parseInt(pageno), parseInt(limit));
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
@@ -14,9 +15,12 @@ assignmentService.get("/all", async (req, res) => {
 });
 
 // search assignment by batch id
-assignmentService.get('/search/:searchQuery', async (req, res) => {
+assignmentService.get('/search', async (req, res) => {
   try {
-
+    const studentId = req.decoded.id;
+    const { s, pageno, limit } = req.query;
+    const result = await assignmentUtil.searchAssignmentsByStudent(studentId, s, parseInt(pageno), parseInt(limit));
+    res.send(result);
   } catch (err) {
     res.status(400).json(err);
   }
