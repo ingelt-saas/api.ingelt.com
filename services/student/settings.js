@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const awsUpload = require('../../aws/upload');
 const { memoryStorage } = require("multer");
 const multer = require("multer");
+const deleteFile = require("../../aws/delete");
 
 const storage = memoryStorage();
 const upload = multer({ storage });
@@ -26,16 +27,21 @@ settingsService.put("/", async (req, res) => {
 // update profile picture
 settingsService.put('/updateProfile', upload.single('image'), async (req, res) => {
   try {
-    const student = req.headers.authorization.split(" ")[1];
-    const studentId = jwt.decode(student).id;
+
+    const studentId = req.decoded.id;
     const file = req.file;
+
+    const student = studentUtil.readById(studentId);
 
     awsUpload(file, 'student/profile', async (err, data) => {
       if (err) {
         res.status(400).send(err);
       } else {
+        // delete file from aws
+        student?.image && await deleteFile(student.image);
+
         await studentUtil.update(studentId, { image: data.key }); // update image in db
-        res.json({ filename: data.key });
+        res.json({ image: data.key });
       }
     });
   } catch (err) {
@@ -47,15 +53,14 @@ settingsService.put('/updateProfile', upload.single('image'), async (req, res) =
 settingsService.put("/updatePassword", async (req, res) => {
   try {
 
-    const student = req.headers.authorization.split(" ")[1];
-    const studentId = jwt.decode(student).id;
+    const student = req.decoded;
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const previousPassword = req.body.previousPassword;
 
     // change password functionality
-    if (await bcrypt.compare(previousPassword, studentId.password)) {
-      const result = await studentUtil.update(studentId, { password: hashedPassword });
+    if (await bcrypt.compare(previousPassword, student.password)) {
+      const result = await studentUtil.update(student.id, { password: hashedPassword });
       res.json(result);
     } else {
       res.json({ status: 'bad', message: 'Previous password does not match' });

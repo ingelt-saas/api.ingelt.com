@@ -6,7 +6,12 @@ const discussionService = express.Router();
 // POST discussion
 discussionService.post("/", async (req, res) => {
   try {
-    const result = await discussionUtil.create(req.body);
+    const newDiscussion = req.body;
+    newDiscussion.designation = 'student';
+    newDiscussion.senderName = req.decoded.name;
+    newDiscussion.senderId = req.decoded.id;
+    newDiscussion.senderImage = req.decoded.image;
+    const result = await discussionUtil.create(newDiscussion);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
@@ -16,11 +21,9 @@ discussionService.post("/", async (req, res) => {
 // get all discussions by batch id
 discussionService.get("/all", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const student = jwt.decode(token);
-
-    const result = await discussionUtil.getDiscussionsByBatch(student.batchId);
-    res.status(201).json(result);
+    const { pageno, limit } = req.query;
+    const result = await discussionUtil.read(parseInt(pageno), parseInt(limit));
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);

@@ -1,4 +1,4 @@
-const { submission, student } = require("../models");
+const { submission, student, assignment } = require("../models");
 const { Op } = require("sequelize");
 const submissionUtil = {};
 
@@ -22,6 +22,11 @@ submissionUtil.getSubmissionByStudent = async (studentId) => {
     const result = await submission.findAll({
       where: {
         studentId: studentId,
+        status: 'submitted'
+      },
+      include: {
+        model: assignment,
+        required: true,
       }
     });
     return result;

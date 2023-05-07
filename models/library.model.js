@@ -26,7 +26,7 @@ const libraryModel = (sequelize, DataTypes) => {
         values: ['reading', 'writing', 'speaking', 'listening']
       },
 
-      fileSize: DataTypes.STRING,
+      fileSize: DataTypes.INTEGER,
     },
     {
       timestamps: true,

@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organization, mockTest, teacher } = require("../models");
+const { student, mockTestMarks, batch, organization, mockTest, teacher, organisation } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -19,7 +19,7 @@ studentUtil.create = async (newStudent) => {
 };
 
 // students under by  teacher
-studentUtil.readByTeacher = async (teacherId, pageNo, limit) => {
+studentUtil.readByOrg = async (orgId, pageNo, limit) => {
 
   try {
     const result = await student.findAndCountAll({
@@ -28,11 +28,11 @@ studentUtil.readByTeacher = async (teacherId, pageNo, limit) => {
         required: true,
         attributes: ['name', 'id'],
         include: {
-          model: teacher,
+          model: organisation,
           required: true,
           attributes: ['name', 'id'],
           where: {
-            id: teacherId,
+            id: orgId,
           }
         }
       },
@@ -253,12 +253,29 @@ studentUtil.bandScore = async (studentId) => {
 // GET by id
 studentUtil.readById = async (studentId) => {
   try {
+    const organization = await organisation.findOne({
+      include: {
+        model: batch,
+        required: true,
+        attributes: ['name', 'id'],
+        include: {
+          model: student,
+          required: true,
+          attributes: [],
+          where: {
+            id: studentId,
+          }
+        }
+      },
+      raw: true,
+    });
+
     let result = await student.findByPk(studentId, {
       include: {
         model: batch,
         required: false,
         include: [
-          // { model: organization, attributes: ['name', 'id'] },
+          { model: organisation, attributes: ['name', 'id'] },
           // { model: mockTest, attributes: ['name', 'id'] }
         ],
       }
@@ -266,9 +283,11 @@ studentUtil.readById = async (studentId) => {
     if (result) {
       result = result.get({ plain: true });
     }
+    result.organization = organization;
     delete result?.password;
     return result;
   } catch (err) {
+    console.log(err)
     throw err;
   }
 };
