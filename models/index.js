@@ -60,5 +60,6 @@ db.submission = require("./submission.model")(sequelize, Sequelize);
 db.teacher = require("./teacher.model")(sequelize, Sequelize);
 db.mockTest = require("./mockTest.model")(sequelize, Sequelize);
 db.mockTestMarks = require("./mockTestMarks.model")(sequelize, Sequelize);
+db.studentApplied = require("./studentApplied.model")(sequelize, Sequelize);
 
 module.exports = db;

@@ -6,19 +6,23 @@ const settingsService = require('express').Router();
 const storage = memoryStorage();
 const upload = multer({ storage });
 const awsUpload = require('../../aws/upload');
+const deleteFile = require('../../aws/delete');
+const bcrypt = require('bcrypt');
 
 // update admin image 
 settingsService.post('/', upload.single('image'), async (req, res) => {
     try {
         const adminId = req.decoded.id;
         const file = req.file;
+        const admin = await adminUtil.readById(adminId);
 
         awsUpload(file, 'admin/profile', async (err, data) => {
             if (err) {
                 res.status(400).send(err);
             } else {
                 const result = await adminUtil.update(adminId, { picture: data.Key });
-                res.send(result);
+                admin?.picture && await deleteFile(admin.picture); // delete previous image
+                res.json(result);
             }
         });
 
@@ -31,6 +35,7 @@ settingsService.post('/', upload.single('image'), async (req, res) => {
 settingsService.post('/org', upload.single('image'), async (req, res) => {
     try {
         const orgId = req.decoded.organizationId;
+        const organization = await organizationUtil.readById(orgId);
         const file = req.file;
 
         awsUpload(file, 'admin/organization', async (err, data) => {
@@ -38,7 +43,8 @@ settingsService.post('/org', upload.single('image'), async (req, res) => {
                 res.status(400).send(err);
             } else {
                 const result = await organizationUtil.update(orgId, { logo: data.Key });
-                res.send(result);
+                organization?.logo && await deleteFile(organization.logo); // delete previous logo
+                res.json(result);
             }
         });
 
@@ -61,6 +67,25 @@ settingsService.put('/', async (req, res) => {
     }
 });
 
+// update password 
+settingsService.put('/updatePassword', async (req, res) => {
+    try {
+        const prevPwd = req.body.prevPassword;
+        const admin = await adminUtil.readById(req.decoded.id);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+        if (await bcrypt.compare(prevPwd, admin.password)) {
+            const result = await adminUtil.update(req.decoded.id, { password: hashedPassword });
+            res.json(result);
+        } else {
+            res.status(401).json({ message: 'Your previous password does not match.' });
+        }
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 // update org data 
 settingsService.put('/org', async (req, res) => {
     try {
@@ -68,7 +93,7 @@ settingsService.put('/org', async (req, res) => {
         const orgId = req.decoded.organizationId;
 
         const result = await organizationUtil.update(orgId, updatedData);
-        res.send(result);
+        res.json(result);
 
     } catch (err) {
         res.status(400).send(err);

@@ -44,12 +44,12 @@ Batch.belongsTo(Organisation, {
 // Discussion.belongsTo(Organisation)
 
 // ORGANISATION - LIBRARY
-Organisation.hasMany(Library);
-Library.belongsTo(Organisation);
+// Organisation.hasMany(Library);
+// Library.belongsTo(Organisation);
 
 // BATCH TEACHER
-Batch.belongsToMany(Teacher, { through: BatchesTeachers });
-Teacher.belongsToMany(Batch, { through: BatchesTeachers });
+Batch.belongsToMany(Teacher, { through: BatchesTeachers, });
+Teacher.belongsToMany(Batch, { through: BatchesTeachers, });
 
 Batch.hasMany(BatchesTeachers);
 BatchesTeachers.belongsTo(Batch);
@@ -147,5 +147,9 @@ Organisation.hasMany(OrgImages);
 OrgImages.belongsTo(Organisation);
 
 // STUDENT APPLIED
-Student.belongsToMany(Organisation, { through: StudentApplied });
-Organisation.belongsToMany(Student, { through: StudentApplied });
+Organisation.hasMany(StudentApplied);
+StudentApplied.belongsTo(Organisation);
+
+Student.hasMany(StudentApplied);
+StudentApplied.belongsTo(Student);
+

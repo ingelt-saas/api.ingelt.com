@@ -44,7 +44,6 @@ adminUtil.readById = async (adminId) => {
     });
     if (result) {
       result = result.get({ plain: true });
-      delete result.password;
     }
     return result;
   } catch (err) {

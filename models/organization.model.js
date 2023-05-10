@@ -110,6 +110,7 @@ const organisationModel = (sequelize, DataTypes) => {
 
       sponsored: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
 
       modeOfClasses: {
@@ -123,6 +124,7 @@ const organisationModel = (sequelize, DataTypes) => {
 
       active: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
 
       verified: {

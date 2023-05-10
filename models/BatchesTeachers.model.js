@@ -1,12 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define(
-    "BatchesTeachers",
-    {
-      subject: {
-        type: DataTypes.ENUM,
-        values: ['reading', 'writing', 'speaking', 'listening']
-      },
+  return sequelize.define("BatchesTeachers", {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
-    { timestamps: true }
+    subject: {
+      type: DataTypes.STRING,
+      defaultValue: null,
+    },
+  }
   );
 };

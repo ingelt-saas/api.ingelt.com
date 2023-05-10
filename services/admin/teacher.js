@@ -24,12 +24,12 @@ teacherService.post("/add-batch", async (req, res) => {
 });
 
 // get all teacher in the organization
-teacherService.get("/", async (req, res) => {
+teacherService.get("/getall", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const organizationId = jwt.decode(token).organizationId;
-    const result = await teacherUtil.read(organizationId);
-    res.status(201).json(result);
+    const orgId = req.decoded.organizationId;
+    const { pageno, limit } = req.query;
+    const result = await teacherUtil.readByOrg(orgId, parseInt(pageno), parseInt(limit));
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -73,25 +73,20 @@ teacherService.get("/:teacherId", async (req, res) => {
 // get teachers by batch id
 teacherService.get("/batch/:batchId", async (req, res) => {
   try {
-    const result = await teacherUtil.getTeachersByBatch(req.params.batchId);
-    res.status(201).json(result);
+    const { pageno, limit } = req.query;
+    const result = await teacherUtil.getTeachersByBatch(req.params.batchId, parseInt(pageno), parseInt(limit));
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
 });
 
 // teacher subject updated
-teacherService.put("/:batchId/:teacherId", async (req, res) => {
-  const batchId = req.params.batchId;
-  const teacherId = req.params.teacherId;
+teacherService.put("/subjectUpdate/:id", async (req, res) => {
   const subject = req.body.subject;
   try {
-    const result = await teacherUtil.teacherSubjectUpdate(
-      batchId,
-      teacherId,
-      subject
-    );
-    res.send(result);
+    const result = await teacherUtil.teacherSubjectUpdate(req.params.id, subject);
+    res.json(result);
   } catch (err) {
     res.status(400).send(err);
   }

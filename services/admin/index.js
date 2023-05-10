@@ -11,9 +11,23 @@ const mockTestService = require("./mockTest");
 const settingsService = require("./settings");
 const authenticateAdmin = require("../../auth/admin");
 const verifyJWT = require("../../middleware/verifyJWT");
+const file = require("../../aws/file");
+const appliedStudentsService = require("./appliedStudents");
 
 // authentication service 
 router.post('/auth', authenticateAdmin);
+
+// file or image route 
+router.get('/files', verifyJWT, async (req, res) => {
+    try {
+        const key = req.headers.awskey;
+        const result = await file(key);
+        res.send(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 
 router.use("/", verifyJWT, homeService);
 router.use("/student", verifyJWT, studentService);
@@ -23,5 +37,6 @@ router.use("/batch", verifyJWT, batchService);
 router.use("/mockTest", verifyJWT, mockTestService);
 router.use("/assignment", verifyJWT, mockTestService);
 router.use("/settings", verifyJWT, settingsService);
+router.use("/appliedStudents", verifyJWT, appliedStudentsService);
 
 module.exports = router;

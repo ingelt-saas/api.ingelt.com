@@ -5,6 +5,7 @@ const batchService = express.Router();
 // create new batch
 batchService.post("/", async (req, res) => {
   try {
+    req.body.organizationId = req.decoded.organizationId;
     const result = await batchUtil.create(req.body);
     res.status(201).json(result);
   } catch (err) {
@@ -13,11 +14,27 @@ batchService.post("/", async (req, res) => {
 });
 
 // get all batch with batch students and teachers by organization
-batchService.get("/", async (req, res) => {
+batchService.get("/getall", async (req, res) => {
   try {
-    const result = await batchUtil.batchesWithStuAndTea(req.headers.organization);
-    res.status(201).json(result);
+    const orgId = req.decoded.organizationId;
+    const { pageno, limit } = req.query;
+    const result = await batchUtil.batchesWithStuAndTea(orgId, parseInt(pageno), parseInt(limit));
+    res.status(200).json(result);
   } catch (err) {
+    console.log(err)
+    res.status(400).json(err);
+  }
+});
+
+// search all batch with batch students and teachers by organization
+batchService.get("/search", async (req, res) => {
+  try {
+    const orgId = req.decoded.organizationId;
+    const { s, pageno, limit } = req.query;
+    const result = await batchUtil.searchBatchesWithStuAndTea(orgId, s, parseInt(pageno), parseInt(limit));
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err)
     res.status(400).json(err);
   }
 });
