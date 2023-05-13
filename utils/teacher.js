@@ -45,29 +45,31 @@ teacherUtil.addTeacherInBatch = async (data) => {
 }
 
 // GET all teacher by batch id
-teacherUtil.getTeachersByBatch = async (batchId) => {
+teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
   try {
-    const result = await BatchesTeachers.findAll({
+    const result = await BatchesTeachers.findAndCountAll({
       where: { batchId: batchId },
       include: {
         model: teacher
       },
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };
 
 // get all teachers in the organization
-teacherUtil.read = async (orgId) => {
+teacherUtil.readByOrg = async (orgId, pageNo, limit) => {
   try {
-    const result = await teacher.findAll({
+    const result = await teacher.findAndCountAll({
       include: {
         model: batch,
-        as: "batches",
+        as: 'batches',
         required: true,
+        attributes: ['name', 'id'],
         include: {
           model: organisation,
           where: { id: orgId },
@@ -76,9 +78,12 @@ teacherUtil.read = async (orgId) => {
         },
       },
       order: [["name", "ASC"]],
+      offset: (pageNo - 1) * limit,
+      limit: limit
     });
     return result;
   } catch (err) {
+    console.log(err)
     throw err;
   }
 };
@@ -290,28 +295,28 @@ teacherUtil.deleteTeacherFromBatch = async (batchId, teacherId) => {
 }
 
 // teacher subject update
-teacherUtil.teacherSubjectUpdate = async (batchId, teacherId, subject) => {
+teacherUtil.teacherSubjectUpdate = async (id, subject) => {
   try {
     const getSubject = await BatchesTeachers.findOne({
-      where: {
-        batchId: batchId,
-        teacherId: teacherId,
-      },
+      where: { id: id },
       plain: true,
     });
 
     let newSubjects = [];
-    const subjects = getSubject.subject.split(';');
-    if (subjects.includes(subject)) {
-      newSubjects = subjects.filter(i => i !== subject);
+    if (!getSubject.subject) {
+      newSubjects = [subject];
     } else {
-      newSubjects = [...subjects, subject];
+      const subjects = getSubject.subject.split(';');
+      if (subjects.includes(subject)) {
+        newSubjects = subjects.filter(i => i !== subject);
+      } else {
+        newSubjects = [...subjects, subject];
+      }
     }
 
     const result = await BatchesTeachers.update({ subject: newSubjects.join(';') }, {
       where: {
-        batchId: batchId,
-        teacherId: teacherId,
+        id: id,
       }
     });
     return result;

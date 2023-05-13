@@ -45,7 +45,10 @@ organizationUtil.read = async () => {
 // GET by id
 organizationUtil.readById = async (organizationId) => {
   try {
-    const result = await organization.findByPk(organizationId);
+    let result = await organization.findByPk(organizationId);
+    if (result) {
+      result = result.get({ plain: true });
+    }
     return result;
   } catch (err) {
     throw err;

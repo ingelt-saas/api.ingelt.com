@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { mockTestMarks, student, batch, organisation } = require("../models");
+const { mockTestMarks, student, batch, organisation, mockTest } = require("../models");
 const mockTestMarksUtil = {};
 
 // POST
@@ -33,6 +33,10 @@ mockTestMarksUtil.getMockTestMarksByStudent = async (studentId) => {
       where: {
         studentId: studentId,
       },
+      include: {
+        model: mockTest,
+        required: true,
+      }
     });
     return result;
   } catch (err) {

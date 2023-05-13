@@ -1,6 +1,6 @@
-const { batch, student, teacher, organisation } = require("../models");
+const { batch, student, teacher, organisation, BatchesTeachers } = require("../models");
 const batchUtil = {};
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 
 // POST
 batchUtil.create = async (newBatch) => {
@@ -25,10 +25,10 @@ batchUtil.read = async () => {
 };
 
 // get all batch and batch students and teacher
-batchUtil.batchesWithStuAndTea = async (orgId) => {
+batchUtil.batchesWithStuAndTea = async (orgId, pageNo, limit) => {
   try {
     // get all batches
-    const batches = await batch.findAll({
+    const batches = await batch.findAndCountAll({
       include: [
         {
           model: organisation,
@@ -38,18 +38,78 @@ batchUtil.batchesWithStuAndTea = async (orgId) => {
         },
       ],
       order: [["id", "DESC"]],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
       raw: true,
     });
+
     let batchesArr = []; // define new batch array
 
     // get students and teacher by batch
-    for (let batch of batches) {
-      const students = await student.count({ where: { batchId: batch.id } });
-      const teachers = await teacher.count({ where: { batchId: batch.id } });
-      batchesArr.push({ batch, students, teachers });
+    if (Array.isArray(batches.rows)) {
+      for (let batch of batches.rows) {
+        const students = await student.count({ where: { batchId: batch.id } });
+        const teachers = await BatchesTeachers.count({
+          where: {
+            batchId: batch.id
+          },
+          attributes: [
+            [Sequelize.fn('DISTINCT', Sequelize.col('teacherId')), 'teachers'],
+          ]
+        });
+        batchesArr.push({ ...batch, students, teachers });
+      }
     }
+
     // return new batch array
-    return batchesArr;
+    return { count: batches.count, rows: batchesArr };
+  } catch (err) {
+    throw err;
+  }
+};
+
+// search all batch and batch students and teacher
+batchUtil.searchBatchesWithStuAndTea = async (orgId, search, pageNo, limit) => {
+  try {
+    // get all batches
+    const batches = await batch.findAndCountAll({
+      where: {
+        name: { [Op.like]: `%${search}%` }
+      },
+      include: [
+        {
+          model: organisation,
+          where: { id: orgId },
+          required: true,
+          attributes: [],
+        },
+      ],
+      order: [["id", "DESC"]],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      raw: true,
+    });
+
+    let batchesArr = []; // define new batch array
+
+    // get students and teacher by batch
+    if (Array.isArray(batches.rows)) {
+      for (let batch of batches.rows) {
+        const students = await student.count({ where: { batchId: batch.id } });
+        const teachers = await BatchesTeachers.count({
+          where: {
+            batchId: batch.id
+          },
+          attributes: [
+            [Sequelize.fn('DISTINCT', Sequelize.col('teacherId')), 'teachers'],
+          ]
+        });
+        batchesArr.push({ ...batch, students, teachers });
+      }
+    }
+
+    // return new batch array
+    return { count: batches.count, rows: batchesArr };
   } catch (err) {
     throw err;
   }

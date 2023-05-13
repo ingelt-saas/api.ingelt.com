@@ -1,8 +1,13 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const batchUtil = require("../../utils/batch");
 const studentUtil = require("../../utils/student");
+const mockTestMarksUtil = require("../../utils/mockTestMarks");
+const { memoryStorage } = require("multer");
+const multer = require("multer");
 const studentService = express.Router();
+const storage = memoryStorage();
+const upload = multer({ storage });
+const awsUpload = require('../../aws/upload');
+const deleteFile = require("../../aws/delete");
 
 // POST new student
 studentService.post("/", async (req, res) => {
@@ -14,33 +19,80 @@ studentService.post("/", async (req, res) => {
   }
 });
 
-// search student
+// search student in the organization
 studentService.get("/search", async (req, res) => {
-  const value = req.query.s;
   try {
-    const result = await studentUtil.search(value);
-    res.send(result);
+    const { s, pageno, limit } = req.query;
+    const orgId = req.decoded.organizationId;
+    const result = await studentUtil.searchStuByOrg(orgId, s, parseInt(pageno), parseInt(limit));
+    res.json(result);
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-// get all student by batch
-studentService.get("/batch/:batchId", async (req, res) => {
+// get all student in the organization
+studentService.get('/getall', async (req, res) => {
   try {
-    const result = await studentUtil.getStudentsByBatch(req.params.batchId);
-    res.status(201).json(result);
+    const { pageno, limit } = req.query;
+    const orgId = req.decoded.organizationId;
+    const result = await studentUtil.allStuByOrgId(orgId, parseInt(pageno), parseInt(limit));
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// search student in the all student 
+studentService.get('/searchAll', async (req, res) => {
+  try {
+    const { s } = req.query;
+    const result = await studentUtil.searchInAllStudents(s);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// get all student in the batch
+studentService.get('/batch/:batchId', async (req, res) => {
+  try {
+    const { pageno, limit } = req.query;
+    const batchId = req.params.batchId;
+    const result = await studentUtil.readByBatch(batchId, parseInt(pageno), parseInt(limit));
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// get a student by student id
+studentService.get('/:studentId', async (req, res) => {
+  try {
+    const result = await studentUtil.readById(req.params.studentId);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// get student average band 
+studentService.get("/avgBand/:studentId", async (req, res) => {
+  const studentId = req.params.studentId;
+  try {
+    const result = await studentUtil.bandScore(studentId);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
 });
 
-// get a student by student id
-studentService.get("/:studentId", async (req, res) => {
+// get student mock test marks 
+studentService.get("/mockTestMarks/:studentId", async (req, res) => {
   const studentId = req.params.studentId;
   try {
-    const result = await studentUtil.readById(studentId);
-    res.status(201).json(result);
+    const result = await mockTestMarksUtil.getMockTestMarksByStudent(studentId);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -55,6 +107,31 @@ studentService.put("/:studentId", async (req, res) => {
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
+  }
+});
+
+//
+studentService.put('/updatePicture/:studentId', upload.single('image'), async (req, res) => {
+  try {
+    const studentId = req.params.studentId;
+    const file = req.file;
+
+    const student = studentUtil.readById(studentId);
+
+    awsUpload(file, 'student/profile', async (err, data) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        // delete file from aws
+        student?.image && await deleteFile(student.image);
+
+        await studentUtil.update(studentId, { image: data.key }); // update image in db
+        res.json({ image: data.key });
+      }
+    });
+
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 

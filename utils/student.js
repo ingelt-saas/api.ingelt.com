@@ -1,4 +1,4 @@
-const { student, mockTestMarks, batch, organization, mockTest, teacher, organisation } = require("../models");
+const { student, batch, organization, mockTest, teacher, organisation, mockTestMarks } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -18,7 +18,7 @@ studentUtil.create = async (newStudent) => {
   }
 };
 
-// students under by  teacher
+// students under by org
 studentUtil.readByOrg = async (orgId, pageNo, limit) => {
 
   try {
@@ -42,6 +42,26 @@ studentUtil.readByOrg = async (orgId, pageNo, limit) => {
     return result;
   } catch (err) {
     console.log(err)
+    throw err;
+  }
+}
+// students under by batch
+studentUtil.readByBatch = async (batchId, pageNo, limit) => {
+
+  try {
+    const result = await student.findAndCountAll({
+      include: {
+        model: batch,
+        required: true,
+        where: {
+          id: batchId,
+        }
+      },
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
     throw err;
   }
 }
@@ -85,6 +105,63 @@ studentUtil.search = async (teacherId, searchValue) => {
   }
 }
 
+// search students in all organization and student batchId is null
+studentUtil.searchInAllStudents = async (searchValue) => {
+  try {
+    const result = await student.findAll({
+      where: {
+        [Op.and]: [
+          {
+            [Op.or]: [
+              { name: { [Op.like]: `%${searchValue}%` } },
+              { email: { [Op.like]: `%${searchValue}%` } }
+            ]
+          },
+          { batchId: null, }
+        ]
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// search student by org 
+studentUtil.searchStuByOrg = async (orgId, searchQuery, pageNo, limit) => {
+  try {
+    const result = await student.findAndCountAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${searchQuery}%` } },
+          { email: { [Op.like]: `%${searchQuery}%` } },
+          { phoneNo: { [Op.like]: `%${searchQuery}%` } },
+        ]
+      },
+      include: {
+        model: batch,
+        required: true,
+        attributes: ['name', 'id'],
+        include: {
+          model: organisation,
+          required: true,
+          attributes: ['name', 'id'],
+          where: {
+            id: orgId,
+          }
+        }
+      },
+      order: [['name', 'ASC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    console.log(err)
+    throw err;
+  }
+}
+
 // get total student in the organization
 studentUtil.totalStudents = async (orgId) => {
   try {
@@ -105,20 +182,21 @@ studentUtil.totalStudents = async (orgId) => {
 };
 
 // get All Students in an Organization
-studentUtil.allStuByOrgId = async (orgId) => {
+studentUtil.allStuByOrgId = async (orgId, pageNo, limit) => {
   try {
-    const result = await student.findAll({
+    const result = await student.findAndCountAll({
       include: [
         {
           model: batch,
-          include: { model: organization, where: { id: orgId } },
+          include: { model: organisation, where: { id: orgId } },
           required: true,
         },
       ],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };
@@ -274,20 +352,27 @@ studentUtil.readById = async (studentId) => {
       include: {
         model: batch,
         required: false,
-        include: [
-          { model: organisation, attributes: ['name', 'id'] },
-          // { model: mockTest, attributes: ['name', 'id'] }
-        ],
+        include: {
+          model: organisation, attributes: ['name', 'id'],
+          include: { model: mockTest, attributes: ['name', 'id'] }
+        },
       }
     });
+
+    const testAttempted = await mockTestMarks.count({
+      where: {
+        studentId: studentId,
+      }
+    });
+
     if (result) {
       result = result.get({ plain: true });
+      result.organization = organization;
+      result.testAttempted = testAttempted;
     }
-    result.organization = organization;
     delete result?.password;
     return result;
   } catch (err) {
-    console.log(err)
     throw err;
   }
 };
