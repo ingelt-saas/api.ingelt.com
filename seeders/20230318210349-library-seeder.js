@@ -8,7 +8,6 @@ module.exports = {
       [
         {
           id: "DOC004",
-          organizationId: "ORG1",
           file: "document 1",
           name: "document 1",
           fileSize: 1200390,
@@ -18,7 +17,6 @@ module.exports = {
         },
         {
           id: "DOC002",
-          organizationId: "ORG1",
           file: "document 2",
           name: "document 1",
           fileSize: 1200390,
@@ -28,7 +26,6 @@ module.exports = {
         },
         {
           id: "DOC003",
-          organizationId: "ORG2",
           file: "document 3",
           name: "document 1",
           fileSize: 1200390,

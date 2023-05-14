@@ -7,6 +7,7 @@ module.exports = {
       "BatchesTeachers",
       [
         {
+          id: 'BATCH0',
           batchId: "BAT01",
           teacherId: "TEA001",
           subject: "reading",
@@ -14,6 +15,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id: 'BATCH1',
           batchId: "BAT01",
           teacherId: "TEA002",
           subject: "writing",
@@ -21,6 +23,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id: 'BATCH2',
           batchId: "BAT01",
           teacherId: "TEA003",
           subject: "listening",
@@ -28,6 +31,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id: 'BATCH3',
           batchId: "BAT01",
           teacherId: "TEA004",
           subject: "speaking",
@@ -35,6 +39,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id: 'BATCH4',
           batchId: "BAT02",
           teacherId: "TEA001",
           subject: "reading",
@@ -42,6 +47,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id: 'BATCH5',
           batchId: "BAT02",
           teacherId: "TEA004",
           subject: "writing",

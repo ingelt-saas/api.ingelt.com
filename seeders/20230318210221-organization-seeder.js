@@ -8,7 +8,7 @@ module.exports = {
       [
         {
           id: "ORG1",
-          ownerName:"Priyanshu Gupta",
+          ownerName: "Priyanshu Gupta",
           name: "organisation one",
           images: "https://picsum.photos/200",
           phoneNo: "1234567890",
@@ -42,7 +42,7 @@ module.exports = {
         },
         {
           id: "ORG2",
-          ownerName:"Nishant Sharma",
+          ownerName: "Nishant Sharma",
           name: "organisation two",
           images: "https://picsum.photos/200",
           phoneNo: "1234567890",
@@ -76,7 +76,7 @@ module.exports = {
         },
         {
           id: "ORG3",
-          ownerName:"Sumit Kaushik",
+          ownerName: "Sumit Kaushik",
           name: "organisation three",
           images: "https://picsum.photos/200",
           phoneNo: "1234567890",
