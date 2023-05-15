@@ -33,6 +33,29 @@ homeService.get("/avgBand", async (req, res) => {
   }
 });
 
+// get attempted students by organization
+homeService.get('/attemptedStudents', async (req, res) => {
+  try {
+    const orgId = req.headers.organization;
+    const result = await studentUtil.attemptedStudentsByOrg(orgId);
+    res.json(result);
+  } catch (err) {
+    console.log(err)
+    res.status(400).send(err);
+  }
+});
+
+// best students
+homeService.get('/bestStudents', async (req, res) => {
+  try {
+    const orgId = req.headers.organization;
+    const result = await studentUtil.bestStudents(orgId);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // get teacher
 homeService.get("/:teacherId", async (req, res) => {
   try {

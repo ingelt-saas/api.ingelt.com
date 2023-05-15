@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const studentUtil = require("../../utils/student");
 const batchUtil = require("../../utils/batch");
 const mockTestMarksUtil = require("../../utils/mockTestMarks");
+const submissionUtil = require("../../utils/submission");
 const homeService = express.Router();
 
 // GET student by id
@@ -17,11 +18,9 @@ homeService.get("/", async (req, res) => {
 });
 
 // get meet link
-homeService.get("/meetLink/", async (req, res) => {
+homeService.get("/meetLink", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const student = jwt.decode(token);
-
+    const student = req.decoded;
     const result = await batchUtil.readById(student.batchId);
     const batchId = { classroomLink: result.classroomLink };
     res.json(batchId);
@@ -33,8 +32,7 @@ homeService.get("/meetLink/", async (req, res) => {
 // avg band
 homeService.get("/bands", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const student = jwt.decode(token);
+    const student = req.decoded;
     const avgBand = await studentUtil.bandScore(student.id);
     res.json(avgBand);
   } catch (err) {
@@ -45,8 +43,7 @@ homeService.get("/bands", async (req, res) => {
 // get mock test marks
 homeService.get("/mockTestMarks", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const student = jwt.decode(token);
+    const student = req.decoded;
 
     const marks = await mockTestMarksUtil.getMockTestMarksByStudent(student.id);
 
@@ -62,6 +59,17 @@ homeService.get("/mockTestMarks", async (req, res) => {
       });
     });
 
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// get submissions with assignment
+homeService.get('/submissions', async (req, res) => {
+  try {
+    const studentId = req.decoded.id;
+    const result = await submissionUtil.getSubmissionByStudent(studentId);
     res.json(result);
   } catch (err) {
     res.status(400).send(err);
