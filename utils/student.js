@@ -1,4 +1,4 @@
-const { student, batch, organization, mockTest, teacher, organisation, mockTestMarks, submission, assignment } = require("../models");
+const { student, batch, organization, mockTest, teacher, organisation, mockTestMarks, submission, assignment, sequelize, studentApplied } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -297,6 +297,123 @@ studentUtil.enrollmentStudent = async (orgId) => {
   }
 };
 
+// enrollment students by walk-in
+studentUtil.enrollmentStudentByWalkIn = async (orgId, year) => {
+  try {
+    const result = await student.findAll({
+      where: {
+        [Op.and]: [
+          { '$studentApplieds.id$': null },
+          Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
+        ]
+      },
+      attributes: [
+        [sequelize.fn('MONTH', sequelize.col('student.createdAt')), 'month'],
+        [Sequelize.fn('COUNT', 'student.*'), 'count'],
+      ],
+      include: [
+        {
+          model: batch,
+          required: true,
+          attributes: [],
+          include: {
+            model: organisation,
+            where: { id: orgId },
+            required: true,
+            attributes: [],
+          },
+        },
+        { model: studentApplied, required: false, as: 'studentApplieds', attributes: [] }
+      ],
+      group: ['month'],
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// enrollment students by ingelt
+studentUtil.enrollmentStudentByInGelt = async (orgId, year) => {
+  try {
+    const result = await student.findAll({
+      where: {
+        [Op.and]: [
+          Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
+        ]
+      },
+      attributes: [
+        [sequelize.fn('MONTH', sequelize.col('student.createdAt')), 'month'],
+        [Sequelize.fn('COUNT', 'student.*'), 'count'],
+      ],
+      include: [
+        {
+          model: batch,
+          required: true,
+          attributes: [],
+          include: {
+            model: organisation,
+            where: { id: orgId },
+            required: true,
+            attributes: [],
+          },
+        },
+        { model: studentApplied, required: true, where: { status: 'accepted' } }
+      ],
+      group: ['month'],
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// enrollment student by organization
+studentUtil.enrollmentStudentByOrg = async (orgId) => {
+  try {
+    const inGeltStudents = await student.count({
+      include: [
+        {
+          model: batch,
+          required: true,
+          include: {
+            model: organisation,
+            required: true,
+            where: {
+              id: orgId,
+            }
+          }
+        },
+        { model: studentApplied, required: true, where: { organizationId: orgId, status: 'accepted' } }
+      ]
+    });
+
+    const walkInStudents = await student.count({
+      include: [
+        {
+          model: batch,
+          required: true,
+          include: {
+            model: organisation,
+            required: true,
+            where: {
+              id: orgId,
+            }
+          }
+        },
+        { model: studentApplied, required: false, as: 'studentApplieds' }
+      ],
+      where: {
+        '$studentApplieds.id$': null,
+      },
+    });
+    return { walkInStudents, inGeltStudents };
+  } catch (err) {
+    console.log(err)
+    throw err;
+  }
+}
+
 // GET all students by batch id
 studentUtil.getStudentsByBatch = async (batchId) => {
   try {
@@ -352,6 +469,31 @@ studentUtil.attemptedStudentsByOrg = async (orgId) => {
     throw err;
   }
 };
+
+// active student by organization
+studentUtil.activeStudentsByOrg = async (orgId) => {
+  try {
+    const result = await student.count({
+      where: {
+        active: true,
+      },
+      include: {
+        model: batch,
+        required: true,
+        include: {
+          model: organisation,
+          required: true,
+          where: {
+            id: orgId,
+          }
+        }
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // band score by student id
 studentUtil.bandScore = async (studentId) => {
