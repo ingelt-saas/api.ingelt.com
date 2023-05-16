@@ -1,4 +1,4 @@
-const { student, batch, organization, mockTest, teacher, organisation, mockTestMarks } = require("../models");
+const { student, batch, organization, mockTest, teacher, organisation, mockTestMarks, submission, assignment } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
@@ -209,13 +209,18 @@ studentUtil.bestStudents = async (orgId) => {
         {
           model: batch,
           required: true,
+          attributes: ['name', 'id'],
           include: {
             model: organization,
+            attributes: ['name', 'id'],
             where: { id: orgId },
             required: true,
           },
         },
       ],
+      attributes: {
+        exclude: ['password']
+      },
       limit: 4,
       order: [["averageBands", "DESC"]],
     });
@@ -306,6 +311,48 @@ studentUtil.getStudentsByBatch = async (batchId) => {
   }
 };
 
+// assignment attempted students
+studentUtil.attemptedStudentsByOrg = async (orgId) => {
+  try {
+
+    const totalAssignments = await assignment.count({
+      where: {
+        organizationId: orgId,
+      }
+    });
+
+    let result = await student.findAll({
+      attributes: ['name', 'id', 'image'],
+      include: [
+        {
+          model: batch,
+          required: true,
+          attributes: [],
+          include: {
+            model: organisation,
+            required: true,
+            attributes: [],
+            where: {
+              id: orgId,
+            }
+          }
+        },
+        {
+          model: submission,
+          attributes: ['id']
+        }
+      ],
+      order: [['name', 'ASC']],
+    });
+
+    const newResult = result.map(i => ({ ...i.dataValues, assignment: totalAssignments }));
+
+    return newResult;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // band score by student id
 studentUtil.bandScore = async (studentId) => {
   try {
@@ -364,7 +411,6 @@ studentUtil.readById = async (studentId) => {
         studentId: studentId,
       }
     });
-
     if (result) {
       result = result.get({ plain: true });
       result.organization = organization;
