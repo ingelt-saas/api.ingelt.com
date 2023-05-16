@@ -553,7 +553,6 @@ studentUtil.readById = async (studentId) => {
         studentId: studentId,
       }
     });
-
     if (result) {
       result = result.get({ plain: true });
       result.organization = organization;
