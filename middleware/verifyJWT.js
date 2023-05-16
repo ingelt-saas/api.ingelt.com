@@ -14,6 +14,7 @@ module.exports = (req, res, next) => {
       }
     });
   } catch (err) {
+    console.log("UNAUTHORIZED");
     res.status(400).send(err);
   }
 };

@@ -18,15 +18,15 @@ const file = require("../../aws/file");
 // authentication route
 router.post("/auth", authenticateTeacher);
 
-// file or image route 
-router.get('/files', verifyJWT, async (req, res) => {
-    try {
-        const key = req.headers.awskey;
-        const result = await file(key);
-        res.send(result);
-    } catch (err) {
-        res.status(400).send(err);
-    }
+// file or image route
+router.get("/files", verifyJWT, async (req, res) => {
+  try {
+    const key = req.headers.awskey;
+    const result = await file(key);
+    res.send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 router.use("/", verifyJWT, homeService);
