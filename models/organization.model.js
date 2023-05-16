@@ -135,6 +135,11 @@ const organisationModel = (sequelize, DataTypes) => {
         type: DataTypes.FLOAT,
       },
 
+      commission: {
+        type: DataTypes.FLOAT,
+        defaultValue: 50,
+      },
+
       bankName: {
         type: DataTypes.STRING,
       },
