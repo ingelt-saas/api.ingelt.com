@@ -88,6 +88,16 @@ teacherUtil.readByOrg = async (orgId, pageNo, limit) => {
   }
 };
 
+// read by email
+teacherUtil.readByEmail = async (email) => {
+  try {
+    const result = await teacher.findOne({ where: { email: email } });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // search teacher
 teacherUtil.search = async (searchQuery) => {
   try {

@@ -73,7 +73,10 @@ const studentModel = (sequelize, DataTypes) => {
 
     dob: DataTypes.DATE,
 
-    active: DataTypes.BOOLEAN,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
 
     status: {
       type: DataTypes.ENUM,

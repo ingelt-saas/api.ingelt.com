@@ -1,13 +1,39 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const teacherUtil = require("../../utils/teacher");
+const { memoryStorage } = require("multer");
+const multer = require("multer");
 const teacherService = express.Router();
+const storage = memoryStorage();
+const upload = multer({ storage });
+const bcrypt = require('bcrypt');
+const awsUpload = require('../../aws/upload');
 
 // add new teacher
-teacherService.post("/", async (req, res) => {
+teacherService.post("/", upload.single('image'), async (req, res) => {
   try {
-    const result = await teacherUtil.create(req.body);
-    res.status(201).json(result);
+    const file = req.file;
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+    // check ani teacher has with this email
+    const getTeacher = await teacherUtil.readByEmail(req.body.email);
+
+    if (getTeacher) {
+      return res.status(208).send({ message: 'Teacher exists at this email.' });
+    }
+
+    awsUpload(file, 'teacher/profile', async (err, data) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        const newTeacher = req.body;
+        newTeacher.password = hashPassword;
+        newTeacher.image = data.Key;
+        const result = await teacherUtil.create(newTeacher);
+        res.status(201).json(result);
+      }
+    });
+
   } catch (err) {
     res.status(400).send(err);
   }

@@ -45,6 +45,7 @@ studentUtil.readByOrg = async (orgId, pageNo, limit) => {
     throw err;
   }
 }
+
 // students under by batch
 studentUtil.readByBatch = async (batchId, pageNo, limit) => {
 
@@ -564,6 +565,20 @@ studentUtil.readById = async (studentId) => {
     throw err;
   }
 };
+
+// update student by batch
+studentUtil.updateStudentsByBatch = async (batchId, data) => {
+  try {
+    const result = await student.update(data, {
+      where: {
+        batchId: batchId,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // PUT
 studentUtil.update = async (studentId, updateData) => {
