@@ -68,7 +68,7 @@ notesService.delete('/:noteId', async (req, res) => {
             getNote = getNote.dataValues;
         }
 
-        getNote?.file && await deleteFile(getNote.file);
+        getNote.file && await deleteFile(getNote.file);
 
         await notesUtil.deleteNotes(noteId);
         res.sendStatus(202);

@@ -72,6 +72,18 @@ teacherService.get("/search", async (req, res) => {
   }
 });
 
+// search teachers in the organization
+teacherService.get("/search/organization", async (req, res) => {
+  try {
+    const { s, pageNo, limit } = req.query;
+    const orgId = req.decoded.organizationId;
+    const result = await teacherUtil.searchByOrg(orgId, s, parseInt(pageNo), parseInt(limit));
+    res.send(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // get a teacher by teacher id and additional info
 teacherService.get("/:teacherId", async (req, res) => {
   try {
