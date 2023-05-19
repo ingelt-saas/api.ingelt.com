@@ -9,8 +9,8 @@ const responseEmail = (data) => {
                 <html lang="en-US">
                     <head>
                         <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-                        <title>Reset Password Email Template</title>
-                        <meta name="description" content="Reset Password Email Template.">
+                        <title>Acknowledgement - board.ingelt.com</title>
+                        <meta name="description" content="Acknowledgement - board.ingelt.com">
                         <style type="text/css">
                             a:hover {text-decoration: underline !important;}
                         </style>
@@ -62,7 +62,7 @@ const responseEmail = (data) => {
                                                             </p>
                                                             <p style="color:#455056; font-size:15px;line-height:24px; margin:0; margin-bottom: 16px;">
                                                             <span style="display:block;">Best regards,</span>
-                                                            <span style="display: block; font-weight:600">Team InGelt.</span>
+                                                            <span style="display: block; font-weight:600">Team InGelt Board</span>
                                                             </p>
                                                             
                                                         </td>
@@ -77,7 +77,7 @@ const responseEmail = (data) => {
                                         </tr>
                                         <tr>
                                             <td style="text-align:center;">
-                                                <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <strong>www.ingelt.com</strong></p>
+                                                <a href='www.board.ingelt.com'><p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <strong>www.board.ingelt.com</strong></p></a>
                                             </td>
                                         </tr>
                                         <tr>

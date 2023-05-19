@@ -1,5 +1,6 @@
 const express = require("express");
 const batchUtil = require("../../utils/batch");
+const studentUtil = require("../../utils/student");
 const batchService = express.Router();
 
 // create new batch
@@ -56,6 +57,20 @@ batchService.put("/:batchId", async (req, res) => {
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
+  }
+});
+
+// end batch 
+batchService.put('/endBatch/:batchId', async (req, res) => {
+  try {
+    const batchId = req.params.batchId;
+    // update batch students 
+    await studentUtil.updateStudentsByBatch(batchId, { active: false });
+    // update batch 
+    const result = await batchUtil.update(batchId, { active: false });
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 

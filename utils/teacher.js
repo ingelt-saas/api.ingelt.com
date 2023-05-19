@@ -64,14 +64,15 @@ teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
 // get all teachers in the organization
 teacherUtil.readByOrg = async (orgId, pageNo, limit) => {
   try {
-    const result = await teacher.findAndCountAll({
+    let result = await teacher.findAndCountAll({
+      subQuery: false,
       include: {
         model: batch,
-        as: 'batches',
         required: true,
         attributes: ['name', 'id'],
         include: {
           model: organisation,
+          as: 'organization',
           where: { id: orgId },
           required: true,
           attributes: [],
@@ -79,14 +80,65 @@ teacherUtil.readByOrg = async (orgId, pageNo, limit) => {
       },
       order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
-      limit: limit
+      limit: limit,
+      group: ['teacher.id'],
     });
+    if (result) {
+      result.count = result.count.length;
+    }
     return result;
   } catch (err) {
     console.log(err)
     throw err;
   }
 };
+
+// search teachers in the organization
+teacherUtil.searchByOrg = async (orgId, searchQuery, pageNo, limit) => {
+  try {
+    let result = await teacher.findAndCountAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${searchQuery}%` } },
+          { email: { [Op.like]: `%${searchQuery}%` } },
+        ]
+      },
+      subQuery: false,
+      include: {
+        model: batch,
+        required: true,
+        attributes: ['name', 'id'],
+        include: {
+          model: organisation,
+          as: 'organization',
+          where: { id: orgId },
+          required: true,
+          attributes: [],
+        },
+      },
+      order: [["name", "ASC"]],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      group: ['teacher.id'],
+    });
+    if (result) {
+      result.count = result.count.length;
+    }
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// read by email
+teacherUtil.readByEmail = async (email) => {
+  try {
+    const result = await teacher.findOne({ where: { email: email } });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // search teacher
 teacherUtil.search = async (searchQuery) => {

@@ -13,6 +13,7 @@ const authenticateAdmin = require("../../auth/admin");
 const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
 const appliedStudentsService = require("./appliedStudents");
+const notesService = require("./notes");
 
 // authentication service 
 router.post('/auth', authenticateAdmin);
@@ -38,5 +39,6 @@ router.use("/mockTest", verifyJWT, mockTestService);
 router.use("/assignment", verifyJWT, mockTestService);
 router.use("/settings", verifyJWT, settingsService);
 router.use("/appliedStudents", verifyJWT, appliedStudentsService);
+router.use("/notes", verifyJWT, notesService);
 
 module.exports = router;

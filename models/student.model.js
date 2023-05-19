@@ -5,6 +5,10 @@ const studentModel = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+    roll: {
+      type: DataTypes.UUID,
+      unique: true,
+    },
 
     batchId: {
       type: DataTypes.UUID,
@@ -66,6 +70,9 @@ const studentModel = (sequelize, DataTypes) => {
     country: {
       type: DataTypes.STRING,
     },
+    interestedCountry: {
+      type: DataTypes.STRING,
+    },
 
     pinCode: {
       type: DataTypes.STRING,
@@ -73,7 +80,10 @@ const studentModel = (sequelize, DataTypes) => {
 
     dob: DataTypes.DATE,
 
-    active: DataTypes.BOOLEAN,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
 
     status: {
       type: DataTypes.ENUM,

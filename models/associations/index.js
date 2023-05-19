@@ -153,3 +153,7 @@ StudentApplied.belongsTo(Organisation);
 Student.hasMany(StudentApplied);
 StudentApplied.belongsTo(Student);
 
+// ORGANISATION - STUDENT
+Organisation.hasMany(Student);
+Student.belongsTo(Organisation);
+
