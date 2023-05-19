@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { student } = require("../models");
 const passwordReset = require("../mail/passwordReset");
+const studentUtil = require("../utils/student");
 
 const authenticateStudent = async (req, res) => {
 
@@ -64,11 +65,7 @@ const authorizationStudent = async (req, res) => {
   try {
 
     const newStudent = req.body;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newStudent.password, salt);
-    newStudent.password = hashedPassword;
-
-    const result = (await student.create(newStudent)).get({ plain: true });
+    const result = await studentUtil.create(newStudent);
 
     const token = jwt.sign(result, process.env.JWT_SECRET, {
       expiresIn: "2d",
@@ -77,6 +74,7 @@ const authorizationStudent = async (req, res) => {
     res.send({ message: 'Student created', token });
 
   } catch (err) {
+    console.log(err)
     res.status(400).send(err);
   }
 }

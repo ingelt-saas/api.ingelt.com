@@ -1,17 +1,49 @@
-const { student, batch, organization, mockTest, teacher, organisation, mockTestMarks, submission, assignment, sequelize, studentApplied } = require("../models");
+const { batch, organization, mockTest, teacher, organisation, mockTestMarks, submission, assignment, sequelize, studentApplied, student } = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
 
+studentUtil.generateRollNumber = async () => {
+
+  try {
+    let str = '0123456789abcdefghijklmnopqrstwvxyz';
+    let rollNumber = '';
+
+    for (let i = 0; i < 3; i++) {
+      rollNumber += str[Math.ceil(Math.random() * str.length - 1)]
+    }
+
+    rollNumber = (`IGS${rollNumber}`).toUpperCase();
+
+    // check exists roll number
+    const student = await student.findOne({ where: { roll: rollNumber } });
+    if (student) {
+      studentUtil.generateRollNumber();
+    } else {
+      return rollNumber;
+    }
+  } catch (err) {
+    throw err;
+  }
+
+};
+
 // POST
 studentUtil.create = async (newStudent) => {
   try {
+
     // Encrypt Password and Set it
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newStudent.password, salt);
     newStudent.password = hashedPassword;
 
-    const result = await student.create(newStudent);
+    const rollNumber = await studentUtil.generateRollNumber();
+    newStudent.roll = rollNumber;
+
+    let result = await student.create(newStudent);
+    if (result) {
+      result = result.get({ plain: true });
+    }
     return result;
   } catch (err) {
     throw err;
@@ -20,7 +52,6 @@ studentUtil.create = async (newStudent) => {
 
 // students under by org
 studentUtil.readByOrg = async (orgId, pageNo, limit) => {
-
   try {
     const result = await student.findAndCountAll({
       include: {

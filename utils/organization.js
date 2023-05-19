@@ -5,6 +5,7 @@ const organizationUtil = {};
 // POST
 organizationUtil.create = async (newOrganization) => {
   try {
+    
     let result = await organization.create(newOrganization);
     if (result) {
       result = result.get({ plain: true });
