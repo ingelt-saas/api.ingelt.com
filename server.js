@@ -9,11 +9,11 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "board.ingelt.com",
-      "www.ingelt.com",
-      "student.ingelt.com",
-      "teacher.ingelt.com",
-      "org.ingelt.com",
+      "https://board.ingelt.com/",
+      "https://www.ingelt.com/",
+      "https://student.ingelt.com/",
+      "https://teacher.ingelt.com/",
+      "https://org.ingelt.com/",
       "http://localhost:3000/",
     ],
   })
