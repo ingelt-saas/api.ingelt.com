@@ -6,11 +6,11 @@ require("dotenv").config();
 
 // App Config
 const app = express();
+
 app.use(
-  cors({
-    origin: ['https://org.ingelt.com/', 'https://student.ingelt.com/', 'https://teacher.ingelt.com/'],
-  })
+  cors()
 );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

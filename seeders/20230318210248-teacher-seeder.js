@@ -8,6 +8,7 @@ module.exports = {
       [
         {
           id: "TEA001",
+          organizationId: 'ORG1',
           name: "Teacher 1",
           gender: "Male",
           email: "teacher1@email.com",
@@ -26,6 +27,7 @@ module.exports = {
         },
         {
           id: "TEA002",
+          organizationId: 'ORG1',
           name: "Teacher 2",
           gender: "Female",
           email: "teacher2@email.com",
@@ -44,6 +46,7 @@ module.exports = {
         },
         {
           id: "TEA003",
+          organizationId: 'ORG2',
           name: "Teacher 3",
           gender: "Male",
           email: "teacher3@example.com",
@@ -62,6 +65,7 @@ module.exports = {
         },
         {
           id: "TEA004",
+          organizationId: 'ORG3',
           name: "Teacher 4",
           gender: "Female",
           email: "teacher4@example.com",
@@ -80,6 +84,7 @@ module.exports = {
         },
         {
           id: "TEA005",
+          organizationId: 'ORG2',
           name: "Teacher 5",
           gender: "Male",
           email: "teacher5@example.com",

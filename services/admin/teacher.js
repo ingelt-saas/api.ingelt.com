@@ -5,7 +5,6 @@ const multer = require("multer");
 const teacherService = express.Router();
 const storage = memoryStorage();
 const upload = multer({ storage });
-const bcrypt = require('bcrypt');
 const awsUpload = require('../../aws/upload');
 
 // add new teacher
@@ -26,6 +25,7 @@ teacherService.post("/", upload.single('image'), async (req, res) => {
       } else {
         const newTeacher = req.body;
         newTeacher.image = data.Key;
+        newTeacher.organizationId = req.decoded.organizationId;
         const result = await teacherUtil.create(newTeacher);
         res.status(201).json(result);
       }
@@ -85,9 +85,10 @@ teacherService.get("/search/organization", async (req, res) => {
 teacherService.get("/:teacherId", async (req, res) => {
   try {
     // get teacher
-    const teacher = (await teacherUtil.readById(req.params.teacherId)).get({
-      plain: true,
-    });
+    let teacher = await teacherUtil.readById(req.params.teacherId);
+    if (!teacher) {
+      return res.send(null);
+    }
 
     // get complete batch and live batch by teacher id
     const batches = await teacherUtil.liveAndCompleteBatches(
@@ -98,7 +99,7 @@ teacherService.get("/:teacherId", async (req, res) => {
       req.params.teacherId
     );
 
-    res.status(201).send({ ...teacher, ...batches, ...students });
+    res.status(200).send({ ...teacher, ...batches, ...students });
   } catch (err) {
     console.log(err);
     res.status(400).send(err);

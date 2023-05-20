@@ -19,17 +19,7 @@ teacherUtil.create = async (newTeacher) => {
 
     const teacherResult = await teacher.create(newTeacher);
 
-    // Create Entry in Batch-Teacher
-    const result = await BatchesTeachers.create({
-      batchId: newTeacher.batchId,
-      teacherId: teacherResult.id,
-      subject: newTeacher.subject,
-    });
-    
-    return {
-      ...teacherResult.get({ raw: true }),
-      ...result.get({ raw: true }),
-    };
+    return teacherResult.get({ raw: true })
   } catch (err) {
     throw err;
   }
@@ -66,30 +56,23 @@ teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
 teacherUtil.readByOrg = async (orgId, pageNo, limit) => {
   try {
     let result = await teacher.findAndCountAll({
-      subQuery: false,
+      where: {
+        organizationId: orgId,
+      },
+      attributes: {
+        exclude: ['password']
+      },
       include: {
         model: batch,
-        required: true,
-        attributes: ['name', 'id'],
-        include: {
-          model: organisation,
-          as: 'organization',
-          where: { id: orgId },
-          required: true,
-          attributes: [],
-        },
+        required: false,
+        attributes: ['name', 'id']
       },
       order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
-      group: ['teacher.id'],
     });
-    if (result) {
-      result.count = result.count.length;
-    }
     return result;
   } catch (err) {
-    console.log(err)
     throw err;
   }
 };
@@ -99,32 +82,28 @@ teacherUtil.searchByOrg = async (orgId, searchQuery, pageNo, limit) => {
   try {
     let result = await teacher.findAndCountAll({
       where: {
-        [Op.or]: [
-          { name: { [Op.like]: `%${searchQuery}%` } },
-          { email: { [Op.like]: `%${searchQuery}%` } },
+        [Op.and]: [
+          { organizationId: orgId },
+          {
+            [Op.or]: [
+              { name: { [Op.like]: `%${searchQuery}%` } },
+              { email: { [Op.like]: `%${searchQuery}%` } },
+            ]
+          }
         ]
       },
-      subQuery: false,
+      attributes: {
+        exclude: ['password']
+      },
       include: {
         model: batch,
-        required: true,
-        attributes: ['name', 'id'],
-        include: {
-          model: organisation,
-          as: 'organization',
-          where: { id: orgId },
-          required: true,
-          attributes: [],
-        },
+        required: false,
+        attributes: ['name', 'id']
       },
       order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
-      group: ['teacher.id'],
     });
-    if (result) {
-      result.count = result.count.length;
-    }
     return result;
   } catch (err) {
     throw err;
@@ -310,21 +289,12 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
 };
 
 // total teachers by organization
-teacherUtil.totalTeachers = async (orgId) => {
+teacherUtil.totalTeachersInTheOrg = async (orgId) => {
   try {
     const result = await teacher.count({
-      where: { active: true },
-      include: [
-        {
-          model: batch,
-          include: {
-            model: organisation,
-            where: { id: orgId },
-            required: true,
-          },
-          required: true,
-        },
-      ],
+      where: {
+        organizationId: orgId,
+      }
     });
     return result;
   } catch (err) {

@@ -157,3 +157,6 @@ StudentApplied.belongsTo(Student);
 Organisation.hasMany(Student);
 Student.belongsTo(Organisation, { foreignKey: { type: Sequelize.UUID, allowNull: true } });
 
+// ORGANISATION - TEACHER
+Organisation.hasMany(Teacher);
+Teacher.belongsTo(Organisation, { foreignKey: { allowNull: true, type: Sequelize.UUID } });

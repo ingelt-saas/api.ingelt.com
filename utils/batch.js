@@ -158,15 +158,22 @@ batchUtil.currentBatchesCount = async (orgId) => {
 // get COUNT complete batches by organization
 batchUtil.completeBatchesCount = async (orgId) => {
   try {
-    const result = await batch.count({
+    const batches = await batch.findAll({
       where: {
         active: false,
-        endDate: {
-          [Op.lte]: new Date(),
-        },
       },
-      include: [{ model: organisation, where: { id: orgId }, required: true }],
+      attributes: ['endDate'],
+      include: [{ model: organisation, where: { id: orgId }, required: true, attributes: [] }],
+      raw: true
     });
+    let result = 0;
+
+    for (let batch of batches) {
+      if (new Date(batch.endDate).getTime() < new Date().getTime()) {
+        result++;
+      }
+    }
+
     return result;
   } catch (err) {
     throw err;

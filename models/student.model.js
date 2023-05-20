@@ -7,7 +7,7 @@ const studentModel = (sequelize, DataTypes) => {
     },
     roll: {
       type: DataTypes.UUID,
-      unique: true,
+      // unique: true,
     },
 
     batchId: {
