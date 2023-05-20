@@ -8,7 +8,7 @@ require("dotenv").config();
 const app = express();
 app.use(
   cors({
-    origin: ['https://org.ingelt.com/', 'https://student.ingelt.com/', 'https://teacher.ingelt.com/'],
+    origin: "*",
   })
 );
 app.use(bodyParser.json());
