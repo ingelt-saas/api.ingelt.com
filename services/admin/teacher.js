@@ -12,8 +12,6 @@ const awsUpload = require('../../aws/upload');
 teacherService.post("/", upload.single('image'), async (req, res) => {
   try {
     const file = req.file;
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
 
     // check ani teacher has with this email
     const getTeacher = await teacherUtil.readByEmail(req.body.email);
@@ -27,7 +25,6 @@ teacherService.post("/", upload.single('image'), async (req, res) => {
         res.status(400).send(err);
       } else {
         const newTeacher = req.body;
-        newTeacher.password = hashPassword;
         newTeacher.image = data.Key;
         const result = await teacherUtil.create(newTeacher);
         res.status(201).json(result);
