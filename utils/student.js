@@ -16,8 +16,8 @@ studentUtil.generateRollNumber = async () => {
     rollNumber = (`IGS${rollNumber}`).toUpperCase();
 
     // check exists roll number
-    const student = await student.findOne({ where: { roll: rollNumber } });
-    if (student) {
+    const getStudent = await student.findOne({ where: { roll: rollNumber } });
+    if (getStudent) {
       studentUtil.generateRollNumber();
     } else {
       return rollNumber;
