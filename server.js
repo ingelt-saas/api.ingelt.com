@@ -8,7 +8,14 @@ require("dotenv").config();
 const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "board.ingelt.com",
+      "www.ingelt.com",
+      "student.ingelt.com",
+      "teacher.ingelt.com",
+      "org.ingelt.com",
+      "https://localhost:3000",
+    ],
   })
 );
 app.use(bodyParser.json());
