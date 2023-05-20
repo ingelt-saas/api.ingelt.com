@@ -14,7 +14,7 @@ app.use(
       "student.ingelt.com",
       "teacher.ingelt.com",
       "org.ingelt.com",
-      "http://localhost:3000",
+      "http://localhost:3000/",
     ],
   })
 );
