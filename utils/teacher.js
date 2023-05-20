@@ -25,6 +25,7 @@ teacherUtil.create = async (newTeacher) => {
       teacherId: teacherResult.id,
       subject: newTeacher.subject,
     });
+    
     return {
       ...teacherResult.get({ raw: true }),
       ...result.get({ raw: true }),
