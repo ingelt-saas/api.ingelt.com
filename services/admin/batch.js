@@ -65,9 +65,10 @@ batchService.put('/endBatch/:batchId', async (req, res) => {
   try {
     const batchId = req.params.batchId;
     // update batch students 
-    await studentUtil.updateStudentsByBatch(batchId, { active: false });
+    await studentUtil.updateStudentsByBatch(batchId, { active: false, batchId: null });
+
     // update batch 
-    const result = await batchUtil.update(batchId, { active: false });
+    const result = await batchUtil.update(batchId, { active: false, endDate: Date.now() });
     res.json(result);
   } catch (err) {
     res.status(400).send(err);

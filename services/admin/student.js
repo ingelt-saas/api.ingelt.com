@@ -19,6 +19,42 @@ studentService.post("/", async (req, res) => {
   }
 });
 
+// get active students
+studentService.get('/activeStudents', async (req, res) => {
+  try {
+    const orgId = req.decoded.organizationId;
+    const { s, pageNo, limit } = req.query;
+    const result = await studentUtil.activeStudents(orgId, parseInt(pageNo), parseInt(limit), s);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// fresh students
+studentService.get('/freshStudents', async (req, res) => {
+  try {
+    const orgId = req.decoded.organizationId;
+    const { s, pageNo, limit } = req.query;
+    const result = await studentUtil.freshStudents(orgId, parseInt(pageNo), parseInt(limit), s);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// passed students
+studentService.get('/passedStudents', async (req, res) => {
+  try {
+    const orgId = req.decoded.organizationId;
+    const { s, pageNo, limit } = req.query;
+    const result = await studentUtil.passedStudents(orgId, parseInt(pageNo), parseInt(limit), s);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // search student in the organization
 studentService.get("/search", async (req, res) => {
   try {

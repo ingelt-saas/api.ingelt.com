@@ -195,20 +195,15 @@ studentUtil.searchStuByOrg = async (orgId, searchQuery, pageNo, limit) => {
 }
 
 // get total student in the organization
-studentUtil.totalStudents = async (orgId) => {
+studentUtil.totalStudentsInTheOrg = async (orgId) => {
   try {
     const result = await student.count({
-      include: [
-        {
-          model: batch,
-          include: { model: organization, where: { id: orgId } },
-          required: true,
-        },
-      ],
+      where: {
+        organizationId: orgId,
+      }
     });
     return result;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };
@@ -217,13 +212,10 @@ studentUtil.totalStudents = async (orgId) => {
 studentUtil.allStuByOrgId = async (orgId, pageNo, limit) => {
   try {
     const result = await student.findAndCountAll({
-      include: [
-        {
-          model: batch,
-          include: { model: organisation, where: { id: orgId } },
-          required: true,
-        },
-      ],
+      where: {
+        organizationId: orgId,
+      },
+      attributes: ['name', 'email', 'id', 'image', 'gender', 'phoneNo'],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
@@ -232,6 +224,124 @@ studentUtil.allStuByOrgId = async (orgId, pageNo, limit) => {
     throw err;
   }
 };
+
+// active students in the organization
+studentUtil.activeStudents = async (orgId, pageNo, limit, searchQuery = null) => {
+  try {
+    let search;
+
+    if (searchQuery) {
+      search = {
+        [Op.and]: [
+          { organizationId: orgId },
+          { active: true },
+          { batchId: { [Op.not]: null } },
+          {
+            [Op.or]: [
+              { name: { [Op.like]: `%${searchQuery}%` } },
+              { email: { [Op.like]: `%${searchQuery}%` } },
+            ]
+          }
+        ]
+      };
+    } else {
+      search = {
+        organizationId: orgId,
+        active: true,
+        batchId: { [Op.not]: null }
+      };
+    }
+
+    const result = await student.findAndCountAll({
+      where: search,
+      order: [['name', 'ASC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// fresh students in the organization
+studentUtil.freshStudents = async (orgId, pageNo, limit, searchQuery = null) => {
+  try {
+    let search;
+
+    if (searchQuery) {
+      search = {
+        [Op.and]: [
+          { organizationId: orgId },
+          { active: true },
+          { batchId: null },
+          {
+            [Op.or]: [
+              { name: { [Op.like]: `%${searchQuery}%` } },
+              { email: { [Op.like]: `%${searchQuery}%` } },
+            ]
+          }
+        ]
+      };
+    } else {
+      search = {
+        organizationId: orgId,
+        active: true,
+        batchId: null,
+      };
+    }
+
+    const result = await student.findAndCountAll({
+      where: search,
+      order: [['name', 'ASC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// passed students in the organization
+studentUtil.passedStudents = async (orgId, pageNo, limit, searchQuery = null) => {
+  try {
+
+    let search;
+
+    if (searchQuery) {
+      search = {
+        [Op.and]: [
+          { organizationId: orgId },
+          { active: false },
+          { batchId: null },
+          {
+            [Op.or]: [
+              { name: { [Op.like]: `%${searchQuery}%` } },
+              { email: { [Op.like]: `%${searchQuery}%` } },
+            ]
+          }
+        ]
+      };
+    } else {
+      search = {
+        organizationId: orgId,
+        active: false,
+        batchId: null,
+      };
+    }
+
+    const result = await student.findAndCountAll({
+      where: search,
+      order: [['name', 'ASC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // best students in the organization
 studentUtil.bestStudents = async (orgId) => {
@@ -508,17 +618,7 @@ studentUtil.activeStudentsByOrg = async (orgId) => {
     const result = await student.count({
       where: {
         active: true,
-      },
-      include: {
-        model: batch,
-        required: true,
-        include: {
-          model: organisation,
-          required: true,
-          where: {
-            id: orgId,
-          }
-        }
+        organizationId: orgId,
       }
     });
     return result;
