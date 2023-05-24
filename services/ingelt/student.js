@@ -12,6 +12,26 @@ studentService.post("/", async (req, res) => {
   }
 });
 
+//get all student in the database
+// studentService.get("/", async (req, res) => {
+//   try {
+//     const result = await studentUtil.readAll();
+//     res.status(201).json(result);
+//   } catch (err) {
+//     res.status(400).json(err);
+//   }
+// });
+
+//get all student in the database
+studentService.get("/", async (req, res) => {
+  try {
+    const result = await studentUtil.readAll();
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 // get student by batch id
 studentService.get("/batch/:batchId", async (req, res) => {
   const batchId = req.params.batchId;
