@@ -28,6 +28,7 @@ studentService.post("/", upload.single('image'), async (req, res) => {
           const newStudent = req.body;
           newStudent.image = data.Key;
           newStudent.organizationId = req.decoded.organizationId;
+          newStudent.type = 'walk-in';
           const result = await studentUtil.create(newStudent);
           res.status(201).json(result);
         }
