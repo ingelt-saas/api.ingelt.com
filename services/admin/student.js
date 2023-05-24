@@ -10,10 +10,29 @@ const awsUpload = require('../../aws/upload');
 const deleteFile = require("../../aws/delete");
 
 // POST new student
-studentService.post("/", async (req, res) => {
+studentService.post("/", upload.single('image'), async (req, res) => {
   try {
-    const result = await studentUtil.create(req.body);
-    res.status(201).json(result);
+
+    const file = req.file;
+
+    // check student by email
+    const getStudent = await studentUtil.readByEmail(req.body.email);
+
+    if (getStudent) {
+      return res.status(208).send({ message: 'student exists at this email' });
+    } else {
+      awsUpload(file, 'student/profile', async (err, data) => {
+        if (err) {
+          res.status(400).send(err);
+        } else {
+          const newStudent = req.body;
+          newStudent.image = data.Key;
+          newStudent.organizationId = req.decoded.organizationId;
+          const result = await studentUtil.create(newStudent);
+          res.status(201).json(result);
+        }
+      });
+    }
   } catch (err) {
     res.status(400).json(err);
   }
@@ -146,7 +165,7 @@ studentService.put("/:studentId", async (req, res) => {
   }
 });
 
-//
+// update student profile image
 studentService.put('/updatePicture/:studentId', upload.single('image'), async (req, res) => {
   try {
     const studentId = req.params.studentId;

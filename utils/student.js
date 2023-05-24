@@ -697,6 +697,16 @@ studentUtil.readById = async (studentId) => {
   }
 };
 
+// GET by email
+studentUtil.readByEmail = async (email) => {
+  try {
+    const result = await student.findOne({ where: { email: email } });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // update student by batch
 studentUtil.updateStudentsByBatch = async (batchId, data) => {
   try {

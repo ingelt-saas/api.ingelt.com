@@ -7,6 +7,7 @@ const storage = memoryStorage();
 const upload = multer({ storage });
 const awsUpload = require('../../aws/upload');
 const orgImagesUtils = require("../../utils/orgImages");
+const adminUtil = require("../../utils/admin");
 
 // create new organization 
 organizationService.post("/",
@@ -26,14 +27,16 @@ organizationService.post("/",
         try {
             const newInstitute = req.body;
             const logo = req.files.logo[0]; // institute logo
-            const panPicture = req.files.panPicture[0]; // institute pan picture
+            const panPicture = req.files.panPicture ? req.files.panPicture[0] : false; // institute pan picture
             const orgImages = req.files.orgImages; // institute images
 
             const uploadLogo = await uploadFileToS3(logo, 'institute'); // upload to aws
             newInstitute.logo = uploadLogo.Key; // set key in newInstitute object
 
-            const uploadPanPic = await uploadFileToS3(panPicture, 'institute'); // upload to aws
-            newInstitute.panPicture = uploadPanPic.Key; // set key in newInstitute object
+            if (panPicture) {
+                const uploadPanPic = await uploadFileToS3(panPicture, 'institute'); // upload to aws
+                newInstitute.panPicture = uploadPanPic.Key; // set key in newInstitute object   
+            }
 
             let uploadOrgImages = await uploadFileToS3(orgImages, 'institute'); // upload to aws 
 
@@ -41,10 +44,14 @@ organizationService.post("/",
 
             uploadOrgImages = uploadOrgImages.map(i => ({ name: i.Key, organizationId: result.id }));
 
-            result = await orgImagesUtils.create(uploadOrgImages); // insert institute images
+            await orgImagesUtils.create(uploadOrgImages); // insert institute images
 
-            res.status(201).json(result);
+            // create organization admin
+            await adminUtil.create({ email: newInstitute.adminEmail, password: newInstitute.adminPassword, name: newInstitute.ownerName, organizationId: result.id });
+
+            res.status(201).json({ message: 'Created' });
         } catch (err) {
+            console.log(err)
             res.status(400).json(err);
         }
     });
