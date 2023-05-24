@@ -14,7 +14,7 @@ app.use(
       "https://board.ingelt.com",
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
-      "https://admin.ingelt.com",
+      "https://org.ingelt.com",
     ],
   })
 );
