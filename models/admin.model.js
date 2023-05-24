@@ -1,10 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define(
+  const Admin = sequelize.define(
     "admin",
     {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.STRING,
         primaryKey: true,
       },
 
@@ -40,4 +39,22 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     }
   );
+  Admin.beforeCreate(async (teacher, options) => {
+    try {
+      const lastTeacher = await Admin.findOne({ order: [["createdAt", "DESC"]] });
+
+      if (lastTeacher) {
+        const numericPart = parseInt(lastTeacher.id.slice(3), 16); // Extract the numeric part from the last teacher's ID
+        const nextNumericPart = numericPart + 1;
+        const nextID = `IGS${nextNumericPart.toString(16).toUpperCase()}`;
+        teacher.id = nextID;
+      } else {
+        teacher.id = "IGO3E7"; // If there are no previous teachers, set the initial ID
+      }
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  return Admin;
 };
