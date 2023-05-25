@@ -66,7 +66,7 @@ homeService.get("/mockTestMarks", async (req, res) => {
 });
 
 // get submissions with assignment
-homeService.get('/submissions', async (req, res) => {
+homeService.get("/submissions", async (req, res) => {
   try {
     const studentId = req.decoded.id;
     const result = await submissionUtil.getSubmissionByStudent(studentId);

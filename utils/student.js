@@ -3,30 +3,41 @@ const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
 
-studentUtil.generateRollNumber = async () => {
 
+// studentUtil.generateRollNumber = async () => {
+//   try {
+//     //read all student and get the last student's roll number
+//     const allStudents = await studentUtil.readAll();
+//     let lastRollNumber = allStudents[allStudents.length - 1].roll;
+//     const numericPart = parseInt(lastRollNumber.slice(3), 16); // Extract the numeric part from the last roll number
+//     const nextNumericPart = numericPart + 1;
+//     const nextRollNumber = `IGS${nextNumericPart.toString(16).toUpperCase()}`;
+
+//     // Check if the next roll number already exists
+//     const getStudent = await student.findOne({ where: { roll: nextRollNumber } });
+
+//     if (getStudent) {
+//       // Roll number already exists, recursively call the function to generate the next roll number
+//       return await studentUtil.generateRollNumber();
+//     } else {
+//       lastRollNumber = nextRollNumber; // Update the last roll number
+//       return nextRollNumber;
+//     }
+//   } catch (err) {
+//     throw err;
+//   }
+// };
+
+
+// Read all students from the database
+studentUtil.readAll = async () => {
   try {
-    let str = '0123456789abcdefghijklmnopqrstwvxyz';
-    let rollNumber = '';
-
-    for (let i = 0; i < 3; i++) {
-      rollNumber += str[Math.ceil(Math.random() * str.length - 1)]
-    }
-
-    rollNumber = (`IGS${rollNumber}`).toUpperCase();
-
-    // check exists roll number
-    const getStudent = await student.findOne({ where: { roll: rollNumber } });
-    if (getStudent) {
-      studentUtil.generateRollNumber();
-    } else {
-      return rollNumber;
-    }
+    const result = await student.findAll();
+    return result;
   } catch (err) {
     throw err;
   }
-
-};
+};  
 
 // POST
 studentUtil.create = async (newStudent) => {
@@ -37,8 +48,8 @@ studentUtil.create = async (newStudent) => {
     const hashedPassword = await bcrypt.hash(newStudent.password, salt);
     newStudent.password = hashedPassword;
 
-    const rollNumber = await studentUtil.generateRollNumber();
-    newStudent.roll = rollNumber;
+    // const rollNumber = await studentUtil.generateRollNumber();
+    // newStudent.roll = rollNumber;
 
     let result = await student.create(newStudent);
     if (result) {

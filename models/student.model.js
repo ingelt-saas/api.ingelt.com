@@ -1,14 +1,16 @@
 const studentModel = (sequelize, DataTypes) => {
-  return sequelize.define("student", {
+  const Student =  sequelize.define("student", {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.STRING,
       primaryKey: true,
     },
-    roll: {
-      type: DataTypes.UUID,
-      // unique: true,
-    },
+    // roll: {
+    //   type: DataTypes.UUID,
+    //   unique: true,
+    //   validate: {
+    //     notNull: { msg: "roll is required" },
+    //   }
+    // },
 
     batchId: {
       type: DataTypes.UUID,
@@ -102,6 +104,27 @@ const studentModel = (sequelize, DataTypes) => {
 
     averageBands: DataTypes.FLOAT,
   });
+Student.beforeCreate(async (student, options) => {
+    try {
+      const lastStudent = await Student.findOne({
+        order: [['createdAt', 'DESC']],
+      });
+  
+      if (lastStudent) {
+        const numericPart = parseInt(lastStudent.id.slice(3), 16);
+        const nextNumericPart = numericPart + 1;
+        const nextRollNumber = `IGS${nextNumericPart.toString(16).toUpperCase()}`;
+        student.id = nextRollNumber;
+      } else {
+        student.id = 'IGS3E6'; // Default value for the first student
+      }
+    } catch (err) {
+      throw err;
+    }
+  });
+  
+  return Student;
 };
+
 
 module.exports = studentModel;

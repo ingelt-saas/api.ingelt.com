@@ -7,7 +7,17 @@ require("dotenv").config();
 // App Config
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://board.ingelt.com",
+      "https://student.ingelt.com",
+      "https://teacher.ingelt.com",
+      "https://org.ingelt.com",
+    ],
+  })
+);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
