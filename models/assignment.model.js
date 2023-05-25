@@ -13,12 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: "name is required" },
       },
     },
-
-    uploadedDate: {
-      type: DataTypes.DATE,
-      defaultValue: Date.now,
-    },
-
     endDate: DataTypes.DATE,
 
     file: {
