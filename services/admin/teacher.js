@@ -60,9 +60,31 @@ teacherService.post("/add-batch", async (req, res) => {
 teacherService.get("/getall", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
-    const { pageno, limit } = req.query;
-    const result = await teacherUtil.readByOrg(orgId, parseInt(pageno), parseInt(limit));
+    const { s, pageNo, limit } = req.query;
+    const result = await teacherUtil.readByOrg(orgId, parseInt(pageNo), parseInt(limit), s);
     res.status(200).json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// get attempted students by organization
+teacherService.get('/attemptedStudents', async (req, res) => {
+  try {
+    const orgId = req.decoded.organizationId;
+    const result = await studentUtil.attemptedStudentsByOrg(orgId);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// best students
+teacherService.get('/bestStudents', async (req, res) => {
+  try {
+    const orgId = req.headers.organization;
+    const result = await studentUtil.bestStudents(orgId);
+    res.json(result);
   } catch (err) {
     res.status(400).send(err);
   }

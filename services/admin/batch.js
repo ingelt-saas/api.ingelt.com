@@ -54,7 +54,7 @@ batchService.get("/:batchId", async (req, res) => {
 batchService.put("/:batchId", async (req, res) => {
   try {
     const result = await batchUtil.update(req.params.batchId, req.body);
-    res.status(201).json(result);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
