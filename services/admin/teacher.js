@@ -10,26 +10,36 @@ const awsUpload = require('../../aws/upload');
 // add new teacher
 teacherService.post("/", upload.single('image'), async (req, res) => {
   try {
+
     const file = req.file;
+    const newTeacher = req.body;
+    newTeacher.organizationId = req.decoded.organizationId;
 
     // check ani teacher has with this email
     const getTeacher = await teacherUtil.readByEmail(req.body.email);
+
+    // aws upload
+    const __awsUpload = () => new Promise((resolve, reject) => {
+      awsUpload(file, 'teacher/profile', async (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
 
     if (getTeacher) {
       return res.status(208).send({ message: 'Teacher exists at this email.' });
     }
 
-    awsUpload(file, 'teacher/profile', async (err, data) => {
-      if (err) {
-        res.status(400).send(err);
-      } else {
-        const newTeacher = req.body;
-        newTeacher.image = data.Key;
-        newTeacher.organizationId = req.decoded.organizationId;
-        const result = await teacherUtil.create(newTeacher);
-        res.status(201).json(result);
-      }
-    });
+    if (file) {
+      const data = await __awsUpload();
+      newTeacher.image = data.Key;
+    }
+
+    const result = await teacherUtil.create(newTeacher);
+    res.status(201).json(result);
 
   } catch (err) {
     res.status(400).send(err);

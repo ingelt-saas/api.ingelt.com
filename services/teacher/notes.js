@@ -22,6 +22,7 @@ notesService.post('/', upload.single('file'), async (req, res) => {
                 newNote.name = file.originalname;
                 newNote.file = data.Key;
                 newNote.fileSize = file.size;
+                newNote.organizationId = req.decoded.organizationId;
                 const result = await notesUtil.createNotes(newNote);
                 res.status(201).json(result);
             }
@@ -32,26 +33,15 @@ notesService.post('/', upload.single('file'), async (req, res) => {
     }
 });
 
-// search notes 
-notesService.get('/search', async (req, res) => {
-    try {
-        const { s, pageno, limit } = req.query;
-        const orgId = req.headers.orgid;
-        const result = await notesUtil.search(orgId, s, parseInt(pageno), parseInt(limit));
-        res.send(result);
-    } catch (err) {
-        res.status(400).send(err);
-    }
-});
-
 // get notes by organization
-notesService.get('/:orgId', async (req, res) => {
+notesService.get('/get-all', async (req, res) => {
     try {
-        const orgId = req.params.orgId;
-        const { pageno, limit } = req.query;
-        const result = await notesUtil.getNotesByOrg(orgId, parseInt(pageno), parseInt(limit));
+        const orgId = req.decoded.organizationId;
+        const { s, pageNo, limit } = req.query;
+        const result = await notesUtil.getNotesByOrg(orgId, parseInt(pageNo), parseInt(limit), s);
         res.status(200).json(result);
     } catch (err) {
+        console.log(err)
         res.status(400).send(err);
     }
 });

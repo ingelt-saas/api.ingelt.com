@@ -62,7 +62,7 @@ homeService.get("/:teacherId", async (req, res) => {
     const teacher = await teacherUtil.readById(teacherId);
     const liveAndCompleteBatches = await teacherUtil.liveAndCompleteBatches(teacherId);
     const taughtAndBandStudents = await teacherUtil.taughtAndBandStudents(teacherId);
-
+    
     res
       .status(201)
       .json({ teacher, ...liveAndCompleteBatches, ...taughtAndBandStudents });
