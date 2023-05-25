@@ -46,10 +46,10 @@ assignmentService.post("/", upload.single("file"), async (req, res) => {
     newAssignment.name = file.originalname;
     newAssignment.fileSize = file.size;
     newAssignment.teacherId = req.decoded.id;
+    newAssignment.organizationId = req.decoded.organizationId;
 
     awsUpload(file, "teacher/assignments", async (err, data) => {
       if (err) {
-        console.log(err);
         res.status(400).send(err);
       } else {
         newAssignment.file = data.Key;
@@ -58,7 +58,6 @@ assignmentService.post("/", upload.single("file"), async (req, res) => {
       }
     });
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
