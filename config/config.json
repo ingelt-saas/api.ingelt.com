@@ -1,38 +1,45 @@
 {
-    "test": {
-        "username": "nodejs",
-        "password": "nodejs",
-        "database": "nodejs",
-        "dialect": "mysql",
-        "logging": false
-    },
-    "development2": {
-        "username": "root",
-        "password": "8565887271",
-        "database": "ingelt_server",
-        "dialect": "mysql",
-        "logging": false
-    },
-    "development3": {
-        "username": "root",
-        "password": "Nish2002",
-        "database": "ingelt_dev",
-        "dialect": "mysql",
-        "logging": false
-    },
-    "development": {
-        "username": "admin",
-        "password": "helloWorld",
-        "database": "ingelt_dev",
-        "host": "ingelt-dev.cwdlzhtcc44j.us-east-1.rds.amazonaws.com",
-        "dialect": "mysql",
-        "logging": false
-    },
-    "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
-    }
+  "test": {
+    "username": "nodejs",
+    "password": "nodejs",
+    "database": "nodejs",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "development2": {
+    "username": "root",
+    "password": "8565887271",
+    "database": "ingelt_server",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "development3": {
+    "username": "root",
+    "password": "Nish2002",
+    "database": "ingelt_dev",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "development": {
+    "username": "admin",
+    "password": "helloWorld",
+    "database": "ingelt_dev",
+    "host": "ingelt-dev.cwdlzhtcc44j.us-east-1.rds.amazonaws.com",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "development4": {
+    "username": "root",
+    "password": "Parth23#",
+    "database": "ingelt_server",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
 }
