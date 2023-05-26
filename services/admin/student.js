@@ -14,25 +14,37 @@ studentService.post("/", upload.single('image'), async (req, res) => {
   try {
 
     const file = req.file;
+    const newStudent = req.body;
+    newStudent.organizationId = req.decoded.organizationId;
+    newStudent.type = 'walk-in';
+    newStudent.active = true;
 
     // check student by email
     const getStudent = await studentUtil.readByEmail(req.body.email);
 
-    if (getStudent) {
-      return res.status(208).send({ message: 'student exists at this email' });
-    } else {
+    // student image uploading promise func
+    const studentImageUpload = () => new Promise((resolve, reject) => {
       awsUpload(file, 'student/profile', async (err, data) => {
         if (err) {
-          res.status(400).send(err);
+          reject(err);
         } else {
-          const newStudent = req.body;
-          newStudent.image = data.Key;
-          newStudent.organizationId = req.decoded.organizationId;
-          newStudent.type = 'walk-in';
-          const result = await studentUtil.create(newStudent);
-          res.status(201).json(result);
+          resolve(data);
         }
       });
+    });
+
+    if (getStudent) { // if has user at this email then return here
+      return res.status(208).send({ message: 'student exists at this email' });
+    } else {
+
+      if (file) {
+        const uploadedImage = await studentImageUpload();
+        newStudent.image = uploadedImage.Key;
+      }
+
+      const result = await studentUtil.create(newStudent);
+      res.status(201).json(result);
+
     }
   } catch (err) {
     res.status(400).json(err);

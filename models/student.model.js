@@ -1,5 +1,5 @@
 const studentModel = (sequelize, DataTypes) => {
-  const Student =  sequelize.define("student", {
+  const Student = sequelize.define("student", {
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
@@ -104,12 +104,13 @@ const studentModel = (sequelize, DataTypes) => {
 
     averageBands: DataTypes.FLOAT,
   });
-Student.beforeCreate(async (student, options) => {
+
+  Student.beforeCreate(async (student, options) => {
     try {
       const lastStudent = await Student.findOne({
         order: [['createdAt', 'DESC']],
       });
-  
+
       if (lastStudent) {
         const numericPart = parseInt(lastStudent.id.slice(3), 16);
         const nextNumericPart = numericPart + 1;
@@ -122,7 +123,7 @@ Student.beforeCreate(async (student, options) => {
       throw err;
     }
   });
-  
+
   return Student;
 };
 
