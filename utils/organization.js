@@ -5,7 +5,7 @@ const organizationUtil = {};
 // POST
 organizationUtil.create = async (newOrganization) => {
   try {
-    
+
     let result = await organization.create(newOrganization);
     if (result) {
       result = result.get({ plain: true });
@@ -90,39 +90,16 @@ organizationUtil.totalRevenueByOrg = async (orgId) => {
     const organization = await organizationUtil.readById(orgId);
 
     const inGeltStudents = await student.count({
-      include: [
-        {
-          model: batch,
-          required: true,
-          include: {
-            model: organisation,
-            required: true,
-            where: {
-              id: orgId,
-            }
-          }
-        },
-        { model: studentApplied, required: true, where: { organizationId: orgId, status: 'accepted' } }
-      ]
+      where: {
+        organizationId: orgId,
+        type: 'ingelt'
+      }
     });
 
     const walkInStudents = await student.count({
-      include: [
-        {
-          model: batch,
-          required: true,
-          include: {
-            model: organisation,
-            required: true,
-            where: {
-              id: orgId,
-            }
-          }
-        },
-        { model: studentApplied, required: false, as: 'studentApplieds' }
-      ],
       where: {
-        '$studentApplieds.id$': null,
+        organizationId: orgId,
+        type: 'walk-in'
       },
     });
 
@@ -150,27 +127,14 @@ organizationUtil.walkInRevenueByOrg = async (orgId, year) => {
     let result = await student.findAll({
       where: {
         [Op.and]: [
-          { '$studentApplieds.id$': null },
+          { organizationId: orgId },
+          { type: 'walk-in' },
           Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
         ]
       },
       attributes: [
         [Sequelize.fn('MONTH', Sequelize.col('student.createdAt')), 'month'],
         [Sequelize.fn('COUNT', 'student.*'), 'count'],
-      ],
-      include: [
-        {
-          model: batch,
-          required: true,
-          attributes: [],
-          include: {
-            model: organisation,
-            where: { id: orgId },
-            required: true,
-            attributes: [],
-          },
-        },
-        { model: studentApplied, required: false, as: 'studentApplieds', attributes: [] }
       ],
       group: ['month'],
     });
@@ -197,26 +161,14 @@ organizationUtil.inGeltRevenueByOrg = async (orgId, year) => {
     let result = await student.findAll({
       where: {
         [Op.and]: [
+          { organizationId: orgId },
+          { type: 'ingelt' },
           Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
         ]
       },
       attributes: [
         [Sequelize.fn('MONTH', Sequelize.col('student.createdAt')), 'month'],
         [Sequelize.fn('COUNT', 'student.*'), 'count'],
-      ],
-      include: [
-        {
-          model: batch,
-          required: true,
-          attributes: [],
-          include: {
-            model: organisation,
-            where: { id: orgId },
-            required: true,
-            attributes: [],
-          },
-        },
-        { model: studentApplied, required: true, where: { status: 'accepted' } }
       ],
       group: ['month'],
     });

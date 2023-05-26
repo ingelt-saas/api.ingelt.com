@@ -1,6 +1,7 @@
 const express = require("express");
 const batchUtil = require("../../utils/batch");
 const studentUtil = require("../../utils/student");
+const organizationUtil = require("../../utils/organization");
 const batchService = express.Router();
 
 // create new batch
@@ -54,7 +55,7 @@ batchService.get("/:batchId", async (req, res) => {
 batchService.put("/:batchId", async (req, res) => {
   try {
     const result = await batchUtil.update(req.params.batchId, req.body);
-    res.status(201).json(result);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -64,12 +65,25 @@ batchService.put("/:batchId", async (req, res) => {
 batchService.put('/endBatch/:batchId', async (req, res) => {
   try {
     const batchId = req.params.batchId;
+    const orgId = req.decoded.organizationId
+
+    const getBatch = await batchUtil.readById(batchId);
+    let endBatches = 0;
+
+    if (getBatch.endBatches && typeof getBatch.endBatches === 'number') {
+      endBatches = parseInt(getBatch.endBatches);
+    }
+
     // update batch students 
     await studentUtil.updateStudentsByBatch(batchId, { active: false, batchId: null });
 
-    // update batch 
-    const result = await batchUtil.update(batchId, { active: false, endDate: Date.now() });
+    // update organization endBatches count
+    await organizationUtil.update(orgId, { endBatches: endBatches + 1 });
+
+    // delete batch 
+    const result = await batchUtil.delete(batchId);
     res.json(result);
+
   } catch (err) {
     res.status(400).send(err);
   }

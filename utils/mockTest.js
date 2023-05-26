@@ -109,6 +109,20 @@ mockTestUtil.readById = async (mockTestId) => {
   }
 };
 
+// ready by name and organization
+mockTestUtil.readByName = async (name, orgId) => {
+  try {
+    const result = await mockTest.findOne({
+      where: {
+        name: name, organizationId: orgId
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // PUT
 mockTestUtil.update = async (mockTestId, updateData) => {
   try {

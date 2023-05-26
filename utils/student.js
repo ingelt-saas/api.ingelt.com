@@ -37,7 +37,7 @@ studentUtil.readAll = async () => {
   } catch (err) {
     throw err;
   }
-};  
+};
 
 // POST
 studentUtil.create = async (newStudent) => {
@@ -149,7 +149,7 @@ studentUtil.search = async (teacherId, searchValue) => {
 }
 
 // search students in all organization and student batchId is null
-studentUtil.searchInAllStudents = async (searchValue) => {
+studentUtil.searchFreshStudentsByOrg = async (orgId, searchValue) => {
   try {
     const result = await student.findAll({
       where: {
@@ -160,7 +160,9 @@ studentUtil.searchInAllStudents = async (searchValue) => {
               { email: { [Op.like]: `%${searchValue}%` } }
             ]
           },
-          { batchId: null, }
+          { batchId: null },
+          { organizationId: orgId },
+          { active: true },
         ]
       }
     });
@@ -453,30 +455,18 @@ studentUtil.enrollmentStudent = async (orgId) => {
 // enrollment students by walk-in
 studentUtil.enrollmentStudentByWalkIn = async (orgId, year) => {
   try {
+
     const result = await student.findAll({
       where: {
         [Op.and]: [
-          { '$studentApplieds.id$': null },
+          { organizationId: orgId },
+          { type: 'walk-in' },
           Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
         ]
       },
       attributes: [
         [sequelize.fn('MONTH', sequelize.col('student.createdAt')), 'month'],
         [Sequelize.fn('COUNT', 'student.*'), 'count'],
-      ],
-      include: [
-        {
-          model: batch,
-          required: true,
-          attributes: [],
-          include: {
-            model: organisation,
-            where: { id: orgId },
-            required: true,
-            attributes: [],
-          },
-        },
-        { model: studentApplied, required: false, as: 'studentApplieds', attributes: [] }
       ],
       group: ['month'],
     });
@@ -489,29 +479,18 @@ studentUtil.enrollmentStudentByWalkIn = async (orgId, year) => {
 // enrollment students by ingelt
 studentUtil.enrollmentStudentByInGelt = async (orgId, year) => {
   try {
+
     const result = await student.findAll({
       where: {
         [Op.and]: [
+          { organizationId: orgId },
+          { type: 'ingelt' },
           Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
         ]
       },
       attributes: [
         [sequelize.fn('MONTH', sequelize.col('student.createdAt')), 'month'],
         [Sequelize.fn('COUNT', 'student.*'), 'count'],
-      ],
-      include: [
-        {
-          model: batch,
-          required: true,
-          attributes: [],
-          include: {
-            model: organisation,
-            where: { id: orgId },
-            required: true,
-            attributes: [],
-          },
-        },
-        { model: studentApplied, required: true, where: { status: 'accepted' } }
       ],
       group: ['month'],
     });
@@ -525,41 +504,19 @@ studentUtil.enrollmentStudentByInGelt = async (orgId, year) => {
 studentUtil.enrollmentStudentByOrg = async (orgId) => {
   try {
     const inGeltStudents = await student.count({
-      include: [
-        {
-          model: batch,
-          required: true,
-          include: {
-            model: organisation,
-            required: true,
-            where: {
-              id: orgId,
-            }
-          }
-        },
-        { model: studentApplied, required: true, where: { organizationId: orgId, status: 'accepted' } }
-      ]
+      where: {
+        organizationId: orgId,
+        type: 'ingelt'
+      }
     });
 
     const walkInStudents = await student.count({
-      include: [
-        {
-          model: batch,
-          required: true,
-          include: {
-            model: organisation,
-            required: true,
-            where: {
-              id: orgId,
-            }
-          }
-        },
-        { model: studentApplied, required: false, as: 'studentApplieds' }
-      ],
       where: {
-        '$studentApplieds.id$': null,
-      },
+        organizationId: orgId,
+        type: 'walk-in'
+      }
     });
+
     return { walkInStudents, inGeltStudents };
   } catch (err) {
     console.log(err)
@@ -630,6 +587,7 @@ studentUtil.activeStudentsByOrg = async (orgId) => {
       where: {
         active: true,
         organizationId: orgId,
+        batchId: { [Op.not]: null }
       }
     });
     return result;

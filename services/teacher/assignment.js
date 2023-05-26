@@ -12,15 +12,15 @@ const deleteFile = require("../../aws/delete");
 assignmentService.get("/get-all", async (req, res) => {
   try {
     const teacherId = req.decoded.id;
-    const { pageno, limit } = req.query;
+    const { s, pageNo, limit } = req.query;
     const result = await assignmentUtil.getAssignmentsByTeacher(
       teacherId,
-      parseInt(pageno),
-      parseInt(limit)
+      parseInt(pageNo),
+      parseInt(limit),
+      s
     );
     res.send(result);
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });

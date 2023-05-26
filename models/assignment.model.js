@@ -13,8 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: "name is required" },
       },
     },
-    endDate: DataTypes.DATE,
-
     file: {
       type: DataTypes.STRING,
       allowNull: false,

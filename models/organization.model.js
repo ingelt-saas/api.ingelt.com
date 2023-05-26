@@ -127,6 +127,10 @@ const organisationModel = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      endBatches: {
+        type: DataTypes.INTEGER,
+        defaultValue: null,
+      },
 
       verified: {
         type: DataTypes.BOOLEAN,

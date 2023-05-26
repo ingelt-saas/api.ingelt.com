@@ -118,7 +118,11 @@ batchUtil.searchBatchesWithStuAndTea = async (orgId, search, pageNo, limit) => {
 // GET by id
 batchUtil.readById = async (batchId) => {
   try {
-    const result = await batch.findByPk(batchId);
+    let result = await batch.findByPk(batchId);
+    if (result) {
+      result = result.get({ plain: true });
+    }
+
     return result;
   } catch (err) {
     throw err;
@@ -230,9 +234,17 @@ batchUtil.update = async (batchId, updateData) => {
   }
 };
 
-// DELETE
+// end batch
 batchUtil.delete = async (batchId) => {
   try {
+
+    // delete batch teachers data
+    await BatchesTeachers.destroy({
+      where: {
+        batchId: batchId
+      }
+    });
+
     const result = await batch.destroy({
       where: {
         id: batchId,
