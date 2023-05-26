@@ -8,6 +8,13 @@ mockTestService.post('/', async (req, res) => {
     try {
         const teacherId = req.decoded.id;
         req.body.teacherId = teacherId;
+        req.body.organizationId = req.decoded.organizationId;
+        // check mock test by mock test name
+        const getMockTest = await mockTestUtil.readByName(req.body.name, req.decoded.organizationId);
+        if (getMockTest) {
+            return res.status(208).send({ message: 'Exist this mock test, try to use a different name' })
+        }
+
         const result = await mockTestUtil.create(req.body);
         res.status(201).json(result);
     } catch (err) {

@@ -53,45 +53,27 @@ teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
 };
 
 // get all teachers in the organization
-teacherUtil.readByOrg = async (orgId, pageNo, limit) => {
-  try {
-    let result = await teacher.findAndCountAll({
-      where: {
-        organizationId: orgId,
-      },
-      attributes: {
-        exclude: ['password']
-      },
-      include: {
-        model: batch,
-        required: false,
-        attributes: ['name', 'id']
-      },
-      order: [["name", "ASC"]],
-      offset: (pageNo - 1) * limit,
-      limit: limit,
-    });
-    return result;
-  } catch (err) {
-    throw err;
-  }
-};
+teacherUtil.readByOrg = async (orgId, pageNo, limit, searchQuery) => {
 
-// search teachers in the organization
-teacherUtil.searchByOrg = async (orgId, searchQuery, pageNo, limit) => {
+  let findQuery;
+
+  if (searchQuery) {
+    findQuery = {
+      organizationId: orgId,
+      [Op.or]: [
+        { name: { [Op.like]: `%${searchQuery}%` } },
+        { email: { [Op.like]: `%${searchQuery}%` } },
+      ]
+    };
+  } else {
+    findQuery = {
+      organizationId: orgId,
+    };
+  }
+
   try {
     let result = await teacher.findAndCountAll({
-      where: {
-        [Op.and]: [
-          { organizationId: orgId },
-          {
-            [Op.or]: [
-              { name: { [Op.like]: `%${searchQuery}%` } },
-              { email: { [Op.like]: `%${searchQuery}%` } },
-            ]
-          }
-        ]
-      },
+      where: findQuery,
       attributes: {
         exclude: ['password']
       },

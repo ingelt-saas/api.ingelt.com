@@ -13,14 +13,27 @@ assignmentUtil.create = async (newAssignment) => {
 };
 
 // get all assignment by teacher
-assignmentUtil.getAssignmentsByTeacher = async (teacherId, pageNo, limit) => {
+assignmentUtil.getAssignmentsByTeacher = async (teacherId, pageNo, limit, searchQuery) => {
+
   try {
+
+    let findQuery;
+
+    if (searchQuery) {
+      findQuery = {
+        teacherId: teacherId,
+        name: { [Op.like]: `%${searchQuery}%` }
+      }
+    } else {
+      findQuery = {
+        teacherId: teacherId,
+      }
+    }
+
     const result = await assignment.findAndCountAll({
       offset: (pageNo - 1) * limit,
       limit: limit,
-      where: {
-        teacherId: teacherId,
-      },
+      where: findQuery,
       order: [['createdAt', 'DESC']]
     });
     return result;
