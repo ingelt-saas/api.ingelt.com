@@ -23,12 +23,23 @@ mockTestService.post('/', async (req, res) => {
 });
 
 // get mock test by teacher id 
-mockTestService.get('/:orgId', async (req, res) => {
+mockTestService.get('/getall', async (req, res) => {
     try {
         const teacherId = req.decoded.id;
-        const orgId = req.params.orgId;
+        const orgId = req.decoded.organizationId;
         const result = await mockTestUtil.getMockTestsByTeaAndOrg(orgId, teacherId);
-        res.send(result);
+        res.json(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});cl
+
+// update mock test
+mockTestService.put('/:mockId', async (req, res) => {
+    try {
+        const mockId = req.params.mockId;
+        const result = await mockTestUtil.update(mockId, req.body);
+        res.json(result);
     } catch (err) {
         res.status(400).send(err);
     }
@@ -90,10 +101,26 @@ mockTestService.put('/mockTestMarks/:mockTestId', async (req, res) => {
 // get all student in the organization with mock test marks by mock test 
 mockTestService.get('/mockTestMarks/:mockTestId', async (req, res) => {
     try {
-        const orgId = req.headers.organizationid;
-        const { pageno, limit } = req.query;
-        const marks = await mockTestMarksUtil.getTestMarksWithStudent(req.params.mockTestId, orgId, parseInt(pageno), parseInt(limit));
+        const orgId = req.decoded.organizationId;
+        const { s, pageNo, limit } = req.query;
+        const marks = await mockTestMarksUtil.getTestMarksWithStudent(req.params.mockTestId, orgId, parseInt(pageNo), parseInt(limit), s);
         res.status(200).json(marks);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// delete mock test 
+mockTestService.delete('/:mockId', async (req, res) => {
+    try {
+        const mockId = req.params.mockId;
+
+        // delete mock test marks
+        await mockTestMarksUtil.deleteByMockId(mockId);
+
+        // delete mock test
+        await mockTestUtil.delete(mockId);
+        res.status(202).json({ message: 'Ok' });
     } catch (err) {
         res.status(400).send(err);
     }
