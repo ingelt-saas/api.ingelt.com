@@ -41,7 +41,9 @@ module.exports = (sequelize, DataTypes) => {
   );
   Admin.beforeCreate(async (teacher, options) => {
     try {
-      const lastTeacher = await Admin.findOne({ order: [["createdAt", "DESC"]] });
+      const lastTeacher = await Admin.findOne({
+        order: [["createdAt", "DESC"]],
+      });
 
       if (lastTeacher) {
         const numericPart = parseInt(lastTeacher.id.slice(3), 16); // Extract the numeric part from the last teacher's ID
