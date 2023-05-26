@@ -585,6 +585,7 @@ studentUtil.activeStudentsByOrg = async (orgId) => {
       where: {
         active: true,
         organizationId: orgId,
+        batchId: { [Op.not]: null }
       }
     });
     return result;
