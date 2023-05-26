@@ -32,7 +32,7 @@ mockTestService.get('/getall', async (req, res) => {
     } catch (err) {
         res.status(400).send(err);
     }
-});cl
+});
 
 // update mock test
 mockTestService.put('/:mockId', async (req, res) => {
