@@ -115,7 +115,8 @@ studentService.get('/getall', async (req, res) => {
 studentService.get('/searchAll', async (req, res) => {
   try {
     const { s } = req.query;
-    const result = await studentUtil.searchInAllStudents(s);
+    const orgId = req.decoded.organizationId;
+    const result = await studentUtil.searchFreshStudentsByOrg(orgId, s);
     res.json(result);
   } catch (err) {
     res.status(400).send(err);

@@ -149,7 +149,7 @@ studentUtil.search = async (teacherId, searchValue) => {
 }
 
 // search students in all organization and student batchId is null
-studentUtil.searchInAllStudents = async (searchValue) => {
+studentUtil.searchFreshStudentsByOrg = async (orgId, searchValue) => {
   try {
     const result = await student.findAll({
       where: {
@@ -160,7 +160,9 @@ studentUtil.searchInAllStudents = async (searchValue) => {
               { email: { [Op.like]: `%${searchValue}%` } }
             ]
           },
-          { batchId: null, }
+          { batchId: null },
+          { organizationId: orgId },
+          { active: true },
         ]
       }
     });
