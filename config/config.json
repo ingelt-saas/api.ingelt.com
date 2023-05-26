@@ -6,7 +6,7 @@
         "dialect": "mysql",
         "logging": false
     },
-    "development2": {
+    "development": {
         "username": "root",
         "password": "8565887271",
         "database": "ingelt_server",
@@ -20,7 +20,7 @@
         "dialect": "mysql",
         "logging": false
     },
-    "development": {
+    "development2": {
         "username": "admin",
         "password": "helloWorld",
         "database": "ingelt_dev",

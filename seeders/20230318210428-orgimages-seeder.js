@@ -7,27 +7,13 @@ module.exports = {
       "orgImages",
       [
         {
-          id: "ORGIMG001",
-          organizationId: "ORG1",
-          name: "image1",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: "ORGIMG002",
-          organizationId: "ORG2",
-          name: "image2",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: "ORGIMG003",
-          organizationId: "ORG2",
-          name: "image3",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
+          "id": "5066cc62-fe84-4fa4-950a-a03e718c5c77",
+          "name": "institute/1684988565364-0.png",
+          "createdAt": "2023-05-25 04:22,:47",
+          "updatedAt": "2023-05-25 04:22:47",
+          "organizationId": "b61377cf-c91e-49e7-b7b9-554b7e844527"
+        }
+       ],
       {}
     );
   },

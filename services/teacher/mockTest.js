@@ -6,14 +6,17 @@ const mockTestMarksUtil = require('../../utils/mockTestMarks');
 // add new mock test
 mockTestService.post('/', async (req, res) => {
     try {
-        const teacherId = req.decoded.id;
+        const teacherId = req.decoded.id;// Assuming orgId is provided in the request body
         req.body.teacherId = teacherId;
-        const result = await mockTestUtil.create(req.body);
-        res.status(201).json(result);
+        //set orgId attribute
+        console.log(req.body);
+      const result = await mockTestUtil.create(req.body);
+      res.status(201).json(result);
     } catch (err) {
-        res.status(400).send(err);
+        console.log(err);
+      res.status(400).send(err);
     }
-});
+  });
 
 // get mock test by teacher id 
 mockTestService.get('/:orgId', async (req, res) => {
