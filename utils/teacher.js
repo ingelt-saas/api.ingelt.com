@@ -138,6 +138,10 @@ teacherUtil.readById = async (teacherId) => {
           model: batch,
           as: "batches",
         },
+        {
+          model: organisation,
+          // required: true,
+        }
       ],
       attributes: { exclude: ['password'] }
     });

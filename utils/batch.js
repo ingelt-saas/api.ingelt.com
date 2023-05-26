@@ -118,7 +118,11 @@ batchUtil.searchBatchesWithStuAndTea = async (orgId, search, pageNo, limit) => {
 // GET by id
 batchUtil.readById = async (batchId) => {
   try {
-    const result = await batch.findByPk(batchId);
+    let result = await batch.findByPk(batchId);
+    if (result) {
+      result = result.get({ plain: true });
+    }
+
     return result;
   } catch (err) {
     throw err;
