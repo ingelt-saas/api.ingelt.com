@@ -230,9 +230,17 @@ batchUtil.update = async (batchId, updateData) => {
   }
 };
 
-// DELETE
+// end batch
 batchUtil.delete = async (batchId) => {
   try {
+
+    // delete batch teachers data
+    await BatchesTeachers.destroy({
+      where: {
+        batchId: batchId
+      }
+    });
+
     const result = await batch.destroy({
       where: {
         id: batchId,
