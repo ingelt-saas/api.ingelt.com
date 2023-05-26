@@ -92,6 +92,11 @@ const studentModel = (sequelize, DataTypes) => {
       values: ['PRE', 'APPL', 'FEE', 'ADM', 'COM'],
       defaultValue: "PRE", // PRE - before applied | APPL - Applied | FEE - Fee Paid | ADM - Admitted | COM - Completed
     },
+    type: {
+      type: DataTypes.ENUM,
+      values: ['ingelt', 'walk-in'],
+      defaultValue: 'ingelt',
+    },
 
     targetScore: DataTypes.FLOAT,
 

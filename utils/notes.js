@@ -13,19 +13,34 @@ notesUtil.createNotes = async (note) => {
 };
 
 // get notes by organization
-notesUtil.getNotesByOrg = async (orgId, pageNo, limit) => {
+notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
+
+  let findQuery;
+
+  if (searchQuery) {
+    findQuery = {
+      organizationId: orgId,
+      [Op.or]: {
+        name: { [Op.like]: `%${searchQuery}%` },
+        uploaderName: { [Op.like]: `%${searchQuery}%` },
+        subject: { [Op.like]: `%${searchQuery}%` },
+      }
+    };
+  } else {
+    findQuery = {
+      organizationId: orgId,
+    };
+  }
+
   try {
     const result = await notes.findAndCountAll({
       offset: (pageNo - 1) * limit,
       limit: limit,
-      where: {
-        organizationId: orgId,
-      },
+      where: findQuery,
       order: [['createdAt', 'DESC']],
     });
     return result;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 }
@@ -50,11 +65,7 @@ notesUtil.search = async (orgId, searchQuery, pageNo, limit) => {
     const result = await notes.findAndCountAll({
       where: {
         organizationId: orgId,
-        [Op.or]: {
-          name: { [Op.like]: `%${searchQuery}%` },
-          uploaderName: { [Op.like]: `%${searchQuery}%` },
-          subject: { [Op.like]: `%${searchQuery}%` },
-        }
+
       },
       offset: (pageNo - 1) * limit,
       limit: limit,

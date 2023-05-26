@@ -11,6 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "http://localhost:3001",
       "https://board.ingelt.com",
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
