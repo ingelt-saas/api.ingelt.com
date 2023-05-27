@@ -5,14 +5,13 @@ const studentUtil = require("../../utils/student");
 const notesService = express.Router();
 
 // get notes by batch id
-notesService.get("/all", async (req, res) => {
+notesService.get("/getall", async (req, res) => {
   try {
 
-    const studentId = req.decoded.id;
-    const student = await studentUtil.readById(studentId);
-    const { pageno, limit } = req.query;
+    const orgId = req.decoded.organizationId;
+    const { s, pageNo, limit } = req.query;
 
-    const result = await notesUtil.getNotesByOrg(student?.organization?.id, parseInt(pageno), parseInt(limit));
+    const result = await notesUtil.getNotesByOrg(orgId, parseInt(pageNo), parseInt(limit), s);
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
