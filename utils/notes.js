@@ -6,7 +6,7 @@ const notesUtil = {};
 notesUtil.createNotes = async (note) => {
   try {
     const newNote = await notes.create(note);
-    return newNote;
+    return newNote; 
   } catch (error) {
     throw error;
   }

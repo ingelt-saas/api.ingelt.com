@@ -8,6 +8,7 @@ mockTestUtil.create = async (newMockTest) => {
     const result = await mockTest.create(newMockTest);
     return result;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };

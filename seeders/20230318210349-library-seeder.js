@@ -7,32 +7,24 @@ module.exports = {
       "libraries",
       [
         {
-          id: "DOC004",
-          file: "document 1",
-          name: "document 1",
-          fileSize: 1200390,
-          subject: "listening",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: "DOC002",
-          file: "document 2",
-          name: "document 1",
-          fileSize: 1200390,
+          id: "LIB3E7",
+          name: "Library 1",
+          file: "file1.pdf",
           subject: "reading",
+          fileSize: 1024,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: "DOC003",
-          file: "document 3",
-          name: "document 1",
-          fileSize: 1200390,
+          id: "LIB3E8",
+          name: "Library 2",
+          file: "file2.pdf",
           subject: "writing",
+          fileSize: 2048,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        // Add more library records as needed
       ],
       {}
     );
