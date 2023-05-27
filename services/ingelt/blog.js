@@ -11,6 +11,16 @@ blogService.post("/", async (req, res) => {
     res.status(400).json(err);
   }
 });
+// read all categories
+blogService.get("/categories", async (req, res) => {
+  console.log("inside categories");
+  try {
+    const result = await blogUtil.readCategories();
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
 
 // delete blog
 blogService.delete("/:blogId", async (req, res) => {
@@ -44,8 +54,9 @@ blogService.get("/:blogId", async (req, res) => {
     res.status(400).json(err);
   }
 });
-// read all
+// read all blogs
 blogService.get("/", async (req, res) => {
+  console.log("inside blog");
   try {
     const result = await blogUtil.read();
     res.status(201).json(result);
@@ -53,6 +64,7 @@ blogService.get("/", async (req, res) => {
     res.status(400).json(err);
   }
 });
+
 // read blogs by category
 blogService.get("/category/:category", async (req, res) => {
   const category = req.params.category;

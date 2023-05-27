@@ -1,4 +1,5 @@
 const { blog } = require("../models");
+const sequelize = require("sequelize");
 
 const blogUtil = {};
 
@@ -48,13 +49,28 @@ blogUtil.readById = async (blogId) => {
   }
 };
 
-// read all
+// read all blogs
 blogUtil.read = async () => {
   try {
     const result = await blog.findAll({
       order: [["id", "DESC"]],
     });
     return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// read all categories
+blogUtil.readCategories = async () => {
+  console.log("Hello");
+  try {
+    const distinctCategories = await blog.findAll({
+      attributes: [
+        [sequelize.fn("DISTINCT", sequelize.col("category")), "category"],
+      ],
+    });
+    return distinctCategories;
   } catch (err) {
     throw err;
   }
