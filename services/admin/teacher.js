@@ -173,11 +173,11 @@ teacherService.put("/:teacherId", async (req, res) => {
 // delete teacher from a batch
 teacherService.delete("/:batchId/:teacherId", async (req, res) => {
   try {
-    const result = await teacherUtil.deleteTeacherFromBatch(
+    await teacherUtil.deleteTeacherFromBatch(
       req.params.batchId,
       req.params.teacherId
     );
-    res.send(result);
+    res.status(202).send({ message: 'OK' });
   } catch (err) {
     res.status(400).send(err);
   }
