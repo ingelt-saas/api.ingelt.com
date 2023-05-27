@@ -3,6 +3,7 @@ const studentService = express.Router();
 const studentUtil = require('../../utils/student');
 const mockTestMarksUtil = require('../../utils/mockTestMarks');
 const teacherUtil = require('../../utils/teacher');
+const submissionUtil = require('../../utils/submission');
 
 // get all student under by teacher 
 studentService.get('/getAll', async (req, res) => {
@@ -73,6 +74,17 @@ studentService.get('/mockTestMarks/:studentId', async (req, res) => {
     try {
         const testMarks = await mockTestMarksUtil.getMockTestMarksByStudent(req.params.studentId);
         res.status(201).json(testMarks);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// get submissions by student id
+studentService.get('/submissions/:studentId', async (req, res) => {
+    try {
+        const studentId = req.params.studentId;
+        const result = await submissionUtil.getSubmissionByStudent(studentId);
+        res.json(result);
     } catch (err) {
         res.status(400).send(err);
     }

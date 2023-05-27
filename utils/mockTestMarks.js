@@ -45,22 +45,28 @@ mockTestMarksUtil.getMockTestMarksByStudent = async (studentId) => {
 }
 
 // get mock test marks and student details by mock test id
-mockTestMarksUtil.getTestMarksWithStudent = async (mockTestId, orgId, pageNo, limit) => {
+mockTestMarksUtil.getTestMarksWithStudent = async (mockTestId, orgId, pageNo, limit, searchQuery) => {
   try {
+
+    let findQuery;
+    if (searchQuery) {
+      findQuery = {
+        organizationId: orgId,
+        active: true,
+        batchId: { [Op.not]: null },
+        name: { [Op.like]: `%${searchQuery}%` }
+      };
+    } else {
+      findQuery = {
+        organizationId: orgId,
+        active: true,
+        batchId: { [Op.not]: null },
+      };
+    }
+
     const result = await student.findAndCountAll({
+      where: findQuery,
       include: [
-        {
-          model: batch,
-          required: true,
-          attributes: [],
-          include: {
-            model: organisation,
-            required: true,
-            where: {
-              id: orgId,
-            }
-          }
-        },
         {
           model: mockTestMarks,
           required: false,
@@ -133,5 +139,19 @@ mockTestMarksUtil.update = async (mockTestMarksId, updateData) => {
     throw err;
   }
 };
+
+// delete by mock id
+mockTestMarksUtil.deleteByMockId = async (mockId) => {
+  try {
+    const result = await mockTestMarks.destroy({
+      where: {
+        mockTestId: mockId,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 module.exports = mockTestMarksUtil;
