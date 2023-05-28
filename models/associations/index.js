@@ -92,14 +92,14 @@ Assignment.belongsTo(Organisation, {
   },
 });
 
-// TEACHER - ASSIGNMENTS
-Teacher.hasMany(Assignment);
-Assignment.belongsTo(Teacher, {
-  foreignKey: {
-    allowNull: false,
-    type: Sequelize.UUID,
-  },
-});
+// // TEACHER - ASSIGNMENTS
+// Teacher.hasMany(Assignment);
+// Assignment.belongsTo(Teacher, {
+//   foreignKey: {
+//     allowNull: false,
+//     type: Sequelize.UUID,
+//   },
+// });
 
 // SUBMISSION - ASSIGNMENT - STUDENT
 Assignment.hasMany(Submission);
@@ -128,13 +128,13 @@ MockTest.belongsTo(Organisation, {
 });
 
 // MOCKTEST - TEACHER
-Teacher.hasMany(MockTest);
-MockTest.belongsTo(Teacher, {
-  foreignKey: {
-    allowNull: false,
-    type: Sequelize.UUID,
-  },
-});
+// Teacher.hasMany(MockTest);
+// MockTest.belongsTo(Teacher, {
+//   foreignKey: {
+//     allowNull: false,
+//     type: Sequelize.UUID,
+//   },
+// });
 
 // MOCKTESTMARKS - MOCKTEST - STUDENT
 MockTest.hasMany(MockTestMarks);
@@ -147,11 +147,11 @@ Organisation.hasMany(OrgImages);
 OrgImages.belongsTo(Organisation);
 
 // STUDENT APPLIED
-Organisation.hasMany(StudentApplied);
-StudentApplied.belongsTo(Organisation);
+// Organisation.hasMany(StudentApplied);
+// StudentApplied.belongsTo(Organisation);
 
-Student.hasMany(StudentApplied);
-StudentApplied.belongsTo(Student);
+// Student.hasMany(StudentApplied);
+// StudentApplied.belongsTo(Student);
 
 // ORGANISATION - STUDENT
 Organisation.hasMany(Student);
@@ -161,3 +161,34 @@ Student.belongsTo(Organisation, { foreignKey: { type: Sequelize.UUID, allowNull:
 Organisation.hasMany(Teacher);
 Teacher.belongsTo(Organisation, { foreignKey: { allowNull: true, type: Sequelize.UUID } });
 
+// ASSIGNMENT - TEACHER
+// Teacher.hasMany(Assignment);
+Assignment.belongsTo(Teacher, {
+  foreignKey: 'uploaderId',
+  constraints: false,
+  as: 'teacherUploader',
+});
+
+// ASSIGNMENT - ADMIN
+// Admin.hasMany(Assignment);
+Assignment.belongsTo(Admin, {
+  foreignKey: 'uploaderId',
+  constraints: false,
+  as: 'adminUploader',
+});
+
+// MOCK TEST - TEACHER
+// Teacher.hasMany(MockTest);
+MockTest.belongsTo(Teacher, {
+  foreignKey: 'uploaderId',
+  constraints: false,
+  as: 'teacherUploader',
+});
+
+// MOCK TEST - ADMIN
+// Admin.hasMany(MockTest);
+MockTest.belongsTo(Admin, {
+  foreignKey: 'uploaderId',
+  constraints: false,
+  as: 'adminUploader',
+});

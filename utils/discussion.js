@@ -14,7 +14,7 @@ discussionUtil.create = async (newDiscussion) => {
 discussionUtil.read = async (pageNo, limit) => {
   try {
     const result = await discussion.findAndCountAll({
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });

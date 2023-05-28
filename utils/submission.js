@@ -36,8 +36,20 @@ submissionUtil.getSubmissionByStudent = async (studentId) => {
 }
 
 // get submission by assignment
-submissionUtil.getSubmissionByAssignment = async (assignmentId, pageNo, limit) => {
+submissionUtil.getSubmissionByAssignment = async (assignmentId, pageNo, limit, searchQuery = null) => {
   try {
+    let findQuery;
+
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          name: { [Op.like]: `%${searchQuery}%` }
+        }
+      }
+    } else {
+      findQuery = {}
+    }
+
     const result = await submission.findAndCountAll({
       offset: (pageNo - 1) * limit,
       limit: limit,
@@ -48,6 +60,7 @@ submissionUtil.getSubmissionByAssignment = async (assignmentId, pageNo, limit) =
       include: {
         model: student,
         required: true,
+        ...findQuery
       },
       order: [
         ['evaluated', 'ASC'],

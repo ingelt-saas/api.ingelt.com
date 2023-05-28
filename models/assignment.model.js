@@ -28,5 +28,18 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: "file size is required" },
       },
     },
+    subject: {
+      type: DataTypes.ENUM,
+      values: ['reading', 'writing', 'speaking', 'listening']
+    },
+    uploaderId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    uploaderType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
+
   });
 };

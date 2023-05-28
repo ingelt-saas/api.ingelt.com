@@ -19,6 +19,14 @@ const mockTestModel = (sequelize, DataTypes) => {
         notNull: { msg: "name is required" },
       },
     },
+    uploaderId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    uploaderType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
   });
 };
 

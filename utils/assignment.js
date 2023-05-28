@@ -1,5 +1,5 @@
-const { Op } = require("sequelize");
-const { assignment, submission, teacher, organisation, batch, student } = require("../models");
+const { Op, literal } = require("sequelize");
+const { assignment, submission, teacher, organisation, batch, student, admin } = require("../models");
 const assignmentUtil = {};
 
 // POST
@@ -11,6 +11,44 @@ assignmentUtil.create = async (newAssignment) => {
     throw err;
   }
 };
+
+// get assignments by organization
+assignmentUtil.getAssignmentByOrg = async (orgId, pageNo, limit, searchQuery) => {
+  try {
+    let findQuery;
+    if (searchQuery) {
+      findQuery = {
+        organizationId: orgId,
+        name: { [Op.like]: `%${searchQuery}%` }
+      };
+    } else {
+      findQuery = {
+        organizationId: orgId,
+      }
+    }
+
+    const result = await assignment.findAndCountAll({
+      where: findQuery,
+      include: [
+        { model: teacher, as: 'teacherUploader', attributes: [] },
+        { model: admin, as: 'adminUploader', attributes: [] },
+      ],
+      attributes: [
+        'id', 'name', 'file', 'fileSize', 'createdAt',
+        [literal('CASE WHEN `Assignment`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `Assignment`.`uploaderId`) ELSE (SELECT `name` FROM `Admins` WHERE `Admins`.`id` = `Assignment`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `Assignment`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `Assignment`.`uploaderId`) ELSE (SELECT `image` FROM `Admins` WHERE `Admins`.`id` = `Assignment`.`uploaderId`) END'), 'uploaderImage'],
+        [literal('CASE WHEN `Assignment`.`uploaderType` = "Teacher" THEN (SELECT `id` FROM `Teachers` WHERE `Teachers`.`id` = `Assignment`.`uploaderId`) ELSE (SELECT `id` FROM `Admins` WHERE `Admins`.`id` = `Assignment`.`uploaderId`) END'), 'uploaderId'],
+      ],
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    console.log(err)
+    throw err;
+  }
+}
 
 // get all assignment by teacher
 assignmentUtil.getAssignmentsByTeacher = async (teacherId, pageNo, limit, searchQuery) => {
