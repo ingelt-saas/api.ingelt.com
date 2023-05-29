@@ -53,7 +53,7 @@ notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
     console.log(err)
     throw err;
   }
-}
+};
 
 // GET by batch id
 notesUtil.getNotesByBatch = async (batchId) => {
@@ -75,7 +75,11 @@ notesUtil.search = async (orgId, searchQuery, pageNo, limit) => {
     const result = await notes.findAndCountAll({
       where: {
         organizationId: orgId,
-
+        [Op.or]: {
+          name: { [Op.like]: `%${searchQuery}%` },
+          uploaderName: { [Op.like]: `%${searchQuery}%` },
+          subject: { [Op.like]: `%${searchQuery}%` },
+        }
       },
       offset: (pageNo - 1) * limit,
       limit: limit,
