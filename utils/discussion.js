@@ -21,8 +21,8 @@ discussionUtil.read = async (pageNo, limit) => {
       ],
       attributes: [
         'id', 'message', 'designation', 'senderId', 'createdAt',
-        [literal('CASE WHEN `Discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `Discussion`.`senderId`) ELSE (SELECT `name` FROM `Students` WHERE `Students`.`id` = `Discussion`.`senderId`) END'), 'senderName'],
-        [literal('CASE WHEN `Discussion`.`designation` = "teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `Discussion`.`senderId`) ELSE (SELECT `image` FROM `Students` WHERE `Students`.`id` = `Discussion`.`senderId`) END'), 'senderImage'],
+        [literal('CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `name` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'), 'senderName'],
+        [literal('CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `image` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'), 'senderImage'],
       ],
       order: [['createdAt', 'DESC']],
       offset: (pageNo - 1) * limit,
