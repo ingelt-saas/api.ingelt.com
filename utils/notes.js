@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 const { notes, teacher, admin } = require("../models");
 const notesUtil = {};
 
@@ -6,24 +6,51 @@ const notesUtil = {};
 notesUtil.createNotes = async (note) => {
   try {
     const newNote = await notes.create(note);
-    return newNote; 
+    return newNote;
   } catch (error) {
     throw error;
   }
 };
 
 // get notes by organization
-notesUtil.getNotesByOrg = async (orgId, pageNo, limit) => {
+notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
+
+  let findQuery;
+
+  if (searchQuery) {
+    findQuery = {
+      organizationId: orgId,
+      [Op.or]: {
+        name: { [Op.like]: `%${searchQuery}%` },
+        // uploaderName: { [Op.like]: `%${searchQuery}%` },
+        subject: { [Op.like]: `%${searchQuery}%` },
+      }
+    };
+  } else {
+    findQuery = {
+      organizationId: orgId,
+    };
+  }
+
   try {
     const result = await notes.findAndCountAll({
-      where: {
-        organizationId: orgId,
-      },
+      include: [
+        { model: teacher, as: 'teacherUploader', attributes: [] },
+        { model: admin, as: 'adminUploader', attributes: [] },
+      ],
+      attributes: [
+        'name', 'id', 'file', 'fileSize', 'subject', 'createdAt', 'uploaderId',
+        [literal('CASE WHEN `Notes`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `Notes`.`uploaderId`) ELSE (SELECT `name` FROM `Admins` WHERE `Admins`.`id` = `Notes`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `Notes`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `Notes`.`uploaderId`) ELSE (SELECT `image` FROM `Admins` WHERE `Admins`.`id` = `Notes`.`uploaderId`) END'), 'uploaderImage'],
+      ],
+      where: findQuery,
+      order: [['createdAt', 'DESC']],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
     return result;
   } catch (err) {
+    console.log(err)
     throw err;
   }
 };

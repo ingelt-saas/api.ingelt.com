@@ -14,6 +14,9 @@ const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
 const appliedStudentsService = require("./appliedStudents");
 const notesService = require("./notes");
+const discussionService = require("./discussion");
+const assignmentService = require("./assignment");
+const submissionService = require("./submission");
 
 // authentication service 
 router.post('/auth', authenticateAdmin);
@@ -36,9 +39,11 @@ router.use("/teacher", verifyJWT, teacherService);
 router.use("/library", verifyJWT, libraryService);
 router.use("/batch", verifyJWT, batchService);
 router.use("/mockTest", verifyJWT, mockTestService);
-router.use("/assignment", verifyJWT, mockTestService);
+router.use("/assignment", verifyJWT, assignmentService);
+router.use("/submission", verifyJWT, submissionService);
 router.use("/settings", verifyJWT, settingsService);
 router.use("/appliedStudents", verifyJWT, appliedStudentsService);
 router.use("/notes", verifyJWT, notesService);
+router.use("/discussion", verifyJWT, discussionService);
 
 module.exports = router;

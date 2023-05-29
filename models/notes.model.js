@@ -22,23 +22,14 @@ const notesModel = (sequelize, DataTypes) => {
           notNull: { msg: "file is required" },
         },
       },
-
-      uploaderName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "uploader name is required" },
-        },
-      },
-
       uploaderId: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notNull: { msg: "uploader id is required" },
-        },
       },
-
+      uploaderType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       subject: {
         type: DataTypes.ENUM,
         values: ['reading', 'writing', 'speaking', 'listening']

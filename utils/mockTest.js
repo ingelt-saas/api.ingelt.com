@@ -1,5 +1,5 @@
-const { Sequelize } = require("sequelize");
-const { mockTest, mockTestMarks, batch, organisation } = require("../models");
+const { Sequelize, literal } = require("sequelize");
+const { mockTest, mockTestMarks, batch, organisation, teacher, admin } = require("../models");
 const mockTestUtil = {};
 
 // POST
@@ -14,12 +14,11 @@ mockTestUtil.create = async (newMockTest) => {
 };
 
 // get mock test by org and teacher
-mockTestUtil.getMockTestsByTeaAndOrg = async (orgId, teacherId) => {
+mockTestUtil.getByTeacher = async (teacherId) => {
   try {
     const result = await mockTest.findAll({
       where: {
-        organizationId: orgId,
-        teacherId: teacherId,
+        uploaderId: teacherId,
       },
       order: [['createdAt', 'DESC']]
     });
@@ -95,6 +94,32 @@ mockTestUtil.mockTestAvgBand = async (batchId, orgId) => {
     return newMockTestArr;
 
   } catch (err) {
+    throw err;
+  }
+}
+
+// get by organization
+mockTestUtil.getByOrg = async (orgId) => {
+  try {
+    const result = await mockTest.findAll({
+      include: [
+        { model: teacher, as: 'teacherUploader', attributes: [] },
+        { model: admin, as: 'adminUploader', attributes: [] },
+      ],
+      attributes: [
+        'id', 'name', 'createdAt',
+        [literal('CASE WHEN `MockTest`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `MockTest`.`uploaderId`) ELSE (SELECT `name` FROM `Admins` WHERE `Admins`.`id` = `MockTest`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `MockTest`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `MockTest`.`uploaderId`) ELSE (SELECT `image` FROM `Admins` WHERE `Admins`.`id` = `MockTest`.`uploaderId`) END'), 'uploaderImage'],
+        [literal('CASE WHEN `MockTest`.`uploaderType` = "Teacher" THEN (SELECT `id` FROM `Teachers` WHERE `Teachers`.`id` = `MockTest`.`uploaderId`) ELSE (SELECT `id` FROM `Admins` WHERE `Admins`.`id` = `MockTest`.`uploaderId`) END'), 'uploaderId'],
+      ],
+      where: {
+        organizationId: orgId,
+      },
+      order: [['createdAt', 'DESC']]
+    });
+    return result;
+  } catch (err) {
+    console.log(err)
     throw err;
   }
 }
