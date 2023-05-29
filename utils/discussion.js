@@ -1,4 +1,5 @@
-const { discussion } = require("../models");
+const { literal } = require("sequelize");
+const { discussion, teacher, student } = require("../models");
 const discussionUtil = {};
 
 // POST
@@ -14,7 +15,16 @@ discussionUtil.create = async (newDiscussion) => {
 discussionUtil.read = async (pageNo, limit) => {
   try {
     const result = await discussion.findAndCountAll({
-      order: [['createdAt', 'ASC']],
+      include: [
+        { model: teacher, as: 'teacherSender', attributes: [] },
+        { model: student, as: 'studentSender', attributes: [] },
+      ],
+      attributes: [
+        'id', 'message', 'designation', 'senderId', 'createdAt',
+        [literal('CASE WHEN `Discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `Discussion`.`senderId`) ELSE (SELECT `name` FROM `Students` WHERE `Students`.`id` = `Discussion`.`senderId`) END'), 'senderName'],
+        [literal('CASE WHEN `Discussion`.`designation` = "teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `Discussion`.`senderId`) ELSE (SELECT `image` FROM `Students` WHERE `Students`.`id` = `Discussion`.`senderId`) END'), 'senderImage'],
+      ],
+      order: [['createdAt', 'DESC']],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });

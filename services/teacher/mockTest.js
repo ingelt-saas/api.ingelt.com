@@ -7,7 +7,8 @@ const mockTestMarksUtil = require('../../utils/mockTestMarks');
 mockTestService.post('/', async (req, res) => {
     try {
         const teacherId = req.decoded.id;// Assuming orgId is provided in the request body
-        req.body.teacherId = teacherId;
+        req.body.uploaderId = teacherId;
+        req.body.uploaderType = 'Teacher';
         req.body.organizationId = req.decoded.organizationId;
         // check mock test by mock test name
         const getMockTest = await mockTestUtil.readByName(req.body.name, req.decoded.organizationId);
@@ -19,16 +20,15 @@ mockTestService.post('/', async (req, res) => {
         res.status(201).json(result);
     } catch (err) {
         console.log(err);
-      res.status(400).send(err);
+        res.status(400).send(err);
     }
-  });
+});
 
 // get mock test by teacher id 
 mockTestService.get('/getall', async (req, res) => {
     try {
         const teacherId = req.decoded.id;
-        const orgId = req.decoded.organizationId;
-        const result = await mockTestUtil.getMockTestsByTeaAndOrg(orgId, teacherId);
+        const result = await mockTestUtil.getByTeacher(teacherId);
         res.json(result);
     } catch (err) {
         res.status(400).send(err);
@@ -46,36 +46,25 @@ mockTestService.put('/:mockId', async (req, res) => {
     }
 });
 
-// get mock test by batch and teacher
-mockTestService.get('/batch/:batchId', async (req, res) => {
-    try {
-        const teacherId = req.decoded.id;
-        const result = await mockTestUtil.getMockTestsByTeaAndBatch(teacherId, req.params.batchId);
-        res.status(201).json(result);
-    } catch (err) {
-        res.status(400).send(err);
-    }
-});
-
-// search mock test marks by student 
-mockTestService.get('/search/:mockTestId', async (req, res) => {
-    try {
-        const mockTestId = req.params.mockTestId;
-        const orgId = req.headers.organizationid;
-        const { s, pageno, limit } = req.query;
-        const searchData = {
-            pageNo: parseInt(pageno),
-            limit: parseInt(limit),
-            searchQuery: s,
-            orgId: orgId,
-            mockTestId: mockTestId,
-        };
-        const result = await mockTestMarksUtil.searchByStudent(searchData);
-        res.send(result);
-    } catch (err) {
-        res.status(400).send(err);
-    }
-});
+// // search mock test marks by student 
+// mockTestService.get('/search/:mockTestId', async (req, res) => {
+//     try {
+//         const mockTestId = req.params.mockTestId;
+//         const orgId = req.headers.organizationid;
+//         const { s, pageno, limit } = req.query;
+//         const searchData = {
+//             pageNo: parseInt(pageno),
+//             limit: parseInt(limit),
+//             searchQuery: s,
+//             orgId: orgId,
+//             mockTestId: mockTestId,
+//         };
+//         const result = await mockTestMarksUtil.searchByStudent(searchData);
+//         res.send(result);
+//     } catch (err) {
+//         res.status(400).send(err);
+//     }
+// });
 
 // save mock test marks
 mockTestService.post('/mockTestMarks', async (req, res) => {
@@ -89,10 +78,10 @@ mockTestService.post('/mockTestMarks', async (req, res) => {
 });
 
 // update mock test marks
-mockTestService.put('/mockTestMarks/:mockTestId', async (req, res) => {
+mockTestService.put('/mockTestMarks/:marksId', async (req, res) => {
     try {
         const updateData = req.body;
-        const result = await mockTestMarksUtil.update(req.params.mockTestId, updateData);
+        const result = await mockTestMarksUtil.update(req.params.marksId, updateData);
         res.send(result);
     } catch (err) {
         res.status(400).send(err);

@@ -6,22 +6,12 @@ const teacherUtil = require('../../utils/teacher');
 const submissionUtil = require('../../utils/submission');
 
 // get all student under by teacher 
-studentService.get('/getAll', async (req, res) => {
+studentService.get('/getall', async (req, res) => {
     try {
-        let pageNo = req.query.pageno;
-        let limit = req.query.limit;
-
-        if (pageNo) {
-            pageNo = parseInt(pageNo);
-        }
-
-        if (limit) {
-            limit = parseInt(limit);
-        }
-
-        const teacher = await teacherUtil.readById(req.decoded.id);
-        const result = await studentUtil.readByOrg(teacher?.organization.id, pageNo, limit);
-        res.send(result);
+        const { s, pageNo, limit } = req.query;
+        const orgId = req.decoded.organizationId;
+        const result = await studentUtil.activeStudents(orgId, parseInt(pageNo), parseInt(limit), s);
+        res.json(result);
     } catch (err) {
         res.status(400).send(err);
     }
