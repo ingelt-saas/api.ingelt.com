@@ -40,8 +40,8 @@ notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
       ],
       attributes: [
         'name', 'id', 'file', 'fileSize', 'subject', 'createdAt', 'uploaderId',
-        [literal('CASE WHEN `Notes`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `Notes`.`uploaderId`) ELSE (SELECT `name` FROM `Admins` WHERE `Admins`.`id` = `Notes`.`uploaderId`) END'), 'uploaderName'],
-        [literal('CASE WHEN `Notes`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `Notes`.`uploaderId`) ELSE (SELECT `image` FROM `Admins` WHERE `Admins`.`id` = `Notes`.`uploaderId`) END'), 'uploaderImage'],
+        [literal('CASE WHEN `notes`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `notes`.`uploaderId`) ELSE (SELECT `name` FROM `admins` WHERE `admins`.`id` = `notes`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `notes`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `notes`.`uploaderId`) ELSE (SELECT `image` FROM `admins` WHERE `admins`.`id` = `notes`.`uploaderId`) END'), 'uploaderImage'],
       ],
       where: findQuery,
       order: [['createdAt', 'DESC']],

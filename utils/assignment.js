@@ -34,10 +34,9 @@ assignmentUtil.getAssignmentByOrg = async (orgId, pageNo, limit, searchQuery) =>
         { model: admin, as: 'adminUploader', attributes: [] },
       ],
       attributes: [
-        'id', 'name', 'file', 'fileSize', 'createdAt',
-        [literal('CASE WHEN `Assignment`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `Assignment`.`uploaderId`) ELSE (SELECT `name` FROM `Admins` WHERE `Admins`.`id` = `Assignment`.`uploaderId`) END'), 'uploaderName'],
-        [literal('CASE WHEN `Assignment`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `Assignment`.`uploaderId`) ELSE (SELECT `image` FROM `Admins` WHERE `Admins`.`id` = `Assignment`.`uploaderId`) END'), 'uploaderImage'],
-        [literal('CASE WHEN `Assignment`.`uploaderType` = "Teacher" THEN (SELECT `id` FROM `Teachers` WHERE `Teachers`.`id` = `Assignment`.`uploaderId`) ELSE (SELECT `id` FROM `Admins` WHERE `Admins`.`id` = `Assignment`.`uploaderId`) END'), 'uploaderId'],
+        'id', 'name', 'file', 'fileSize', 'createdAt', 'uploaderId',
+        [literal('CASE WHEN `assignment`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `assignment`.`uploaderId`) ELSE (SELECT `name` FROM `admins` WHERE `admins`.`id` = `assignment`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `assignment`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `assignment`.`uploaderId`) ELSE (SELECT `image` FROM `admins` WHERE `admins`.`id` = `assignment`.`uploaderId`) END'), 'uploaderImage'],
       ],
       order: [['createdAt', 'DESC']],
       offset: (pageNo - 1) * limit,
@@ -45,7 +44,6 @@ assignmentUtil.getAssignmentByOrg = async (orgId, pageNo, limit, searchQuery) =>
     });
     return result;
   } catch (err) {
-    console.log(err)
     throw err;
   }
 }

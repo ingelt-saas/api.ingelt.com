@@ -8,12 +8,10 @@ const notesService = express.Router();
 notesService.get("/getall", async (req, res) => {
   try {
 
-    const studentId = req.decoded.id;
-    const student = await studentUtil.readById(studentId);
-    const orgId =  student?.organizationId;
-    const { pageNo, limit } = req.query;
+    const orgId = req.decoded.organizationId;
+    const { s, pageNo, limit } = req.query;
 
-    const result = await notesUtil.getNotesByOrg(orgId, parseInt(pageNo), parseInt(limit));
+    const result = await notesUtil.getNotesByOrg(orgId, parseInt(pageNo), parseInt(limit), s);
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
@@ -26,9 +24,10 @@ notesService.get("/search", async (req, res) => {
 
     const studentId = req.decoded.id;
     const student = await studentUtil.readById(studentId);
-    const { s, pageno, limit } = req.query;
+    const orgId =  student?.organizationId;
+    const { pageNo, limit } = req.query;
 
-    const result = await notesUtil.search(student?.organizationId, s, parseInt(pageno), parseInt(limit));
+    const result = await notesUtil.getNotesByOrg(orgId, parseInt(pageNo), parseInt(limit));
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);

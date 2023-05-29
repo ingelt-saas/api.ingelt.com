@@ -107,10 +107,9 @@ mockTestUtil.getByOrg = async (orgId) => {
         { model: admin, as: 'adminUploader', attributes: [] },
       ],
       attributes: [
-        'id', 'name', 'createdAt',
-        [literal('CASE WHEN `MockTest`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `MockTest`.`uploaderId`) ELSE (SELECT `name` FROM `Admins` WHERE `Admins`.`id` = `MockTest`.`uploaderId`) END'), 'uploaderName'],
-        [literal('CASE WHEN `MockTest`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `MockTest`.`uploaderId`) ELSE (SELECT `image` FROM `Admins` WHERE `Admins`.`id` = `MockTest`.`uploaderId`) END'), 'uploaderImage'],
-        [literal('CASE WHEN `MockTest`.`uploaderType` = "Teacher" THEN (SELECT `id` FROM `Teachers` WHERE `Teachers`.`id` = `MockTest`.`uploaderId`) ELSE (SELECT `id` FROM `Admins` WHERE `Admins`.`id` = `MockTest`.`uploaderId`) END'), 'uploaderId'],
+        'id', 'name', 'createdAt', 'uploaderId',
+        [literal('CASE WHEN `mockTest`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `mockTest`.`uploaderId`) ELSE (SELECT `name` FROM `admins` WHERE `admins`.`id` = `mockTest`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `mockTest`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `mockTest`.`uploaderId`) ELSE (SELECT `image` FROM `admins` WHERE `admins`.`id` = `mockTest`.`uploaderId`) END'), 'uploaderImage'],
       ],
       where: {
         organizationId: orgId,
