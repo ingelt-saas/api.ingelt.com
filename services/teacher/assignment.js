@@ -39,7 +39,6 @@ assignmentService.get("/search", async (req, res) => {
   }
 });
 
-
 // get all assignment
 assignmentService.get("/:assignmentId", async (req, res) => {
   try {

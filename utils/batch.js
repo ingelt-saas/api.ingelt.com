@@ -5,6 +5,9 @@ const { Op, Sequelize } = require("sequelize");
 // POST
 batchUtil.create = async (newBatch) => {
   try {
+    let name = newBatch.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    newBatch.name = name;
     const result = await batch.create(newBatch);
     return result;
   } catch (err) {

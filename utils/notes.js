@@ -5,6 +5,9 @@ const notesUtil = {};
 // POST
 notesUtil.createNotes = async (note) => {
   try {
+    let name = note.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    note.name = name;
     const newNote = await notes.create(note);
     return newNote;
   } catch (error) {

@@ -5,6 +5,9 @@ const assignmentUtil = {};
 // POST
 assignmentUtil.create = async (newAssignment) => {
   try {
+    let name = newAssignment.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    newAssignment.name = name;
     const result = await assignment.create(newAssignment);
     return result;
   } catch (err) {
