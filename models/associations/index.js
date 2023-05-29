@@ -192,3 +192,31 @@ MockTest.belongsTo(Admin, {
   constraints: false,
   as: 'adminUploader',
 });
+
+// DISCUSSION - TEACHER
+Discussion.belongsTo(Teacher, {
+  foreignKey: 'senderId',
+  constraints: false,
+  as: 'teacherSender',
+});
+
+// DISCUSSION - STUDENT
+Discussion.belongsTo(Student, {
+  foreignKey: 'senderId',
+  constraints: false,
+  as: 'studentSender',
+});
+
+// NOTES - ADMIN
+Notes.belongsTo(Admin, {
+  foreignKey: 'uploaderId',
+  constraints: false,
+  as: 'adminUploader',
+});
+
+// NOTES - TEACHER
+Notes.belongsTo(Teacher, {
+  foreignKey: 'uploaderId',
+  constraints: false,
+  as: 'teacherUploader',
+});

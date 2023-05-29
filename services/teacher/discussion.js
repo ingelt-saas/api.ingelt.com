@@ -7,8 +7,6 @@ discussionService.post('/', async (req, res) => {
     try {
         const teacher = req.decoded;
         req.body.senderId = teacher.id;
-        req.body.senderName = teacher.name;
-        req.body.senderImage = teacher.image;
         req.body.designation = 'teacher';
         const result = await discussionUtil.create(req.body);
         res.status(201).json(result);

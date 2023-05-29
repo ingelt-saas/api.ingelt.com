@@ -267,6 +267,7 @@ studentUtil.activeStudents = async (orgId, pageNo, limit, searchQuery = null) =>
 
     const result = await student.findAndCountAll({
       where: search,
+      attributes: { exclude: ['password'] },
       order: [['name', 'ASC']],
       offset: (pageNo - 1) * limit,
       limit: limit,

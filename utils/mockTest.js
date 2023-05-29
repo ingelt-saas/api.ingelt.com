@@ -14,12 +14,11 @@ mockTestUtil.create = async (newMockTest) => {
 };
 
 // get mock test by org and teacher
-mockTestUtil.getMockTestsByTeaAndOrg = async (orgId, teacherId) => {
+mockTestUtil.getByTeacher = async (teacherId) => {
   try {
     const result = await mockTest.findAll({
       where: {
-        organizationId: orgId,
-        teacherId: teacherId,
+        uploaderId: teacherId,
       },
       order: [['createdAt', 'DESC']]
     });

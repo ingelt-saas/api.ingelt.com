@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 const { notes, teacher, admin } = require("../models");
 const notesUtil = {};
 
@@ -6,7 +6,7 @@ const notesUtil = {};
 notesUtil.createNotes = async (note) => {
   try {
     const newNote = await notes.create(note);
-    return newNote; 
+    return newNote;
   } catch (error) {
     throw error;
   }
@@ -22,7 +22,7 @@ notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
       organizationId: orgId,
       [Op.or]: {
         name: { [Op.like]: `%${searchQuery}%` },
-        uploaderName: { [Op.like]: `%${searchQuery}%` },
+        // uploaderName: { [Op.like]: `%${searchQuery}%` },
         subject: { [Op.like]: `%${searchQuery}%` },
       }
     };
@@ -34,13 +34,23 @@ notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
 
   try {
     const result = await notes.findAndCountAll({
-      offset: (pageNo - 1) * limit,
-      limit: limit,
+      include: [
+        { model: teacher, as: 'teacherUploader', attributes: [] },
+        { model: admin, as: 'adminUploader', attributes: [] },
+      ],
+      attributes: [
+        'name', 'id', 'file', 'fileSize', 'subject', 'createdAt', 'uploaderId',
+        [literal('CASE WHEN `Notes`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `Teachers` WHERE `Teachers`.`id` = `Notes`.`uploaderId`) ELSE (SELECT `name` FROM `Admins` WHERE `Admins`.`id` = `Notes`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `Notes`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `Teachers` WHERE `Teachers`.`id` = `Notes`.`uploaderId`) ELSE (SELECT `image` FROM `Admins` WHERE `Admins`.`id` = `Notes`.`uploaderId`) END'), 'uploaderImage'],
+      ],
       where: findQuery,
       order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {
+    console.log(err)
     throw err;
   }
 }
