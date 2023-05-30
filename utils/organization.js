@@ -5,7 +5,9 @@ const organizationUtil = {};
 // POST
 organizationUtil.create = async (newOrganization) => {
   try {
-
+    let name = newOrganization.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    newOrganization.name = name;
     let result = await organization.create(newOrganization);
     if (result) {
       result = result.get({ plain: true });
@@ -191,6 +193,11 @@ organizationUtil.inGeltRevenueByOrg = async (orgId, year) => {
 // PUT
 organizationUtil.update = async (organizationId, updateData) => {
   try {
+    if (updateData.name) {
+      let name = updateData.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+      updateData.name = name;
+    }
     const result = await organization.update(updateData, {
       where: {
         id: organizationId,

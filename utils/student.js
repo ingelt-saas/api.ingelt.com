@@ -48,6 +48,10 @@ studentUtil.create = async (newStudent) => {
     const hashedPassword = await bcrypt.hash(newStudent.password, salt);
     newStudent.password = hashedPassword;
 
+    let name = newStudent.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    newStudent.name = name;
+
     // const rollNumber = await studentUtil.generateRollNumber();
     // newStudent.roll = rollNumber;
 
@@ -694,6 +698,11 @@ studentUtil.updateStudentsByBatch = async (batchId, data) => {
 // PUT
 studentUtil.update = async (studentId, updateData) => {
   try {
+    if (updateData.name) {
+      let name = updateData.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+      updateData.name = name;
+    }
     const result = await student.update(updateData, {
       where: {
         id: studentId,

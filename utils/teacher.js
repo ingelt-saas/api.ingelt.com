@@ -17,6 +17,10 @@ teacherUtil.create = async (newTeacher) => {
     const hashedPassword = await bcrypt.hash(newTeacher.password, salt);
     newTeacher.password = hashedPassword;
 
+    let name = newTeacher.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    newTeacher.name = name;
+
     const teacherResult = await teacher.create(newTeacher);
 
     return teacherResult.get({ raw: true })
@@ -317,6 +321,11 @@ teacherUtil.teacherSubjectUpdate = async (id, subject) => {
 // PUT
 teacherUtil.update = async (teacherId, updateData) => {
   try {
+    if (updateData.name) {
+      let name = updateData.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+      updateData.name = name;
+    }
     const result = await teacher.update(updateData, {
       where: { id: teacherId },
     });

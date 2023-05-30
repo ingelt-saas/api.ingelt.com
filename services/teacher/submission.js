@@ -14,18 +14,6 @@ submissionService.get('/assignment/:assignmentId', async (req, res) => {
     }
 });
 
-// search submission
-submissionService.get('/search/:assignmentId', async (req, res) => {
-    try {
-        const assignmentId = req.params.assignmentId;
-        const { s } = req.query;
-        const result = await submissionUtil.searchSubmission(assignmentId, s);
-        res.send(result);
-    } catch (err) {
-        res.status(400).send(err);
-    }
-});
-
 // update submission
 submissionService.put('/:submissionId', async (req, res) => {
     try {

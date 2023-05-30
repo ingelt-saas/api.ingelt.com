@@ -10,6 +10,12 @@ adminUtil.create = async (newAdmin) => {
     const hashedPassword = await bcrypt.hash(newAdmin.password, salt);
     newAdmin.password = hashedPassword;
 
+    if (newAdmin.name) {
+      let name = newAdmin.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+      newAdmin.name = name;
+    }
+
     // Saving Admin
     const result = await admin.create(newAdmin);
     return result;
@@ -54,6 +60,11 @@ adminUtil.readById = async (adminId) => {
 // PUT
 adminUtil.update = async (adminId, updateData) => {
   try {
+    if (updateData.name) {
+      let name = updateData.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+      updateData.name = name;
+    }
     const result = await admin.update(updateData, {
       where: {
         id: adminId,
