@@ -5,6 +5,9 @@ const mockTestUtil = {};
 // POST
 mockTestUtil.create = async (newMockTest) => {
   try {
+    let name = newMockTest.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    newMockTest.name = name;
     const result = await mockTest.create(newMockTest);
     return result;
   } catch (err) {

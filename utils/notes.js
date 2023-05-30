@@ -5,6 +5,9 @@ const notesUtil = {};
 // POST
 notesUtil.createNotes = async (note) => {
   try {
+    let name = note.name;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    note.name = name;
     const newNote = await notes.create(note);
     return newNote;
   } catch (error) {
@@ -40,7 +43,7 @@ notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
       ],
       attributes: [
         'name', 'id', 'file', 'fileSize', 'subject', 'createdAt', 'uploaderId',
-        [literal('CASE WHEN `notes`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `notes`.`uploaderId`) ELSE (SELECT `name` FROM `admins` WHERE `admins`.`id` = `notes`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `notes`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `notes`.`uploaderId`) ELSE (SELECT `organizations`.`name` FROM `admins` INNER JOIN `organizations` ON `admins`.`organizationId` = `organizations`.`id` WHERE `admins`.`id` = `notes`.`uploaderId`) END'), 'uploaderName'],
         [literal('CASE WHEN `notes`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `notes`.`uploaderId`) ELSE (SELECT `image` FROM `admins` WHERE `admins`.`id` = `notes`.`uploaderId`) END'), 'uploaderImage'],
       ],
       where: findQuery,
