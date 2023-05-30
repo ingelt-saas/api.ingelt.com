@@ -1,16 +1,16 @@
 const express = require("express");
 const teacherUtil = require("../../utils/teacher");
+const studentUtil = require("../../utils/student");
 const { memoryStorage } = require("multer");
 const multer = require("multer");
 const teacherService = express.Router();
 const storage = memoryStorage();
 const upload = multer({ storage });
-const awsUpload = require('../../aws/upload');
+const awsUpload = require("../../aws/upload");
 
 // add new teacher
-teacherService.post("/", upload.single('image'), async (req, res) => {
+teacherService.post("/", upload.single("image"), async (req, res) => {
   try {
-
     const file = req.file;
     const newTeacher = req.body;
     newTeacher.organizationId = req.decoded.organizationId;
@@ -19,18 +19,19 @@ teacherService.post("/", upload.single('image'), async (req, res) => {
     const getTeacher = await teacherUtil.readByEmail(req.body.email);
 
     // aws upload
-    const __awsUpload = () => new Promise((resolve, reject) => {
-      awsUpload(file, 'teacher/profile', async (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
+    const __awsUpload = () =>
+      new Promise((resolve, reject) => {
+        awsUpload(file, "teacher/profile", async (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
       });
-    });
 
     if (getTeacher) {
-      return res.status(208).send({ message: 'Teacher exists at this email.' });
+      return res.status(208).send({ message: "Teacher exists at this email." });
     }
 
     if (file) {
@@ -40,7 +41,6 @@ teacherService.post("/", upload.single('image'), async (req, res) => {
 
     const result = await teacherUtil.create(newTeacher);
     res.status(201).json(result);
-
   } catch (err) {
     res.status(400).send(err);
   }
@@ -61,7 +61,12 @@ teacherService.get("/getall", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const { s, pageNo, limit } = req.query;
-    const result = await teacherUtil.readByOrg(orgId, parseInt(pageNo), parseInt(limit), s);
+    const result = await teacherUtil.readByOrg(
+      orgId,
+      parseInt(pageNo),
+      parseInt(limit),
+      s
+    );
     res.status(200).json(result);
   } catch (err) {
     res.status(400).send(err);
@@ -69,10 +74,13 @@ teacherService.get("/getall", async (req, res) => {
 });
 
 // get attempted students by organization
-teacherService.get('/attemptedStudents', async (req, res) => {
+
+teacherService.get("/attemptedStudents", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
+
     const result = await studentUtil.attemptedStudentsByOrg(orgId);
+
     res.json(result);
   } catch (err) {
     res.status(400).send(err);
@@ -80,7 +88,7 @@ teacherService.get('/attemptedStudents', async (req, res) => {
 });
 
 // best students
-teacherService.get('/bestStudents', async (req, res) => {
+teacherService.get("/bestStudents", async (req, res) => {
   try {
     const orgId = req.headers.organization;
     const result = await studentUtil.bestStudents(orgId);
@@ -106,7 +114,12 @@ teacherService.get("/search/organization", async (req, res) => {
   try {
     const { s, pageNo, limit } = req.query;
     const orgId = req.decoded.organizationId;
-    const result = await teacherUtil.searchByOrg(orgId, s, parseInt(pageNo), parseInt(limit));
+    const result = await teacherUtil.searchByOrg(
+      orgId,
+      s,
+      parseInt(pageNo),
+      parseInt(limit)
+    );
     res.send(result);
   } catch (err) {
     res.status(400).send(err);
@@ -133,7 +146,6 @@ teacherService.get("/:teacherId", async (req, res) => {
 
     res.status(200).send({ ...teacher, ...batches, ...students });
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -142,7 +154,11 @@ teacherService.get("/:teacherId", async (req, res) => {
 teacherService.get("/batch/:batchId", async (req, res) => {
   try {
     const { pageno, limit } = req.query;
-    const result = await teacherUtil.getTeachersByBatch(req.params.batchId, parseInt(pageno), parseInt(limit));
+    const result = await teacherUtil.getTeachersByBatch(
+      req.params.batchId,
+      parseInt(pageno),
+      parseInt(limit)
+    );
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
@@ -153,7 +169,10 @@ teacherService.get("/batch/:batchId", async (req, res) => {
 teacherService.put("/subjectUpdate/:id", async (req, res) => {
   const subject = req.body.subject;
   try {
-    const result = await teacherUtil.teacherSubjectUpdate(req.params.id, subject);
+    const result = await teacherUtil.teacherSubjectUpdate(
+      req.params.id,
+      subject
+    );
     res.json(result);
   } catch (err) {
     res.status(400).send(err);
@@ -177,7 +196,7 @@ teacherService.delete("/:batchId/:teacherId", async (req, res) => {
       req.params.batchId,
       req.params.teacherId
     );
-    res.status(202).send({ message: 'OK' });
+    res.status(202).send({ message: "OK" });
   } catch (err) {
     res.status(400).send(err);
   }
