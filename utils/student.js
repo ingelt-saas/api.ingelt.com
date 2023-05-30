@@ -1,8 +1,19 @@
-const { batch, organization, mockTest, teacher, organisation, mockTestMarks, submission, assignment, sequelize, studentApplied, student } = require("../models");
+const {
+  batch,
+  organization,
+  mockTest,
+  teacher,
+  organisation,
+  mockTestMarks,
+  submission,
+  assignment,
+  sequelize,
+  studentApplied,
+  student,
+} = require("../models");
 const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
-
 
 // studentUtil.generateRollNumber = async () => {
 //   try {
@@ -28,7 +39,6 @@ const studentUtil = {};
 //   }
 // };
 
-
 // Read all students from the database
 studentUtil.readAll = async () => {
   try {
@@ -42,7 +52,6 @@ studentUtil.readAll = async () => {
 // POST
 studentUtil.create = async (newStudent) => {
   try {
-
     // Encrypt Password and Set it
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newStudent.password, salt);
@@ -56,6 +65,7 @@ studentUtil.create = async (newStudent) => {
     // newStudent.roll = rollNumber;
 
     let result = await student.create(newStudent);
+
     if (result) {
       result = result.get({ plain: true });
     }
@@ -72,29 +82,27 @@ studentUtil.readByOrg = async (orgId, pageNo, limit) => {
       include: {
         model: batch,
         required: true,
-        attributes: ['name', 'id'],
+        attributes: ["name", "id"],
         include: {
           model: organisation,
           required: true,
-          attributes: ['name', 'id'],
+          attributes: ["name", "id"],
           where: {
             id: orgId,
-          }
-        }
+          },
+        },
       },
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
     return result;
   } catch (err) {
-    console.log(err)
     throw err;
   }
-}
+};
 
 // students under by batch
 studentUtil.readByBatch = async (batchId, pageNo, limit) => {
-
   try {
     const result = await student.findAndCountAll({
       include: {
@@ -102,7 +110,7 @@ studentUtil.readByBatch = async (batchId, pageNo, limit) => {
         required: true,
         where: {
           id: batchId,
-        }
+        },
       },
       offset: (pageNo - 1) * limit,
       limit: limit,
@@ -111,7 +119,7 @@ studentUtil.readByBatch = async (batchId, pageNo, limit) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
 // READ
 studentUtil.read = async () => {
@@ -125,12 +133,12 @@ studentUtil.read = async () => {
   }
 };
 
-// search students by teacher id 
+// search students by teacher id
 studentUtil.search = async (teacherId, searchValue) => {
   try {
     const result = await student.findAll({
       where: {
-        name: { [Op.like]: `%${searchValue}%` }
+        name: { [Op.like]: `%${searchValue}%` },
       },
       include: {
         model: batch,
@@ -142,15 +150,15 @@ studentUtil.search = async (teacherId, searchValue) => {
           attributes: [],
           where: {
             id: teacherId,
-          }
-        }
-      }
+          },
+        },
+      },
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // search students in all organization and student batchId is null
 studentUtil.searchFreshStudentsByOrg = async (orgId, searchValue) => {
@@ -161,22 +169,22 @@ studentUtil.searchFreshStudentsByOrg = async (orgId, searchValue) => {
           {
             [Op.or]: [
               { name: { [Op.like]: `%${searchValue}%` } },
-              { email: { [Op.like]: `%${searchValue}%` } }
-            ]
+              { email: { [Op.like]: `%${searchValue}%` } },
+            ],
           },
           { batchId: null },
           { organizationId: orgId },
           { active: true },
-        ]
-      }
+        ],
+      },
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
-// search student by org 
+// search student by org
 studentUtil.searchStuByOrg = async (orgId, searchQuery, pageNo, limit) => {
   try {
     const result = await student.findAndCountAll({
@@ -185,31 +193,31 @@ studentUtil.searchStuByOrg = async (orgId, searchQuery, pageNo, limit) => {
           { name: { [Op.like]: `%${searchQuery}%` } },
           { email: { [Op.like]: `%${searchQuery}%` } },
           { phoneNo: { [Op.like]: `%${searchQuery}%` } },
-        ]
+        ],
       },
       include: {
         model: batch,
         required: true,
-        attributes: ['name', 'id'],
+        attributes: ["name", "id"],
         include: {
           model: organisation,
           required: true,
-          attributes: ['name', 'id'],
+          attributes: ["name", "id"],
           where: {
             id: orgId,
-          }
-        }
+          },
+        },
       },
-      order: [['name', 'ASC']],
+      order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
     return result;
   } catch (err) {
-    console.log(err)
+    console.log(err);
     throw err;
   }
-}
+};
 
 // get total student in the organization
 studentUtil.totalStudentsInTheOrg = async (orgId) => {
@@ -217,7 +225,7 @@ studentUtil.totalStudentsInTheOrg = async (orgId) => {
     const result = await student.count({
       where: {
         organizationId: orgId,
-      }
+      },
     });
     return result;
   } catch (err) {
@@ -232,7 +240,7 @@ studentUtil.allStuByOrgId = async (orgId, pageNo, limit) => {
       where: {
         organizationId: orgId,
       },
-      attributes: ['name', 'email', 'id', 'image', 'gender', 'phoneNo'],
+      attributes: ["name", "email", "id", "image", "gender", "phoneNo"],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
@@ -243,7 +251,12 @@ studentUtil.allStuByOrgId = async (orgId, pageNo, limit) => {
 };
 
 // active students in the organization
-studentUtil.activeStudents = async (orgId, pageNo, limit, searchQuery = null) => {
+studentUtil.activeStudents = async (
+  orgId,
+  pageNo,
+  limit,
+  searchQuery = null
+) => {
   try {
     let search;
 
@@ -257,22 +270,22 @@ studentUtil.activeStudents = async (orgId, pageNo, limit, searchQuery = null) =>
             [Op.or]: [
               { name: { [Op.like]: `%${searchQuery}%` } },
               { email: { [Op.like]: `%${searchQuery}%` } },
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       };
     } else {
       search = {
         organizationId: orgId,
         active: true,
-        batchId: { [Op.not]: null }
+        batchId: { [Op.not]: null },
       };
     }
 
     const result = await student.findAndCountAll({
       where: search,
-      attributes: { exclude: ['password'] },
-      order: [['name', 'ASC']],
+      attributes: { exclude: ["password"] },
+      order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
@@ -280,10 +293,15 @@ studentUtil.activeStudents = async (orgId, pageNo, limit, searchQuery = null) =>
   } catch (err) {
     throw err;
   }
-}
+};
 
 // fresh students in the organization
-studentUtil.freshStudents = async (orgId, pageNo, limit, searchQuery = null) => {
+studentUtil.freshStudents = async (
+  orgId,
+  pageNo,
+  limit,
+  searchQuery = null
+) => {
   try {
     let search;
 
@@ -297,9 +315,9 @@ studentUtil.freshStudents = async (orgId, pageNo, limit, searchQuery = null) => 
             [Op.or]: [
               { name: { [Op.like]: `%${searchQuery}%` } },
               { email: { [Op.like]: `%${searchQuery}%` } },
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       };
     } else {
       search = {
@@ -311,7 +329,7 @@ studentUtil.freshStudents = async (orgId, pageNo, limit, searchQuery = null) => 
 
     const result = await student.findAndCountAll({
       where: search,
-      order: [['name', 'ASC']],
+      order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
@@ -319,12 +337,16 @@ studentUtil.freshStudents = async (orgId, pageNo, limit, searchQuery = null) => 
   } catch (err) {
     throw err;
   }
-}
+};
 
 // passed students in the organization
-studentUtil.passedStudents = async (orgId, pageNo, limit, searchQuery = null) => {
+studentUtil.passedStudents = async (
+  orgId,
+  pageNo,
+  limit,
+  searchQuery = null
+) => {
   try {
-
     let search;
 
     if (searchQuery) {
@@ -337,9 +359,9 @@ studentUtil.passedStudents = async (orgId, pageNo, limit, searchQuery = null) =>
             [Op.or]: [
               { name: { [Op.like]: `%${searchQuery}%` } },
               { email: { [Op.like]: `%${searchQuery}%` } },
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       };
     } else {
       search = {
@@ -351,7 +373,7 @@ studentUtil.passedStudents = async (orgId, pageNo, limit, searchQuery = null) =>
 
     const result = await student.findAndCountAll({
       where: search,
-      order: [['name', 'ASC']],
+      order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
@@ -359,7 +381,7 @@ studentUtil.passedStudents = async (orgId, pageNo, limit, searchQuery = null) =>
   } catch (err) {
     throw err;
   }
-}
+};
 
 // best students in the organization
 studentUtil.bestStudents = async (orgId) => {
@@ -369,17 +391,17 @@ studentUtil.bestStudents = async (orgId) => {
         {
           model: batch,
           required: true,
-          attributes: ['name', 'id'],
+          attributes: ["name", "id"],
           include: {
             model: organization,
-            attributes: ['name', 'id'],
+            attributes: ["name", "id"],
             where: { id: orgId },
             required: true,
           },
         },
       ],
       attributes: {
-        exclude: ['password']
+        exclude: ["password"],
       },
       limit: 4,
       order: [["averageBands", "DESC"]],
@@ -460,50 +482,54 @@ studentUtil.enrollmentStudent = async (orgId) => {
 // enrollment students by walk-in
 studentUtil.enrollmentStudentByWalkIn = async (orgId, year) => {
   try {
-
     const result = await student.findAll({
       where: {
         [Op.and]: [
           { organizationId: orgId },
-          { type: 'walk-in' },
-          Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
-        ]
+          { type: "walk-in" },
+          Sequelize.where(
+            Sequelize.fn("YEAR", Sequelize.col("student.createdAt")),
+            year
+          ),
+        ],
       },
       attributes: [
-        [sequelize.fn('MONTH', sequelize.col('student.createdAt')), 'month'],
-        [Sequelize.fn('COUNT', 'student.*'), 'count'],
+        [sequelize.fn("MONTH", sequelize.col("student.createdAt")), "month"],
+        [Sequelize.fn("COUNT", "student.*"), "count"],
       ],
-      group: ['month'],
+      group: ["month"],
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // enrollment students by ingelt
 studentUtil.enrollmentStudentByInGelt = async (orgId, year) => {
   try {
-
     const result = await student.findAll({
       where: {
         [Op.and]: [
           { organizationId: orgId },
-          { type: 'ingelt' },
-          Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
-        ]
+          { type: "ingelt" },
+          Sequelize.where(
+            Sequelize.fn("YEAR", Sequelize.col("student.createdAt")),
+            year
+          ),
+        ],
       },
       attributes: [
-        [sequelize.fn('MONTH', sequelize.col('student.createdAt')), 'month'],
-        [Sequelize.fn('COUNT', 'student.*'), 'count'],
+        [sequelize.fn("MONTH", sequelize.col("student.createdAt")), "month"],
+        [Sequelize.fn("COUNT", "student.*"), "count"],
       ],
-      group: ['month'],
+      group: ["month"],
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // enrollment student by organization
 studentUtil.enrollmentStudentByOrg = async (orgId) => {
@@ -511,23 +537,23 @@ studentUtil.enrollmentStudentByOrg = async (orgId) => {
     const inGeltStudents = await student.count({
       where: {
         organizationId: orgId,
-        type: 'ingelt'
-      }
+        type: "ingelt",
+      },
     });
 
     const walkInStudents = await student.count({
       where: {
         organizationId: orgId,
-        type: 'walk-in'
-      }
+        type: "walk-in",
+      },
     });
 
     return { walkInStudents, inGeltStudents };
   } catch (err) {
-    console.log(err)
+    console.log(err);
     throw err;
   }
-}
+};
 
 // GET all students by batch id
 studentUtil.getStudentsByBatch = async (batchId) => {
@@ -546,15 +572,14 @@ studentUtil.getStudentsByBatch = async (batchId) => {
 // assignment attempted students
 studentUtil.attemptedStudentsByOrg = async (orgId) => {
   try {
-
     const totalAssignments = await assignment.count({
       where: {
         organizationId: orgId,
-      }
+      },
     });
-
+    console.log(totalAssignments);
     let result = await student.findAll({
-      attributes: ['name', 'id', 'image'],
+      attributes: ["name", "id", "image"],
       include: [
         {
           model: batch,
@@ -566,18 +591,21 @@ studentUtil.attemptedStudentsByOrg = async (orgId) => {
             attributes: [],
             where: {
               id: orgId,
-            }
-          }
+            },
+          },
         },
         {
           model: submission,
-          attributes: ['id']
-        }
+          attributes: ["id"],
+        },
       ],
-      order: [['name', 'ASC']],
+      order: [["name", "ASC"]],
     });
 
-    const newResult = result.map(i => ({ ...i.dataValues, assignment: totalAssignments }));
+    const newResult = result.map((i) => ({
+      ...i.dataValues,
+      assignment: totalAssignments,
+    }));
 
     return newResult;
   } catch (err) {
@@ -592,14 +620,14 @@ studentUtil.activeStudentsByOrg = async (orgId) => {
       where: {
         active: true,
         organizationId: orgId,
-        batchId: { [Op.not]: null }
-      }
+        batchId: { [Op.not]: null },
+      },
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // band score by student id
 studentUtil.bandScore = async (studentId) => {
@@ -630,15 +658,15 @@ studentUtil.readById = async (studentId) => {
       include: {
         model: batch,
         required: true,
-        attributes: ['name', 'id'],
+        attributes: ["name", "id"],
         include: {
           model: student,
           required: true,
           attributes: [],
           where: {
             id: studentId,
-          }
-        }
+          },
+        },
       },
       raw: true,
     });
@@ -648,16 +676,17 @@ studentUtil.readById = async (studentId) => {
         model: batch,
         required: false,
         include: {
-          model: organisation, attributes: ['name', 'id'],
-          include: { model: mockTest, attributes: ['name', 'id'] }
+          model: organisation,
+          attributes: ["name", "id"],
+          include: { model: mockTest, attributes: ["name", "id"] },
         },
-      }
+      },
     });
 
     const testAttempted = await mockTestMarks.count({
       where: {
         studentId: studentId,
-      }
+      },
     });
     if (result) {
       result = result.get({ plain: true });
@@ -687,13 +716,13 @@ studentUtil.updateStudentsByBatch = async (batchId, data) => {
     const result = await student.update(data, {
       where: {
         batchId: batchId,
-      }
+      },
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // PUT
 studentUtil.update = async (studentId, updateData) => {

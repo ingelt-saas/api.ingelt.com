@@ -1,5 +1,13 @@
-const { Op } = require("sequelize");
-const { organization, studentApplied, orgImages, organisation, batch, student, Sequelize } = require("../models");
+const { Op, or } = require("sequelize");
+const {
+  organization,
+  studentApplied,
+  orgImages,
+  organisation,
+  batch,
+  student,
+  Sequelize,
+} = require("../models");
 const organizationUtil = {};
 
 // POST
@@ -21,9 +29,8 @@ organizationUtil.create = async (newOrganization) => {
 // GET all
 organizationUtil.read = async () => {
   try {
-
     let organizations = await organization.findAll({
-      order: [["name", "ASC"]]
+      order: [["name", "ASC"]],
     });
 
     const resultArr = [];
@@ -33,7 +40,7 @@ organizationUtil.read = async () => {
       const result = await orgImages.findAll({
         where: {
           organizationId: org.id,
-        }
+        },
       });
       org.images = result;
       resultArr.push(org);
@@ -78,7 +85,7 @@ organizationUtil.search = async (value) => {
       include: {
         model: orgImages,
         required: false,
-      }
+      },
     });
     return result;
   } catch (err) {
@@ -94,32 +101,39 @@ organizationUtil.totalRevenueByOrg = async (orgId) => {
     const inGeltStudents = await student.count({
       where: {
         organizationId: orgId,
-        type: 'ingelt'
-      }
+        type: "ingelt",
+      },
     });
 
     const walkInStudents = await student.count({
       where: {
         organizationId: orgId,
-        type: 'walk-in'
+        type: "walk-in",
       },
     });
 
-    const returnObj = { inGeltRevenue: 0, walkInRevenue: 0 };
+    // const returnObj = { inGeltRevenue: 0, walkInRevenue: 0 };
 
-    if (walkInStudents && organization.fee) {
-      returnObj.walkInRevenue = (walkInStudents * organization.fee);
-    }
+    // if (walkInStudents && organization.fee) {
+    //   returnObj.walkInRevenue = walkInStudents * organization.fee;
+    // }
 
-    if (inGeltStudents && organization.fee && organization.commission) {
-      returnObj.inGeltRevenue = (inGeltStudents * organization.fee) - ((inGeltStudents * organization.fee) / 100 * organization.commission);
-    }
+    // if (inGeltStudents && organization.fee && organization.commission) {
+    //   returnObj.inGeltRevenue =
+    //     inGeltStudents * organization.fee -
+    //     ((inGeltStudents * organization.fee) / 100) * organization.commission;
+    // }
+
+    const returnObj = {
+      inGeltRevenue: organization.ingeltRevenue,
+      walkInRevenue: organization.walkInRevenue,
+    };
 
     return returnObj;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // walk-in revenue by org
 organizationUtil.walkInRevenueByOrg = async (orgId, year) => {
@@ -130,15 +144,18 @@ organizationUtil.walkInRevenueByOrg = async (orgId, year) => {
       where: {
         [Op.and]: [
           { organizationId: orgId },
-          { type: 'walk-in' },
-          Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
-        ]
+          { type: "walk-in" },
+          Sequelize.where(
+            Sequelize.fn("YEAR", Sequelize.col("student.createdAt")),
+            year
+          ),
+        ],
       },
       attributes: [
-        [Sequelize.fn('MONTH', Sequelize.col('student.createdAt')), 'month'],
-        [Sequelize.fn('COUNT', 'student.*'), 'count'],
+        [Sequelize.fn("MONTH", Sequelize.col("student.createdAt")), "month"],
+        [Sequelize.fn("COUNT", "student.*"), "count"],
       ],
-      group: ['month'],
+      group: ["month"],
     });
 
     const resultArr = [];
@@ -146,14 +163,14 @@ organizationUtil.walkInRevenueByOrg = async (orgId, year) => {
     for (let item of result) {
       item = item.get({ plain: true });
       let count = item.count;
-      count = (count * organization.fee);
+      count = count * organization.fee;
       resultArr.push({ month: item.month, revenue: count });
     }
     return resultArr;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // ingelt revenue by org
 organizationUtil.inGeltRevenueByOrg = async (orgId, year) => {
@@ -164,15 +181,18 @@ organizationUtil.inGeltRevenueByOrg = async (orgId, year) => {
       where: {
         [Op.and]: [
           { organizationId: orgId },
-          { type: 'ingelt' },
-          Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('student.createdAt')), year)
-        ]
+          { type: "ingelt" },
+          Sequelize.where(
+            Sequelize.fn("YEAR", Sequelize.col("student.createdAt")),
+            year
+          ),
+        ],
       },
       attributes: [
-        [Sequelize.fn('MONTH', Sequelize.col('student.createdAt')), 'month'],
-        [Sequelize.fn('COUNT', 'student.*'), 'count'],
+        [Sequelize.fn("MONTH", Sequelize.col("student.createdAt")), "month"],
+        [Sequelize.fn("COUNT", "student.*"), "count"],
       ],
-      group: ['month'],
+      group: ["month"],
     });
 
     const resultArr = [];
@@ -180,7 +200,9 @@ organizationUtil.inGeltRevenueByOrg = async (orgId, year) => {
     for (let item of result) {
       item = item.get({ plain: true });
       let count = item.count;
-      const revenue = (count * organization.fee) - ((count * organization.fee) / 100 * organization.commission);
+      const revenue =
+        count * organization.fee -
+        ((count * organization.fee) / 100) * organization.commission;
       resultArr.push({ month: item.month, revenue: revenue });
     }
 
@@ -188,7 +210,7 @@ organizationUtil.inGeltRevenueByOrg = async (orgId, year) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
 // PUT
 organizationUtil.update = async (organizationId, updateData) => {
@@ -199,6 +221,48 @@ organizationUtil.update = async (organizationId, updateData) => {
       updateData.name = name;
     }
     const result = await organization.update(updateData, {
+      where: {
+        id: organizationId,
+      },
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// update WalkIn revenue
+organizationUtil.walkInRevenueUpdate = async (organizationId) => {
+  try {
+    let neworganization = await organizationUtil.readById(organizationId);
+
+    let revenue = neworganization.walkInRevenue + neworganization.fee;
+
+    neworganization.walkInRevenue = revenue;
+
+    const result = await organization.update(neworganization, {
+      where: {
+        id: organizationId,
+      },
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+// update InGelt revenue
+organizationUtil.ingeltRevenueUpdate = async (organizationId) => {
+  try {
+    let neworganisation = await organizationUtil.readById(organizationId);
+    // inGeltStudents * organization.fee -
+    //     ((inGeltStudents * organization.fee) / 100) * organization.commission;
+    let revenue =
+      neworganisation.fee -
+      (neworganisation.fee / 100) * neworganisation.commission;
+
+    neworganisation.inGeltRevenue = revenue;
+
+    const result = await organization.update(neworganisation, {
       where: {
         id: organizationId,
       },

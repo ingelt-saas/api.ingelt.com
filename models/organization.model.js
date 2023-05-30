@@ -116,7 +116,7 @@ const organisationModel = (sequelize, DataTypes) => {
 
       modeOfClasses: {
         type: DataTypes.ENUM,
-        values: ['online', 'offline', 'hybrid']
+        values: ["online", "offline", "hybrid"],
       },
 
       plan: {
@@ -137,6 +137,12 @@ const organisationModel = (sequelize, DataTypes) => {
       },
 
       fee: {
+        type: DataTypes.FLOAT,
+      },
+      walkInRevenue: {
+        type: DataTypes.FLOAT,
+      },
+      ingeltRevenue: {
         type: DataTypes.FLOAT,
       },
 
