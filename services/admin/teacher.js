@@ -160,6 +160,29 @@ teacherService.put("/subjectUpdate/:id", async (req, res) => {
   }
 });
 
+// profile image update 
+teacherService.put('/profileImage/:teacherId', upload.single('image'), async (req, res) => {
+  try {
+
+    const teacherId = req.params.teacherId;
+    const teacher = await teacherUtil.readByIdWithPWD(teacherId);
+    const file = req.file;
+
+    awsUpload(file, 'teacher/profile', async (err, data) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        await teacherUtil.update(teacherId, { image: data?.Key });
+        teacher.image && await deleteFile(teacher.image); // delete previous image
+        res.json({ image: data?.Key });
+      }
+    });
+
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // update teacher
 teacherService.put("/:teacherId", async (req, res) => {
   try {
