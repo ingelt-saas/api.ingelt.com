@@ -24,7 +24,7 @@ discussionUtil.read = async (pageNo, limit) => {
         [literal('CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `name` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'), 'senderName'],
         [literal('CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `image` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'), 'senderImage'],
       ],
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', 'ASC']],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
