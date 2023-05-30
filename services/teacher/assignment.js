@@ -8,18 +8,19 @@ const upload = multer({ storage });
 const awsUpload = require("../../aws/upload");
 const deleteFile = require("../../aws/delete");
 
+
 // get all assignment
 assignmentService.get("/get-all", async (req, res) => {
   try {
-    const teacherId = req.decoded.id;
+    const orgId = req.decoded.organizationId;
     const { s, pageNo, limit } = req.query;
-    const result = await assignmentUtil.getAssignmentsByTeacher(
-      teacherId,
+    const result = await assignmentUtil.getAssignmentByOrg(
+      orgId,
       parseInt(pageNo),
       parseInt(limit),
       s
     );
-    res.send(result);
+    res.json(result);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -38,6 +39,18 @@ assignmentService.get("/search", async (req, res) => {
   }
 });
 
+
+// get all assignment
+assignmentService.get("/:assignmentId", async (req, res) => {
+  try {
+    const assignmentId = req.params.assignmentId;
+    const result = await assignmentUtil.readById(assignmentId);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 // add new assignment
 assignmentService.post("/", upload.single("file"), async (req, res) => {
   try {
@@ -45,7 +58,8 @@ assignmentService.post("/", upload.single("file"), async (req, res) => {
     const newAssignment = req.body;
     newAssignment.name = file.originalname;
     newAssignment.fileSize = file.size;
-    newAssignment.teacherId = req.decoded.id;
+    newAssignment.uploaderId = req.decoded.id;
+    newAssignment.uploaderType = 'Teacher'
     newAssignment.organizationId = req.decoded.organizationId;
 
     awsUpload(file, "teacher/assignments", async (err, data) => {
@@ -57,17 +71,6 @@ assignmentService.post("/", upload.single("file"), async (req, res) => {
         res.status(201).json(result);
       }
     });
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-// get all assignments by per batch
-assignmentService.get("/batch/:batchId", async (req, res) => {
-  try {
-    const batchId = req.params.batchId;
-    const assignments = await assignmentUtil.getAssignmentsByBatch(batchId);
-    res.status(200).json(assignments);
   } catch (err) {
     res.status(400).send(err);
   }

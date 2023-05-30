@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 const { notes, teacher, admin } = require("../models");
 const notesUtil = {};
 
@@ -6,7 +6,7 @@ const notesUtil = {};
 notesUtil.createNotes = async (note) => {
   try {
     const newNote = await notes.create(note);
-    return newNote; 
+    return newNote;
   } catch (error) {
     throw error;
   }
@@ -22,7 +22,7 @@ notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
       organizationId: orgId,
       [Op.or]: {
         name: { [Op.like]: `%${searchQuery}%` },
-        uploaderName: { [Op.like]: `%${searchQuery}%` },
+        // uploaderName: { [Op.like]: `%${searchQuery}%` },
         subject: { [Op.like]: `%${searchQuery}%` },
       }
     };
@@ -34,16 +34,26 @@ notesUtil.getNotesByOrg = async (orgId, pageNo, limit, searchQuery = null) => {
 
   try {
     const result = await notes.findAndCountAll({
-      offset: (pageNo - 1) * limit,
-      limit: limit,
+      include: [
+        { model: teacher, as: 'teacherUploader', attributes: [] },
+        { model: admin, as: 'adminUploader', attributes: [] },
+      ],
+      attributes: [
+        'name', 'id', 'file', 'fileSize', 'subject', 'createdAt', 'uploaderId',
+        [literal('CASE WHEN `notes`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `notes`.`uploaderId`) ELSE (SELECT `name` FROM `admins` WHERE `admins`.`id` = `notes`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `notes`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `notes`.`uploaderId`) ELSE (SELECT `image` FROM `admins` WHERE `admins`.`id` = `notes`.`uploaderId`) END'), 'uploaderImage'],
+      ],
       where: findQuery,
       order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {
+    console.log(err)
     throw err;
   }
-}
+};
 
 // GET by batch id
 notesUtil.getNotesByBatch = async (batchId) => {
@@ -65,7 +75,11 @@ notesUtil.search = async (orgId, searchQuery, pageNo, limit) => {
     const result = await notes.findAndCountAll({
       where: {
         organizationId: orgId,
-
+        [Op.or]: {
+          name: { [Op.like]: `%${searchQuery}%` },
+          uploaderName: { [Op.like]: `%${searchQuery}%` },
+          subject: { [Op.like]: `%${searchQuery}%` },
+        }
       },
       offset: (pageNo - 1) * limit,
       limit: limit,

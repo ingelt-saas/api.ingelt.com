@@ -9,12 +9,9 @@ const discussionModel = (sequelize, DataTypes) => {
       },
 
       senderId: {
-        type: DataTypes.UUID,
+        type: DataTypes.STRING,
+        allowNull: false,
       },
-
-      senderName: DataTypes.STRING,
-      senderImage: DataTypes.STRING,
-
       message: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -22,7 +19,6 @@ const discussionModel = (sequelize, DataTypes) => {
           notNull: { msg: "message is required" },
         },
       },
-
       designation: {
         type: DataTypes.ENUM,
         values: ['student', 'teacher', 'admin']

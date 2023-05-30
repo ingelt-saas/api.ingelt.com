@@ -1,5 +1,5 @@
-const { Sequelize } = require("sequelize");
-const { mockTest, mockTestMarks, batch, organisation } = require("../models");
+const { Sequelize, literal } = require("sequelize");
+const { mockTest, mockTestMarks, batch, organisation, teacher, admin } = require("../models");
 const mockTestUtil = {};
 
 // POST
@@ -14,12 +14,11 @@ mockTestUtil.create = async (newMockTest) => {
 };
 
 // get mock test by org and teacher
-mockTestUtil.getMockTestsByTeaAndOrg = async (orgId, teacherId) => {
+mockTestUtil.getByTeacher = async (teacherId) => {
   try {
     const result = await mockTest.findAll({
       where: {
-        organizationId: orgId,
-        teacherId: teacherId,
+        uploaderId: teacherId,
       },
       order: [['createdAt', 'DESC']]
     });
@@ -95,6 +94,31 @@ mockTestUtil.mockTestAvgBand = async (batchId, orgId) => {
     return newMockTestArr;
 
   } catch (err) {
+    throw err;
+  }
+}
+
+// get by organization
+mockTestUtil.getByOrg = async (orgId) => {
+  try {
+    const result = await mockTest.findAll({
+      include: [
+        { model: teacher, as: 'teacherUploader', attributes: [] },
+        { model: admin, as: 'adminUploader', attributes: [] },
+      ],
+      attributes: [
+        'id', 'name', 'createdAt', 'uploaderId',
+        [literal('CASE WHEN `mockTest`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `mockTest`.`uploaderId`) ELSE (SELECT `name` FROM `admins` WHERE `admins`.`id` = `mockTest`.`uploaderId`) END'), 'uploaderName'],
+        [literal('CASE WHEN `mockTest`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `mockTest`.`uploaderId`) ELSE (SELECT `image` FROM `admins` WHERE `admins`.`id` = `mockTest`.`uploaderId`) END'), 'uploaderImage'],
+      ],
+      where: {
+        organizationId: orgId,
+      },
+      order: [['createdAt', 'DESC']]
+    });
+    return result;
+  } catch (err) {
+    console.log(err)
     throw err;
   }
 }

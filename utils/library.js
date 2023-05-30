@@ -13,12 +13,28 @@ libraryUtil.create = async (newDoc) => {
 };
 
 // READ
-libraryUtil.read = async (pageNo, limit) => {
+libraryUtil.read = async (pageNo, limit, searchQuery = null) => {
   try {
+    let findQuery;
+
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          [Op.or]: [
+            { name: { [Op.like]: `%${searchQuery}%` } },
+            { subject: { [Op.like]: `%${searchQuery}%` } },
+          ]
+        }
+      };
+    } else {
+      findQuery = {};
+    }
+
     const result = await library.findAndCountAll({
+      ...findQuery,
       offset: (pageNo - 1) * limit,
       limit: limit,
-      order: [["id", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
     return result;
   } catch (err) {

@@ -1,6 +1,5 @@
-const express = require('express');
-const submissionService = express.Router();
 const submissionUtil = require('../../utils/submission');
+const submissionService = require('express').Router();
 
 // get all submission by assignment id 
 submissionService.get('/assignment/:assignmentId', async (req, res) => {
@@ -9,18 +8,6 @@ submissionService.get('/assignment/:assignmentId', async (req, res) => {
         const { s, pageNo, limit } = req.query;
         const submission = await submissionUtil.getSubmissionByAssignment(assignmentId, parseInt(pageNo), parseInt(limit), s);
         res.status(200).json(submission);
-    } catch (err) {
-        res.status(400).send(err);
-    }
-});
-
-// search submission
-submissionService.get('/search/:assignmentId', async (req, res) => {
-    try {
-        const assignmentId = req.params.assignmentId;
-        const { s } = req.query;
-        const result = await submissionUtil.searchSubmission(assignmentId, s);
-        res.send(result);
     } catch (err) {
         res.status(400).send(err);
     }

@@ -19,7 +19,7 @@ notesService.post('/', upload.single('file'), async (req, res) => {
             } else {
                 const newNote = req.body;
                 newNote.uploaderId = req.decoded.id;
-                newNote.uploaderName = req.decoded.name;
+                newNote.uploaderIype = 'Admin';
                 newNote.name = file.originalname;
                 newNote.file = data.Key;
                 newNote.fileSize = file.size;

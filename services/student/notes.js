@@ -24,9 +24,10 @@ notesService.get("/search", async (req, res) => {
 
     const studentId = req.decoded.id;
     const student = await studentUtil.readById(studentId);
-    const { s, pageno, limit } = req.query;
+    const orgId =  student?.organizationId;
+    const { pageNo, limit } = req.query;
 
-    const result = await notesUtil.search(student?.organization?.id, s, parseInt(pageno), parseInt(limit));
+    const result = await notesUtil.getNotesByOrg(orgId, parseInt(pageNo), parseInt(limit));
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);

@@ -23,11 +23,6 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const http = require('http');
-const size = http.maxHeaderSize;
-console.log(size)
-
-
 // Services Config
 const ingeltServices = require("./services/ingelt");
 const studentServices = require("./services/student");
