@@ -2,6 +2,12 @@ const { admin, organization } = require("../models");
 const bcrypt = require("bcrypt");
 const adminUtil = {};
 
+adminUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 adminUtil.create = async (newAdmin) => {
   try {
@@ -12,7 +18,7 @@ adminUtil.create = async (newAdmin) => {
 
     if (newAdmin.name) {
       let name = newAdmin.name;
-      name = name.charAt(0).toUpperCase() + name.slice(1);
+      name = adminUtil.capitalizeAllWords(name);
       newAdmin.name = name;
     }
 
@@ -62,7 +68,7 @@ adminUtil.update = async (adminId, updateData) => {
   try {
     if (updateData.name) {
       let name = updateData.name;
-      name = name.charAt(0).toUpperCase() + name.slice(1);
+      name = adminUtil.capitalizeAllWords(name);
       updateData.name = name;
     }
     const result = await admin.update(updateData, {

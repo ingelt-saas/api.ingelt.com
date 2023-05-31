@@ -2,11 +2,17 @@ const { Op, literal } = require("sequelize");
 const { assignment, submission, teacher, organisation, batch, student, admin } = require("../models");
 const assignmentUtil = {};
 
+assignmentUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 assignmentUtil.create = async (newAssignment) => {
   try {
     let name = newAssignment.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = assignmentUtil.capitalizeAllWords(name);
     newAssignment.name = name;
     const result = await assignment.create(newAssignment);
     return result;

@@ -9,6 +9,13 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const teacherUtil = {};
 
+
+teacherUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 teacherUtil.create = async (newTeacher) => {
   try {
@@ -18,7 +25,7 @@ teacherUtil.create = async (newTeacher) => {
     newTeacher.password = hashedPassword;
 
     let name = newTeacher.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = teacherUtil.capitalizeAllWords(name);
     newTeacher.name = name;
 
     const teacherResult = await teacher.create(newTeacher);
