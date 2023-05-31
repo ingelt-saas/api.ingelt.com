@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     }
   );
+  
   Admin.beforeCreate(async (teacher, options) => {
     try {
       const lastTeacher = await Admin.findOne({
