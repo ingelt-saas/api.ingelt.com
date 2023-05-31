@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const { admin, organization } = require("../models");
 const bcrypt = require("bcrypt");
 const adminUtil = {};
@@ -62,6 +63,15 @@ adminUtil.readById = async (adminId) => {
     throw err;
   }
 };
+
+adminUtil.readByEmail = async (email) => {
+  try {
+    const result = await admin.findOne({ where: { email: email }, raw: true });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // PUT
 adminUtil.update = async (adminId, updateData) => {

@@ -14,9 +14,13 @@ const submissionService = require("./submission");
 const authenticateTeacher = require("../../auth/teacher");
 const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
+const { resetEmail, resetTokenVerify, passwordUpdate } = require("./resetPassword");
 
 // authentication route
 router.post("/auth", authenticateTeacher);
+router.post('/auth/resetEmail', resetEmail);
+router.post('/auth/resetTokenVerify', resetTokenVerify);
+router.post('/auth/passwordUpdate', passwordUpdate);
 
 // file or image route
 router.get("/files", verifyJWT, async (req, res) => {

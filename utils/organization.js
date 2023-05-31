@@ -223,7 +223,7 @@ organizationUtil.update = async (organizationId, updateData) => {
   try {
     if (updateData.name) {
       let name = updateData.name;
-      name = name.charAt(0).toUpperCase() + name.slice(1);
+      name = organizationUtil.capitalizeAllWords(name);
       updateData.name = name;
     }
     const result = await organization.update(updateData, {
