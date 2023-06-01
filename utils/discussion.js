@@ -1,6 +1,8 @@
 const { literal } = require("sequelize");
 const { discussion, teacher, student } = require("../models");
 const discussionUtil = {};
+const { Op } = require("sequelize");
+const moment = require("moment");
 
 // POST
 discussionUtil.create = async (newDiscussion) => {
@@ -16,10 +18,18 @@ discussionUtil.create = async (newDiscussion) => {
 
 discussionUtil.read = async (pageNo, limit) => {
   try {
+    const twentyFourHoursAgo = moment().subtract(24, "hours");
+    await discussion.destroy({
+      where: {
+        createdAt: {
+          [Op.lt]: twentyFourHoursAgo,
+        },
+      },
+    });
     const result = await discussion.findAndCountAll({
       include: [
-        { model: teacher, as: 'teacherSender', attributes: [] },
-        { model: student, as: 'studentSender', attributes: [] },
+        { model: teacher, as: "teacherSender", attributes: [] },
+        { model: student, as: "studentSender", attributes: [] },
       ],
       attributes: [
         'id', 'message', 'designation', 'senderId', 'createdAt',
@@ -34,60 +44,6 @@ discussionUtil.read = async (pageNo, limit) => {
     return result;
   } catch (err) {
     throw err;
-  }
-}
-
-// get discussion by organization
-discussionUtil.getDiscussionsByOrg = async (orgId) => {
-  try {
-    const result = await discussion.findAndCountAll({
-      where: {
-        organizationId: orgId,
-      },
-      order: [['createdAt', 'ASC']]
-    });
-    return result;
-  } catch (err) {
-    throw err;
-  }
-}
-
-// GET all by batch id
-discussionUtil.getDiscussionsByBatch = async (batchId) => {
-  try {
-    const result = await discussion.findAll({
-      where: {
-        batchId: batchId,
-      },
-      order: [["createdAt", "DESC"]],
-    });
-    return result;
-  } catch (err) {
-    return err;
-  }
-};
-
-// GET by id
-discussionUtil.readById = async (discussionId) => {
-  try {
-    const result = await discussion.findByPk(discussionId);
-    return result;
-  } catch (err) {
-    return err;
-  }
-};
-
-// PUT
-discussionUtil.update = async (discussionId, updateData) => {
-  try {
-    const result = await discussion.update(updateData, {
-      where: {
-        id: discussionId,
-      },
-    });
-    return result;
-  } catch (err) {
-    return err;
   }
 };
 
