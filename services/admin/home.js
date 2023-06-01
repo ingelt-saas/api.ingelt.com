@@ -12,7 +12,7 @@ const adminService = express.Router();
 adminService.get("/", async (req, res) => {
   try {
     const adminId = req.decoded.id;
-    const result = await adminUtil.readById(adminId)
+    const result = await adminUtil.readById(adminId);
     res.send(result);
   } catch (err) {
     res.status(400).json(err);
@@ -22,22 +22,27 @@ adminService.get("/", async (req, res) => {
 // get total students, current batches , complete batches and total teachers
 adminService.get("/stats-one", async (req, res) => {
   try {
-
     const organizationId = req.decoded.organizationId;
     const getOrg = await organizationUtil.readById(organizationId);
 
-    const totalStudents = await studentUtil.totalStudentsInTheOrg(organizationId);
+    const totalStudents = await studentUtil.totalStudentsInTheOrg(
+      organizationId
+    );
     const currentBatches = await batchUtil.currentBatchesCount(organizationId);
     const completeBatches = getOrg.endBatches;
-    const totalTeachers = await teacherUtil.totalTeachersInTheOrg(organizationId);
-    const activeStudents = await studentUtil.activeStudentsByOrg(organizationId);
+    const totalTeachers = await teacherUtil.totalTeachersInTheOrg(
+      organizationId
+    );
+    const activeStudents = await studentUtil.activeStudentsByOrg(
+      organizationId
+    );
 
     const result = {
       totalStudents,
       currentBatches,
       completeBatches,
       totalTeachers,
-      activeStudents
+      activeStudents,
     };
 
     res.status(200).json(result);
@@ -47,7 +52,7 @@ adminService.get("/stats-one", async (req, res) => {
 });
 
 // enrollment students
-adminService.get('/enrollmentStudents', async (req, res) => {
+adminService.get("/enrollmentStudents", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const result = await studentUtil.enrollmentStudentByOrg(orgId);
@@ -57,8 +62,8 @@ adminService.get('/enrollmentStudents', async (req, res) => {
   }
 });
 
-// get enrollment graph data by every year and month 
-adminService.get('/enrollmentStudents/walk-in/:year', async (req, res) => {
+// get enrollment graph data by every year and month
+adminService.get("/enrollmentStudents/walk-in/:year", async (req, res) => {
   try {
     const year = req.params.year;
     const orgId = req.decoded.organizationId;
@@ -69,8 +74,8 @@ adminService.get('/enrollmentStudents/walk-in/:year', async (req, res) => {
   }
 });
 
-// get enrollment graph data by every year and month 
-adminService.get('/enrollmentStudents/ingelt/:year', async (req, res) => {
+// get enrollment graph data by every year and month
+adminService.get("/enrollmentStudents/ingelt/:year", async (req, res) => {
   try {
     const year = req.params.year;
     const orgId = req.decoded.organizationId;
@@ -82,7 +87,7 @@ adminService.get('/enrollmentStudents/ingelt/:year', async (req, res) => {
 });
 
 // total revenue
-adminService.get('/totalRevenue', async (req, res) => {
+adminService.get("/totalRevenue", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const result = await organizationUtil.totalRevenueByOrg(orgId);
@@ -93,7 +98,7 @@ adminService.get('/totalRevenue', async (req, res) => {
 });
 
 // walk-in revenue by every month  and year
-adminService.get('/revenue/walk-in/:year', async (req, res) => {
+adminService.get("/revenue/walk-in/:year", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const year = req.params.year;
@@ -105,7 +110,7 @@ adminService.get('/revenue/walk-in/:year', async (req, res) => {
 });
 
 // ingelt revenue by every month  and year
-adminService.get('/revenue/ingelt/:year', async (req, res) => {
+adminService.get("/revenue/ingelt/:year", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const year = req.params.year;
@@ -119,14 +124,10 @@ adminService.get('/revenue/ingelt/:year', async (req, res) => {
 // get enrollment data
 adminService.get("/enrollmentStudent/:batchId", async (req, res) => {
   try {
-
     const batchId = req.params.batchId;
     const organizationId = req.decoded.organizationId;
 
-    const result = await studentUtil.enrollmentStudent(
-      batchId,
-      organizationId
-    );
+    const result = await studentUtil.enrollmentStudent(batchId, organizationId);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);

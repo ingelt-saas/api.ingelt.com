@@ -98,19 +98,19 @@ organizationUtil.totalRevenueByOrg = async (orgId) => {
   try {
     const organization = await organizationUtil.readById(orgId);
 
-    const inGeltStudents = await student.count({
-      where: {
-        organizationId: orgId,
-        type: "ingelt",
-      },
-    });
+    // const inGeltStudents = await student.count({
+    //   where: {
+    //     organizationId: orgId,
+    //     type: "ingelt",
+    //   },
+    // });
 
-    const walkInStudents = await student.count({
-      where: {
-        organizationId: orgId,
-        type: "walk-in",
-      },
-    });
+    // const walkInStudents = await student.count({
+    //   where: {
+    //     organizationId: orgId,
+    //     type: "walk-in",
+    //   },
+    // });
 
     // const returnObj = { inGeltRevenue: 0, walkInRevenue: 0 };
 
