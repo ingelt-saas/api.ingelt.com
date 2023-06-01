@@ -27,7 +27,6 @@ settingsService.put("/", async (req, res) => {
 // update profile picture
 settingsService.put('/updateProfile', upload.single('image'), async (req, res) => {
   try {
-
     const studentId = req.decoded.id;
     const file = req.file;
 
