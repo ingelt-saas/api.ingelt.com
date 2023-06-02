@@ -8,12 +8,14 @@ discussionService.post('/', async (req, res) => {
         const teacher = req.decoded;
         req.body.senderId = teacher.id;
         req.body.designation = 'teacher';
+        req.body.country='teacher.country';
         const result = await discussionUtil.create(req.body);
         res.status(201).json(result);
     } catch (err) {
         res.status(400).send(err);
     }
 })
+
 
 // get discussion by org id
 discussionService.get('/get-all', async (req, res) => {
