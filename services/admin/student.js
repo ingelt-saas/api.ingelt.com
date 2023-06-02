@@ -47,13 +47,14 @@ studentService.post("/", upload.single("image"), async (req, res) => {
       const result = await studentUtil.create(newStudent);
 
       // if student is ingelt then update ingelt revenue
+      const organization = await organisationUtil.readById(
+        newStudent.organizationId
+      );
       if (newStudent.type === "walk-in") {
+        organizationUtil.update(newStudent.organizationId, {
+          walkInRevenue: organization.walkInRevenue + organization.fee,
+        });
         // update ingelt revenue
-
-        const ress = await organisationUtil.ingeltRevenueUpdate(
-          newStudent.organizationId
-        );
-        console.log("walk-in");
       } else {
         // update walk-in revenue
         const ress = await organisationUtil.walkInRevenueUpdate(
