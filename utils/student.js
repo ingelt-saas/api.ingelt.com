@@ -15,29 +15,12 @@ const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
 
-// studentUtil.generateRollNumber = async () => {
-//   try {
-//     //read all student and get the last student's roll number
-//     const allStudents = await studentUtil.readAll();
-//     let lastRollNumber = allStudents[allStudents.length - 1].roll;
-//     const numericPart = parseInt(lastRollNumber.slice(3), 16); // Extract the numeric part from the last roll number
-//     const nextNumericPart = numericPart + 1;
-//     const nextRollNumber = `IGS${nextNumericPart.toString(16).toUpperCase()}`;
+studentUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
 
-//     // Check if the next roll number already exists
-//     const getStudent = await student.findOne({ where: { roll: nextRollNumber } });
-
-//     if (getStudent) {
-//       // Roll number already exists, recursively call the function to generate the next roll number
-//       return await studentUtil.generateRollNumber();
-//     } else {
-//       lastRollNumber = nextRollNumber; // Update the last roll number
-//       return nextRollNumber;
-//     }
-//   } catch (err) {
-//     throw err;
-//   }
-// };
 
 // Read all students from the database
 studentUtil.readAll = async () => {
@@ -58,7 +41,7 @@ studentUtil.create = async (newStudent) => {
     newStudent.password = hashedPassword;
 
     let name = newStudent.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = studentUtil.capitalizeAllWords(name);
     newStudent.name = name;
 
     // const rollNumber = await studentUtil.generateRollNumber();

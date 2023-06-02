@@ -17,9 +17,13 @@ const notesService = require("./notes");
 const discussionService = require("./discussion");
 const assignmentService = require("./assignment");
 const submissionService = require("./submission");
+const { resetEmail, resetTokenVerify, passwordUpdate } = require("./resetPassword");
 
 // authentication service 
 router.post('/auth', authenticateAdmin);
+router.post('/auth/resetEmail', resetEmail);
+router.post('/auth/resetTokenVerify', resetTokenVerify);
+router.post('/auth/passwordUpdate', passwordUpdate);
 
 // file or image route 
 router.get('/files', verifyJWT, async (req, res) => {

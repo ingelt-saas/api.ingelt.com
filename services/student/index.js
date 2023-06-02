@@ -12,11 +12,14 @@ const notesService = require("./notes");
 const { authenticateStudent } = require("../../auth/student");
 const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
+const { resetEmail, resetTokenVerify, passwordUpdate } = require("./resetPassword");
 
 
 // authentication route
 router.post("/auth", authenticateStudent);
-
+router.post('/auth/resetEmail', resetEmail);
+router.post('/auth/resetTokenVerify', resetTokenVerify);
+router.post('/auth/passwordUpdate', passwordUpdate);
 
 // get document
 router.get('/files', async (req, res) => {

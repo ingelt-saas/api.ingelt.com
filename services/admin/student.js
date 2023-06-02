@@ -37,7 +37,7 @@ studentService.post("/", upload.single("image"), async (req, res) => {
 
     if (getStudent) {
       // if has user at this email then return here
-      return res.status(208).send({ message: "student exists at this email" });
+      return res.status(208).send({ message: "Student exists at this email" });
     } else {
       if (file) {
         const uploadedImage = await studentImageUpload();

@@ -73,15 +73,13 @@ submissionUtil.getSubmissionByAssignment = async (assignmentId, pageNo, limit, s
 }
 
 // get submission by per assignment and per student
-submissionUtil.getSubmissionByAssignAndStu = async (
-  assignmentId,
-  studentId
-) => {
+submissionUtil.getSubmissionByAssignAndStu = async (assignmentId, studentId) => {
   try {
     const result = await submission.findOne({
       where: {
         [Op.and]: [{ assignmentId: assignmentId }, { studentId: studentId }],
       },
+      raw: true,
     });
     return result;
   } catch (err) {

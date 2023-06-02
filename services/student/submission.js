@@ -13,6 +13,7 @@ submissionService.post("/", upload.single('file'), async (req, res) => {
   try {
 
     const studentId = req.decoded.id;
+    const assignmentId = req.body.assignmentId;
     const file = req.file;
 
     // upload to aws 
@@ -20,14 +21,24 @@ submissionService.post("/", upload.single('file'), async (req, res) => {
       if (err) {
         res.status(400).send(err);
       } else {
-        const newSubmission = {
-          assignmentId: req.body.assignmentId,
-          studentId: studentId,
-          file: data.Key,
-        };
-        const result = await submissionUtil.create(newSubmission);
 
-        res.status(201).json(result);
+        // check if submission has before
+        const getSubmission = await submissionUtil.getSubmissionByAssignAndStu(assignmentId, studentId)
+
+        if (getSubmission) {
+          getSubmission.file && await deleteFile(getSubmission.file); // delete previous file
+          await submissionUtil.update(getSubmission.id, { file: data.Key, submissionDate: Date.now() }); // updated current file
+          res.json({ message: 'UPDATED' });
+        } else {
+          const newSubmission = {
+            assignmentId: assignmentId,
+            studentId: studentId,
+            file: data.Key,
+          };
+          const result = await submissionUtil.create(newSubmission);
+
+          res.status(201).json(result);
+        }
       }
     });
 
@@ -64,7 +75,7 @@ submissionService.put("/:submissionId", async (req, res) => {
   try {
     const result = await submissionUtil.update(
       req.params.submissionId,
-      req.body
+      { ...req.body, submissionDate: Date.now() }
     );
     res.send(result);
   } catch (err) {

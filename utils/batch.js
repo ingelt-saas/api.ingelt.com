@@ -2,11 +2,17 @@ const { batch, student, teacher, organisation, BatchesTeachers } = require("../m
 const batchUtil = {};
 const { Op, Sequelize } = require("sequelize");
 
+batchUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 batchUtil.create = async (newBatch) => {
   try {
     let name = newBatch.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = batchUtil.capitalizeAllWords(name);
     newBatch.name = name;
     const result = await batch.create(newBatch);
     return result;
