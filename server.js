@@ -57,6 +57,7 @@ const PORT = process.env.PORT || 8000;
 const db = require("./models");
 require("./models/associations");
 
+
 // TODO: FORCE ALTER ONLY FOR DEV ENVIRONMENT { alter: true, force: true }
 db.sequelize.sync({ alter: true }).then(() => {
   // App Listen

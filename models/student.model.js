@@ -30,10 +30,10 @@ const studentModel = (sequelize, DataTypes) => {
 
     email: {
       type: DataTypes.STRING,
-      allowNull: true,
-      // validate: {
-      //   notNull: { msg: "email is required" },
-      // },
+      allowNull: false,
+      validate: {
+        notNull: { msg: "email is required" },
+      },
       unique: true,
     },
 
@@ -93,18 +93,10 @@ const studentModel = (sequelize, DataTypes) => {
       values: ['PRE', 'APPL', 'FEE', 'ADM', 'COM'],
       defaultValue: "PRE", // PRE - before applied | APPL - Applied | FEE - Fee Paid | ADM - Admitted | COM - Completed
     },
-    passed: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
     type: {
       type: DataTypes.ENUM,
       values: ['ingelt', 'walk-in'],
       defaultValue: 'ingelt',
-    },
-    batchAssignedDate: {
-      type: DataTypes.DATE,
-      default: null,
     },
 
     targetScore: DataTypes.FLOAT,
