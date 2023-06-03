@@ -2,11 +2,17 @@ const { Op, literal } = require("sequelize");
 const { assignment, submission, teacher, organisation, batch, student, admin } = require("../models");
 const assignmentUtil = {};
 
+assignmentUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 assignmentUtil.create = async (newAssignment) => {
   try {
     let name = newAssignment.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = assignmentUtil.capitalizeAllWords(name);
     newAssignment.name = name;
     const result = await assignment.create(newAssignment);
     return result;
@@ -84,36 +90,41 @@ assignmentUtil.getAssignmentsByTeacher = async (teacherId, pageNo, limit, search
 }
 
 // get assignment by student
-assignmentUtil.getAssignmentsByStudent = async (studentId, pageNo, limit) => {
+assignmentUtil.getAssignmentsByStudent = async (studentId, pageNo, limit, searchQuery = null) => {
   try {
+    let findQuery = {};
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          name: { [Op.like]: `%${searchQuery}%` },
+          subject: { [Op.like]: `%${searchQuery}%` },
+        }
+      };
+    }
+
     const result = await assignment.findAndCountAll({
-      include: [
-        {
-          model: organisation,
+      ...findQuery,
+      include: [{
+        model: organisation,
+        required: true,
+        attributes: ['name', 'id'],
+        include: {
+          model: student,
           required: true,
-          attributes: ['name', 'id'],
-          include: {
-            model: batch,
-            required: true,
-            attributes: ['name', 'id'],
-            include: {
-              model: student,
-              required: true,
-              attributes: [],
-              where: {
-                id: studentId,
-              }
-            }
-          }
-        },
-        {
-          model: submission,
-          required: false,
+          attributes: [],
           where: {
-            studentId: studentId,
-            status: 'submitted'
+            id: studentId,
           }
         }
+      },
+      {
+        model: submission,
+        required: false,
+        where: {
+          studentId: studentId,
+          status: 'submitted'
+        }
+      }
       ],
       order: [['createdAt', 'DESC']],
       offset: (pageNo - 1) * limit,
@@ -122,6 +133,7 @@ assignmentUtil.getAssignmentsByStudent = async (studentId, pageNo, limit) => {
       nest: true,
     });
     return result;
+
   } catch (err) {
     throw err;
   }

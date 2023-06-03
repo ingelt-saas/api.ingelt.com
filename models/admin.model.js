@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     }
   );
+
   Admin.beforeCreate(async (teacher, options) => {
     try {
       const lastTeacher = await Admin.findOne({
@@ -56,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       if (lastTeacher) {
         const numericPart = parseInt(lastTeacher.id.slice(3), 16); // Extract the numeric part from the last teacher's ID
         const nextNumericPart = numericPart + 1;
-        const nextID = `IGS${nextNumericPart.toString(16).toUpperCase()}`;
+        const nextID = `IGO${nextNumericPart.toString(16).toUpperCase()}`;
         teacher.id = nextID;
       } else {
         teacher.id = "IGO3E7"; // If there are no previous teachers, set the initial ID

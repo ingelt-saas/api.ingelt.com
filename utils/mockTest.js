@@ -2,11 +2,17 @@ const { Sequelize, literal } = require("sequelize");
 const { mockTest, mockTestMarks, batch, organisation, teacher, admin } = require("../models");
 const mockTestUtil = {};
 
+mockTestUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 mockTestUtil.create = async (newMockTest) => {
   try {
     let name = newMockTest.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = mockTestUtil.capitalizeAllWords(name);
     newMockTest.name = name;
     const result = await mockTest.create(newMockTest);
     return result;
@@ -153,6 +159,12 @@ mockTestUtil.readByName = async (name, orgId) => {
 // PUT
 mockTestUtil.update = async (mockTestId, updateData) => {
   try {
+    if (updateData.name) {
+      let name = updateData.name;
+      name = mockTestUtil.capitalizeAllWords(name);
+      updateData.name = name;
+    }
+
     const result = await mockTest.update(updateData, {
       where: {
         id: mockTestId,

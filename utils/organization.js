@@ -11,11 +11,17 @@ const {
 } = require("../models");
 const organizationUtil = {};
 
+organizationUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 organizationUtil.create = async (newOrganization) => {
   try {
     let name = newOrganization.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = organizationUtil.capitalizeAllWords(name);
     newOrganization.name = name;
 
     let result = await organization.create(newOrganization);
@@ -220,7 +226,7 @@ organizationUtil.update = async (organizationId, updateData) => {
   try {
     if (updateData.name) {
       let name = updateData.name;
-      name = name.charAt(0).toUpperCase() + name.slice(1);
+      name = organizationUtil.capitalizeAllWords(name);
       updateData.name = name;
     }
     const result = await organization.update(updateData, {

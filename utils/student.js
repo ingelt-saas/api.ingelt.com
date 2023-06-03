@@ -15,29 +15,12 @@ const bcrypt = require("bcrypt");
 const { Sequelize, Op } = require("sequelize");
 const studentUtil = {};
 
-// studentUtil.generateRollNumber = async () => {
-//   try {
-//     //read all student and get the last student's roll number
-//     const allStudents = await studentUtil.readAll();
-//     let lastRollNumber = allStudents[allStudents.length - 1].roll;
-//     const numericPart = parseInt(lastRollNumber.slice(3), 16); // Extract the numeric part from the last roll number
-//     const nextNumericPart = numericPart + 1;
-//     const nextRollNumber = `IGS${nextNumericPart.toString(16).toUpperCase()}`;
+studentUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
 
-//     // Check if the next roll number already exists
-//     const getStudent = await student.findOne({ where: { roll: nextRollNumber } });
-
-//     if (getStudent) {
-//       // Roll number already exists, recursively call the function to generate the next roll number
-//       return await studentUtil.generateRollNumber();
-//     } else {
-//       lastRollNumber = nextRollNumber; // Update the last roll number
-//       return nextRollNumber;
-//     }
-//   } catch (err) {
-//     throw err;
-//   }
-// };
 
 // Read all students from the database
 studentUtil.readAll = async () => {
@@ -58,7 +41,7 @@ studentUtil.create = async (newStudent) => {
     newStudent.password = hashedPassword;
 
     let name = newStudent.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
+    name = studentUtil.capitalizeAllWords(name);
     newStudent.name = name;
 
     // const rollNumber = await studentUtil.generateRollNumber();
@@ -295,6 +278,49 @@ studentUtil.activeStudents = async (
   }
 };
 
+// inactive students in the organization
+studentUtil.inactiveStudents = async (
+  orgId,
+  pageNo,
+  limit,
+  searchQuery = null
+) => {
+  try {
+    let search;
+    if (searchQuery) {
+      search = {
+        [Op.and]: [
+          { organizationId: orgId },
+          { active: false },
+          { batchId: null },
+          {
+            [Op.or]: [
+              { name: { [Op.like]: `%${searchQuery}%` } },
+              { email: { [Op.like]: `%${searchQuery}%` } },
+            ],
+          },
+        ],
+      };
+    } else {
+      search = {
+        organizationId: orgId,
+        active: false,
+        batchId: null,
+      };
+    }
+    const result = await student.findAndCountAll({
+      where: search,
+      attributes: { exclude: ["password"] },
+      order: [["name", "ASC"]],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // fresh students in the organization
 studentUtil.freshStudents = async (
   orgId,
@@ -353,8 +379,7 @@ studentUtil.passedStudents = async (
       search = {
         [Op.and]: [
           { organizationId: orgId },
-          { active: false },
-          { batchId: null },
+          {passed:true},
           {
             [Op.or]: [
               { name: { [Op.like]: `%${searchQuery}%` } },
@@ -366,8 +391,7 @@ studentUtil.passedStudents = async (
     } else {
       search = {
         organizationId: orgId,
-        active: false,
-        batchId: null,
+        passed:true,
       };
     }
 
@@ -756,5 +780,50 @@ studentUtil.delete = async (studentId) => {
     throw err;
   }
 };
+
+//update student status using a scheduler
+studentUtil.updateStudentStatus = async () => {
+  try {
+        // Get all active students
+        const activeStudents = await Student.findAll({ where: { active: true } });
+
+        // Loop through each active student and update their status based on the duration
+        for (const student of activeStudents) {
+          const currentDate = new Date();
+          const assignmentDate = student.assignmentDate; // Assuming you have an 'assignmentDate' field in the student model
+    
+          // Calculate the duration in milliseconds
+          const duration45Days = 45 * 24 * 60 * 60 * 1000;
+          const duration55Days = 55 * 24 * 60 * 60 * 1000;
+    
+          if (currentDate - assignmentDate >= duration45Days) {
+            // Update the student's status after 45 days of assignment
+            await student.update({ active: false, batch: null });
+          } else if (currentDate - assignmentDate >= duration55Days) {
+            // Update the 'passed' attribute after 55 days of inactivity
+            await student.update({ passed: true });
+          }
+        }
+    
+        // Get all inactive students
+        const inactiveStudents = await Student.findAll({ where: { active: false } });
+    
+        // Loop through each inactive student and update their 'passed' attribute after 55 days of inactivity
+        for (const student of inactiveStudents) {
+          const currentDate = new Date();
+          const assignmentDate = student.assignmentDate; // Assuming you have an 'assignmentDate' field in the student model
+    
+          // Calculate the duration in milliseconds
+          const duration55Days = 55 * 24 * 60 * 60 * 1000;
+    
+          if (currentDate - assignmentDate >= duration55Days) {
+            // Update the 'passed' attribute after 55 days of inactivity
+            await student.update({ passed: true });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
 module.exports = studentUtil;
