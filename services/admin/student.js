@@ -51,7 +51,8 @@ studentService.post("/", upload.single("image"), async (req, res) => {
         newStudent.organizationId
       );
       if (newStudent.type === "walk-in") {
-        organisationUtil.update(newStudent.organizationId, {
+        organizationUtil.update(newStudent.organizationId, {
+
           walkInRevenue: organization.walkInRevenue + organization.fee,
         });
         // update ingelt revenue

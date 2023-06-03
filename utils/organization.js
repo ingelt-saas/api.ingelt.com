@@ -7,6 +7,7 @@ const {
   batch,
   student,
   Sequelize,
+  admin,
 } = require("../models");
 const organizationUtil = {};
 
@@ -22,6 +23,7 @@ organizationUtil.create = async (newOrganization) => {
     let name = newOrganization.name;
     name = organizationUtil.capitalizeAllWords(name);
     newOrganization.name = name;
+
     let result = await organization.create(newOrganization);
     if (result) {
       result = result.get({ plain: true });
@@ -31,6 +33,7 @@ organizationUtil.create = async (newOrganization) => {
     throw err;
   }
 };
+// Post orgainzation with foam data
 
 // GET all
 organizationUtil.read = async () => {
