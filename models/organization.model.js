@@ -6,7 +6,6 @@ const organisationModel = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        unique: true,
       },
 
       ownerName: {
@@ -41,10 +40,10 @@ const organisationModel = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-          notNull: { msg: "Email is required" },
-        },
+        // unique: true,
+        // validate: {
+        //   notNull: { msg: "Email is required" },
+        // },
       },
 
       logo: {

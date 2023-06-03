@@ -6,6 +6,13 @@ const discussionModel = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 primaryKey: true,
+            },
+            image: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notNull: { msg: 'image is required' }
+                }
             }
         },
         {
