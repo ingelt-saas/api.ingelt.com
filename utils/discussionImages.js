@@ -21,7 +21,7 @@ discussionImagesUtil.deleteImages = async () => {
         const getImages = await discussionImages.findAll({
             where: {
                 createdAt: {
-                    [Op.gt]: twentyFourHoursAgo,
+                    [Op.lt]: twentyFourHoursAgo,
                 },
             },
             raw: true,

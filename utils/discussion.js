@@ -31,7 +31,7 @@ discussionUtil.read = async (pageNo, limit) => {
     });
 
     // delete discussion images
-    console.log(await discussionImagesUtil.deleteImages());
+    await discussionImagesUtil.deleteImages()
 
     const result = await discussion.findAndCountAll({
       include: [
