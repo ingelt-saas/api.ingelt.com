@@ -11,7 +11,7 @@ const organisationModel = (sequelize, DataTypes) => {
 
       ownerName: {
         type: DataTypes.STRING,
-        // allowNull: false,
+        allowNull: true,
         // validate: {
         //   notNull: { msg: "Owner Name is required" },
         // },
@@ -19,10 +19,10 @@ const organisationModel = (sequelize, DataTypes) => {
 
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "Name is required" },
-        },
+        allowNull: true,
+        // validate: {
+        //   notNull: { msg: "Name is required" },
+        // },
       },
 
       images: {
@@ -32,18 +32,18 @@ const organisationModel = (sequelize, DataTypes) => {
 
       phoneNo: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "Phone Number is required" },
-        },
+        allowNull: true,
+        // validate: {
+        //   notNull: { msg: "Phone Number is required" },
+        // },
       },
 
       email: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "Email is required" },
-        },
+        allowNull: true,
+        // validate: {
+        //   notNull: { msg: "Email is required" },
+        // },
       },
 
       logo: {
@@ -58,26 +58,30 @@ const organisationModel = (sequelize, DataTypes) => {
 
       address: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "address is required" },
-        },
+        allowNull: true,
+        // validate: {
+        //   notNull: { msg: "address is required" },
+        // },
       },
 
       state: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "state is required" },
-        },
+        allowNull: true,
+        // validate: {
+        //   notNull: { msg: "state is required" },
+        // },
+      },
+      zone: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
 
       country: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "country is required" },
-        },
+        allowNull: true,
+        // validate: {
+        //   notNull: { msg: "country is required" },
+        // },
       },
 
       tagline: {
@@ -138,6 +142,10 @@ const organisationModel = (sequelize, DataTypes) => {
 
       fee: {
         type: DataTypes.FLOAT,
+      },
+      discountedFee: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
       },
       walkInRevenue: {
         type: DataTypes.FLOAT,

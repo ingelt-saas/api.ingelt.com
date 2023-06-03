@@ -6,10 +6,11 @@ const adminUtil = {};
 adminUtil.create = async (newAdmin) => {
   try {
     // Encrypt Password and Set it
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newAdmin.password, salt);
-    newAdmin.password = hashedPassword;
-
+    if (newAdmin.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newAdmin.password, salt);
+      newAdmin.password = hashedPassword;
+    }
     if (newAdmin.name) {
       let name = newAdmin.name;
       name = name.charAt(0).toUpperCase() + name.slice(1);
@@ -46,7 +47,7 @@ adminUtil.readById = async (adminId) => {
       include: {
         model: organization,
         required: false,
-      }
+      },
     });
     if (result) {
       result = result.get({ plain: true });
