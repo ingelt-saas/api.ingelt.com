@@ -65,13 +65,13 @@ batchService.put("/:batchId", async (req, res) => {
 batchService.put('/endBatch/:batchId', async (req, res) => {
   try {
     const batchId = req.params.batchId;
-    const orgId = req.decoded.organizationId
+    const orgId = req.decoded.organizationId;
 
-    const getBatch = await batchUtil.readById(batchId);
+    const getOrg = await organizationUtil.readById(orgId);
     let endBatches = 0;
 
-    if (getBatch.endBatches && typeof getBatch.endBatches === 'number') {
-      endBatches = parseInt(getBatch.endBatches);
+    if (getOrg.endBatches && typeof getOrg.endBatches === 'number') {
+      endBatches = parseInt(getOrg.endBatches);
     }
 
     // update batch students 
@@ -86,6 +86,7 @@ batchService.put('/endBatch/:batchId', async (req, res) => {
 
   } catch (err) {
     res.status(400).send(err);
+    console.log(err);
   }
 });
 

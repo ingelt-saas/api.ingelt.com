@@ -1,5 +1,7 @@
 // APP Modules
 const express = require("express");
+const cron = require('node-cron');
+const studentUtil = require('./utils/student');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
@@ -30,6 +32,10 @@ const adminServices = require("./services/admin");
 const teacherServices = require("./services/teacher");
 app.use("/ingelt", ingeltServices);
 app.use("/student", studentServices);
+// Schedule the updateStudentStatus function to run every day at 00:00 (midnight)
+cron.schedule('0 0 * * *', () => {
+  studentUtil.updateStudentStatus();
+});
 app.use("/admin", adminServices);
 app.use("/teacher", teacherServices);
 
