@@ -24,9 +24,10 @@ const teacherModel = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notNull: { msg: "email is required" },
-        },
+        // validate: {
+        //   notNull: { msg: "email is required" },
+        // },
+        // unique: true,
       },
 
       password: {
@@ -73,6 +74,7 @@ const teacherModel = (sequelize, DataTypes) => {
 
       active: {
         type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
     },
     {

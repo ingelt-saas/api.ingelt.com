@@ -15,9 +15,6 @@ const discussionModel = (sequelize, DataTypes) => {
       message: {
         type: DataTypes.STRING,
       },
-      image: {
-        type: DataTypes.STRING,
-      },
       designation: {
         type: DataTypes.ENUM,
         values: ['student', 'teacher', 'admin']
