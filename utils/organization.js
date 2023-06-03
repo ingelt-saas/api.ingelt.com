@@ -256,6 +256,7 @@ organizationUtil.walkInRevenueUpdate = async (organizationId) => {
     throw err;
   }
 };
+
 // update InGelt revenue
 organizationUtil.ingeltRevenueUpdate = async (organizationId) => {
   try {

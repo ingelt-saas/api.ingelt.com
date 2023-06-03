@@ -18,6 +18,7 @@ const OrgImages = db.orgImages;
 const BatchesTeachers = db.BatchesTeachers;
 const StudentApplied = db.studentApplied;
 const Discussion = db.discussion;
+const Revenue = db.revenue;
 
 // Associations
 
@@ -220,3 +221,11 @@ Notes.belongsTo(Teacher, {
   constraints: false,
   as: 'teacherUploader',
 });
+
+// REVENUE - ORGANIZATION
+Organisation.hasMany(Revenue);
+Revenue.belongsTo(Organisation);
+
+// REVENUE - STUDENT
+Student.hasMany(Revenue);
+Revenue.belongsTo(Student);

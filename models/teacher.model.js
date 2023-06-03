@@ -73,6 +73,7 @@ const teacherModel = (sequelize, DataTypes) => {
 
       active: {
         type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
     },
     {

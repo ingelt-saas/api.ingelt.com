@@ -1,8 +1,8 @@
 {
   "test": {
-    "username": "nodejs",
-    "password": "nodejs",
-    "database": "nodejs",
+    "username": "ingelt",
+    "password": "ingelt",
+    "database": "ingelt",
     "dialect": "mysql",
     "logging": false
   },
