@@ -36,6 +36,7 @@ app.use("/student", studentServices);
 cron.schedule('0 0 * * *', () => {
   studentUtil.updateStudentStatus();
 });
+
 app.use("/admin", adminServices);
 app.use("/teacher", teacherServices);
 

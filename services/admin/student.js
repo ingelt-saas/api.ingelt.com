@@ -10,6 +10,7 @@ const awsUpload = require("../../aws/upload");
 const deleteFile = require("../../aws/delete");
 const organisationUtil = require("../../utils/organization");
 const { errorMonitor } = require("nodemailer/lib/xoauth2");
+const revenueUtil = require("../../utils/revenue");
 
 // POST new student
 studentService.post("/", upload.single("image"), async (req, res) => {
@@ -22,6 +23,7 @@ studentService.post("/", upload.single("image"), async (req, res) => {
 
     // check student by email
     const getStudent = await studentUtil.readByEmail(req.body.email);
+    const getOrg = await organisationUtil.readById(req.decoded.organizationId);
 
     // student image uploading promise func
     const studentImageUpload = () =>
@@ -44,24 +46,18 @@ studentService.post("/", upload.single("image"), async (req, res) => {
         newStudent.image = uploadedImage.Key;
       }
 
+      // insert student record
       const result = await studentUtil.create(newStudent);
 
-      // if student is ingelt then update ingelt revenue
-      const organization = await organisationUtil.readById(
-        newStudent.organizationId
-      );
-      if (newStudent.type === "walk-in") {
-        organizationUtil.update(newStudent.organizationId, {
+      // insert revenue record
+      await revenueUtil.create({
+        orgFee: getOrg.fee || 0,
+        inGeltCommission: null,
+        studentType: 'walk-in',
+        organizationId: req.decoded.organizationId,
+        studentId: result.id
+      });
 
-          walkInRevenue: organization.walkInRevenue + organization.fee,
-        });
-        // update ingelt revenue
-      } else {
-        // update walk-in revenue
-        const ress = await organisationUtil.walkInRevenueUpdate(
-          newStudent.organizationId
-        );
-      }
       res.status(201).json(result);
     }
   } catch (err) {

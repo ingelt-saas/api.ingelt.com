@@ -21,7 +21,6 @@ studentUtil.capitalizeAllWords = (str) => {
   });
 }
 
-
 // Read all students from the database
 studentUtil.readAll = async () => {
   try {

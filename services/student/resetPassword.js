@@ -17,7 +17,7 @@ resetPasswordService.resetEmail = async (req, res) => {
                 expiresIn: "2h",
             });
 
-            const resetLink = `${process.env.CLIENT_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+            const resetLink = `https://student.ingelt.com/reset-password?token=${token}`;
             await sendEmail(email, resetLink); // password reset email
             res.json({ message: 'OK' });
         }
