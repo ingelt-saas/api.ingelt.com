@@ -59,12 +59,12 @@ batchUtil.batchesWithStuAndTea = async (orgId, pageNo, limit) => {
       for (let batch of batches.rows) {
         const students = await student.count({ where: { batchId: batch.id } });
         const teachers = await BatchesTeachers.count({
+          attributes: [
+            [Sequelize.fn('DISTINCT', Sequelize.col('teacherId')), 'teachers']
+          ],
           where: {
             batchId: batch.id
           },
-          attributes: [
-            [Sequelize.fn('DISTINCT', Sequelize.col('teacherId')), 'teachers'],
-          ]
         });
         batchesArr.push({ ...batch, students, teachers });
       }

@@ -51,7 +51,7 @@ studentService.post("/", upload.single("image"), async (req, res) => {
         newStudent.organizationId
       );
       if (newStudent.type === "walk-in") {
-        organizationUtil.update(newStudent.organizationId, {
+        organisationUtil.update(newStudent.organizationId, {
           walkInRevenue: organization.walkInRevenue + organization.fee,
         });
         // update ingelt revenue
@@ -75,6 +75,24 @@ studentService.get("/activeStudents", async (req, res) => {
     const orgId = req.decoded.organizationId;
     const { s, pageNo, limit } = req.query;
     const result = await studentUtil.activeStudents(
+      orgId,
+      parseInt(pageNo),
+      parseInt(limit),
+      s
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// get inactive students
+studentService.get("/inactiveStudents", async (req, res) => {
+  try {
+    const orgId = req.decoded.organizationId;
+    console.log(orgId);
+    const { s, pageNo, limit } = req.query;
+    const result = await studentUtil.inactiveStudents(
       orgId,
       parseInt(pageNo),
       parseInt(limit),

@@ -123,6 +123,11 @@ const organisationModel = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
 
+      courseDuration: {
+        type: DataTypes.INTEGER,
+        defaultValue:45,
+      },
+
       active: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
