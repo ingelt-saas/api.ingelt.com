@@ -2,9 +2,18 @@ const { Op } = require("sequelize");
 const { library } = require("../models");
 const libraryUtil = {};
 
+libraryUtil.capitalizeAllWords = (str) => {
+  return str.replace(/\b\w/g, (match) => {
+    return match.toUpperCase();
+  });
+}
+
 // POST
 libraryUtil.create = async (newDoc) => {
   try {
+    if (newDo.name) {
+      newDoc.name = libraryUtil.capitalizeAllWords(newDoc.name);
+    }
     const result = await library.create(newDoc);
     return result;
   } catch (err) {

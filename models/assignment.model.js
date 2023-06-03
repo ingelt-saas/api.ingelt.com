@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     subject: {
       type: DataTypes.ENUM,
-      values: ['reading', 'writing', 'speaking', 'listening']
+      values: ['Reading', 'Writing', 'Speaking', 'Listening', 'All']
     },
     uploaderId: {
       type: DataTypes.STRING,

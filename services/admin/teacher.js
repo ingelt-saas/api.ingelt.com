@@ -206,7 +206,7 @@ teacherService.put('/profileImage/:teacherId', upload.single('image'), async (re
 teacherService.put("/:teacherId", async (req, res) => {
   try {
     const result = await teacherUtil.update(req.params.teacherId, req.body);
-    res.status(201).json(result);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).send(err);
   }
