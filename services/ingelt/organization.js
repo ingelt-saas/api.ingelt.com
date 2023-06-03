@@ -27,7 +27,7 @@ organizationService.post(
 
     try {
       const {
-        // PartnerImages,
+        PartnerImages,
         Partnername,
         PartnerPhoneNo,
         PartnerEmail,

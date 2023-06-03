@@ -91,26 +91,32 @@ const organisationModel = (sequelize, DataTypes) => {
 
       listeningRating: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
 
       readingRating: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
 
       writingRating: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
 
       speakingRating: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
 
       overallRating: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
 
       ratingsCount: {
         type: DataTypes.INTEGER,
+        allowNull: true,
       },
 
       sponsored: {
@@ -121,15 +127,17 @@ const organisationModel = (sequelize, DataTypes) => {
       modeOfClasses: {
         type: DataTypes.ENUM,
         values: ["online", "offline", "hybrid"],
+        defaultValue: "online",
       },
 
       plan: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
 
       courseDuration: {
         type: DataTypes.INTEGER,
-        defaultValue:45,
+        defaultValue: 45,
       },
 
       active: {
@@ -143,10 +151,12 @@ const organisationModel = (sequelize, DataTypes) => {
 
       verified: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
 
       fee: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
       discountedFee: {
         type: DataTypes.FLOAT,
@@ -154,9 +164,11 @@ const organisationModel = (sequelize, DataTypes) => {
       },
       walkInRevenue: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
       ingeltRevenue: {
         type: DataTypes.FLOAT,
+        allowNull: true,
       },
 
       commission: {
@@ -166,26 +178,32 @@ const organisationModel = (sequelize, DataTypes) => {
 
       bankName: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
 
       bankAccountNumber: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
 
       bankAccountIfsc: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
 
       panId: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
 
       panPicture: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
 
       gstId: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {
