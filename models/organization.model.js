@@ -40,11 +40,11 @@ const organisationModel = (sequelize, DataTypes) => {
 
       email: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
-        validate: {
-          notNull: { msg: "Email is required" },
-        },
+        // validate: {
+        //   notNull: { msg: "Email is required" },
+        // },
       },
 
       logo: {
@@ -130,7 +130,7 @@ const organisationModel = (sequelize, DataTypes) => {
 
       courseDuration: {
         type: DataTypes.INTEGER,
-        defaultValue:45,
+        defaultValue: 45,
       },
 
       active: {
