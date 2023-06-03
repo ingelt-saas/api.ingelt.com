@@ -601,7 +601,6 @@ studentUtil.attemptedStudentsByOrg = async (orgId) => {
         organizationId: orgId,
       },
     });
-    console.log(totalAssignments);
     let result = await student.findAll({
       attributes: ["name", "id", "image"],
       include: [
@@ -755,7 +754,7 @@ studentUtil.update = async (studentId, updateData) => {
       let name = updateData.name;
       name = name.charAt(0).toUpperCase() + name.slice(1);
       updateData.name = name;
-    }
+    } 
     const result = await student.update(updateData, {
       where: {
         id: studentId,

@@ -90,7 +90,6 @@ studentService.get("/activeStudents", async (req, res) => {
 studentService.get("/inactiveStudents", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
-    console.log(orgId);
     const { s, pageNo, limit } = req.query;
     const result = await studentUtil.inactiveStudents(
       orgId,
@@ -234,7 +233,12 @@ studentService.get("/mockTestMarks/:studentId", async (req, res) => {
 // update student
 studentService.put("/:studentId", async (req, res) => {
   const studentId = req.params.studentId;
+  const student = studentUtil.readById(studentId);
   const updateData = req.body;
+  if(updateData.batchAssignedDate && student.batchAssignedDate!==null) {
+    const lastBatchAssignedDate =  student.batchAssignedDate;
+    req.body.batchAssignedDate = lastBatchAssignedDate;
+  }
   try {
     const result = await studentUtil.update(studentId, updateData);
     res.status(201).json(result);
