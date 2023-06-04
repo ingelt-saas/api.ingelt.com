@@ -6,6 +6,7 @@ const batchUtil = require("../../utils/batch");
 const teacherUtil = require("../../utils/teacher");
 const { mockTestAvgBand } = require("../../utils/mockTest");
 const organizationUtil = require("../../utils/organization");
+const revenueUtil = require("../../utils/revenue");
 const adminService = express.Router();
 
 // Get Admin
@@ -87,10 +88,11 @@ adminService.get("/enrollmentStudents/ingelt/:year", async (req, res) => {
 });
 
 // total revenue
-adminService.get("/totalRevenue", async (req, res) => {
+adminService.get("/totalRevenue/:year", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
-    const result = await organizationUtil.totalRevenueByOrg(orgId);
+    const year = req.params.year;
+    const result = await revenueUtil.getTotalRevenue(orgId, year);
     res.json(result);
   } catch (err) {
     res.status(400).send(err);
@@ -102,7 +104,7 @@ adminService.get("/revenue/walk-in/:year", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const year = req.params.year;
-    const result = await organizationUtil.walkInRevenueByOrg(orgId, year);
+    const result = await revenueUtil.getWalkInRevenue(orgId, year);
     res.json(result);
   } catch (err) {
     res.status(400).send(err);
@@ -114,7 +116,7 @@ adminService.get("/revenue/ingelt/:year", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const year = req.params.year;
-    const result = await organizationUtil.inGeltRevenueByOrg(orgId, year);
+    const result = await revenueUtil.getInGeltRevenue(orgId, year);
     res.json(result);
   } catch (err) {
     res.status(400).send(err);

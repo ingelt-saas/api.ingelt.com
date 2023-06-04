@@ -34,7 +34,7 @@ const studentModel = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: "email is required" },
       },
-      unique: true,
+      // unique: true,
     },
 
     image: {
