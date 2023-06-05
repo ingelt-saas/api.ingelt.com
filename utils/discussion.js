@@ -16,7 +16,6 @@ discussionUtil.create = async (newDiscussion) => {
   }
 };
 
-
 //POST - get all discussions
 
 // discussionUtil.read = async (pageNo, limit) => {
@@ -55,10 +54,12 @@ discussionUtil.read = async (pageNo, limit) => {
     if (discussionCount > 100) {
       const discussionsToDelete = discussionCount - 100;
       const discussions = await discussion.findAll({
-        order: [['createdAt', 'ASC']],
+        order: [["createdAt", "ASC"]],
         offset: discussionsToDelete,
       });
-      const discussionIdsToDelete = discussions.map((discussion) => discussion.id);
+      const discussionIdsToDelete = discussions.map(
+        (discussion) => discussion.id
+      );
       await discussion.destroy({
         where: {
           id: {
@@ -68,23 +69,22 @@ discussionUtil.read = async (pageNo, limit) => {
       });
     }
 
-//Read Discussion
-// discussionUtil.read = async (pageNo, limit) => {
-//   try {
+    //Read Discussion
+    // discussionUtil.read = async (pageNo, limit) => {
+    //   try {
 
-//     // delete message
-//     const twentyFourHoursAgo = moment().subtract(24, "hours");
-//     await discussion.destroy({
-//       where: {
-//         createdAt: {
-//           [Op.lt]: twentyFourHoursAgo,
-//         },
-//       },
-//     });
+    //     // delete message
+    //     const twentyFourHoursAgo = moment().subtract(24, "hours");
+    //     await discussion.destroy({
+    //       where: {
+    //         createdAt: {
+    //           [Op.lt]: twentyFourHoursAgo,
+    //         },
+    //       },
+    //     });
 
     // delete discussion images
-//     await discussionImagesUtil.deleteImages()
-
+    //     await discussionImagesUtil.deleteImages()
 
     const result = await discussion.findAndCountAll({
       include: [
@@ -92,16 +92,35 @@ discussionUtil.read = async (pageNo, limit) => {
         { model: student, as: "studentSender", attributes: [] },
       ],
       attributes: [
-        'id', 'message', 'designation', 'senderId', 'createdAt',
-        [literal('CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `name` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'), 'senderName'],
-        [literal('CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `image` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'), 'senderImage'],
-        [literal('CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `country` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `country` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'), 'senderCountry'],
+        "id",
+        "message",
+        "designation",
+        "senderId",
+        "createdAt",
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `name` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderName",
+        ],
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `image` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderImage",
+        ],
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `country` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `country` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderCountry",
+        ],
       ],
       include: {
         model: discussionImages,
         required: false,
       },
-      order: [['createdAt', 'ASC']],
+      order: [["createdAt", "ASC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
     });
