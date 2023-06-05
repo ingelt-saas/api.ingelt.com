@@ -4,17 +4,22 @@ const mockTestMarksUtil = require("../../utils/mockTestMarks");
 const mockTestService = express.Router();
 
 // add new mock test
-mockTestService.post('/', async (req, res) => {
+mockTestService.post("/", async (req, res) => {
   try {
     // Assuming orgId is provided in the request body
     req.body.uploaderId = req.decoded.id;
-    req.body.uploaderType = 'Admin';
+    req.body.uploaderType = "Admin";
     req.body.organizationId = req.decoded.organizationId;
 
     // check mock test by mock test name
-    const getMockTest = await mockTestUtil.readByName(req.body.name, req.decoded.organizationId);
+    const getMockTest = await mockTestUtil.readByName(
+      req.body.name,
+      req.decoded.organizationId
+    );
     if (getMockTest) {
-      return res.status(208).send({ message: 'Exist this mock test, try to use a different name' })
+      return res
+        .status(208)
+        .send({ message: "Exist this mock test, try to use a different name" });
     }
 
     const result = await mockTestUtil.create(req.body);
@@ -26,7 +31,7 @@ mockTestService.post('/', async (req, res) => {
 });
 
 // get all mock test
-mockTestService.get('/getall', async (req, res) => {
+mockTestService.get("/getall", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const result = await mockTestUtil.getByOrg(orgId);
@@ -37,7 +42,7 @@ mockTestService.get('/getall', async (req, res) => {
 });
 
 // update mock test
-mockTestService.put('/:mockId', async (req, res) => {
+mockTestService.put("/:mockId", async (req, res) => {
   try {
     const mockId = req.params.mockId;
     const result = await mockTestUtil.update(mockId, req.body);
@@ -48,7 +53,7 @@ mockTestService.put('/:mockId', async (req, res) => {
 });
 
 // save mock test marks
-mockTestService.post('/mockTestMarks', async (req, res) => {
+mockTestService.post("/mockTestMarks", async (req, res) => {
   try {
     const newMarks = req.body;
     const result = await mockTestMarksUtil.create(newMarks);
@@ -59,30 +64,39 @@ mockTestService.post('/mockTestMarks', async (req, res) => {
 });
 
 // update mock test marks
-mockTestService.put('/mockTestMarks/:mockTestId', async (req, res) => {
+mockTestService.put("/mockTestMarks/:mockTestId", async (req, res) => {
   try {
     const updateData = req.body;
-    const result = await mockTestMarksUtil.update(req.params.mockTestId, updateData);
+    const result = await mockTestMarksUtil.update(
+      req.params.mockTestId,
+      updateData
+    );
     res.send(result);
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-// get all student in the organization with mock test marks by mock test 
-mockTestService.get('/mockTestMarks/:mockTestId', async (req, res) => {
+// get all student in the organization with mock test marks by mock test
+mockTestService.get("/mockTestMarks/:mockTestId", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const { s, pageNo, limit } = req.query;
-    const marks = await mockTestMarksUtil.getTestMarksWithStudent(req.params.mockTestId, orgId, parseInt(pageNo), parseInt(limit), s);
+    const marks = await mockTestMarksUtil.getTestMarksWithStudent(
+      req.params.mockTestId,
+      orgId,
+      parseInt(pageNo),
+      parseInt(limit),
+      s
+    );
     res.status(200).json(marks);
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-// delete mock test 
-mockTestService.delete('/:mockId', async (req, res) => {
+// delete mock test
+mockTestService.delete("/:mockId", async (req, res) => {
   try {
     const mockId = req.params.mockId;
 
@@ -91,7 +105,7 @@ mockTestService.delete('/:mockId', async (req, res) => {
 
     // delete mock test
     await mockTestUtil.delete(mockId);
-    res.status(202).json({ message: 'OK' });
+    res.status(202).json({ message: "OK" });
   } catch (err) {
     res.status(400).send(err);
   }
