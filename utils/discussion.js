@@ -69,6 +69,23 @@ discussionUtil.read = async (pageNo, limit) => {
       });
     }
 
+    //Read Discussion
+    // discussionUtil.read = async (pageNo, limit) => {
+    //   try {
+
+    //     // delete message
+    //     const twentyFourHoursAgo = moment().subtract(24, "hours");
+    //     await discussion.destroy({
+    //       where: {
+    //         createdAt: {
+    //           [Op.lt]: twentyFourHoursAgo,
+    //         },
+    //       },
+    //     });
+
+    // delete discussion images
+    //     await discussionImagesUtil.deleteImages()
+
     const result = await discussion.findAndCountAll({
       include: [
         { model: teacher, as: "teacherSender", attributes: [] },
