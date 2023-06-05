@@ -5,20 +5,45 @@ const discussionService = express.Router();
 const awsUpload = require('../../aws/upload');
 const { memoryStorage } = require("multer");
 const multer = require("multer");
+const discussionImagesUtil = require("../../utils/discussionImages");
 
 const storage = memoryStorage();
 const upload = multer({ storage });
 
 // POST discussion
-discussionService.post("/", async (req, res) => {
+discussionService.post("/", upload.array('images'), async (req, res) => {
   try {
+
+    const files = req.files;
+
+    const uploadFileToS3 = (file, filepath) =>
+      new Promise((resolve, reject) => {
+        awsUpload(file, filepath, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+
+    const uploadedImages = [];
+    for (let file of files) {
+      const result = await uploadFileToS3(file, 'discussion'); // upload to asw s3 cloud
+      uploadedImages.push(result);
+    }
+
     const newDiscussion = req.body;
     newDiscussion.designation = 'student';
-    newDiscussion.senderName = req.decoded.name;
     newDiscussion.senderId = req.decoded.id;
-    newDiscussion.senderImage = req.decoded.image;
-    newDiscussion.senderCountry = req.decoded.country;
+    // insert discussion record
     const result = await discussionUtil.create(newDiscussion);
+
+    // insert images record
+    for (let image of uploadedImages) {
+      await discussionImagesUtil.create({ image: image.Key, discussionId: result.id });
+    }
+
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
