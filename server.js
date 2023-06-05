@@ -38,6 +38,11 @@ cron.schedule('0 0 * * *', () => {
   studentUtil.updateStudentStatus();
 });
 
+// cron.schedule('30 15 * * *', () => {
+//   console.log('Running updateStudentStatus...');
+//   studentUtil.updateStudentStatus();
+// });
+
 app.use("/admin", adminServices);
 app.use("/teacher", teacherServices);
 
