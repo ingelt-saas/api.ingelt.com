@@ -88,6 +88,11 @@ const studentModel = (sequelize, DataTypes) => {
       defaultValue: true,
     },
 
+    passed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,  
+    },
+
     status: {
       type: DataTypes.ENUM,
       values: ['PRE', 'APPL', 'FEE', 'ADM', 'COM'],
@@ -97,6 +102,10 @@ const studentModel = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['ingelt', 'walk-in'],
       defaultValue: 'ingelt',
+    },
+    batchAssignedDate: {
+      type: DataTypes.DATE,
+      defaultValue: null,
     },
 
     targetScore: DataTypes.FLOAT,
