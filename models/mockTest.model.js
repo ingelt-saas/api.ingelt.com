@@ -26,7 +26,7 @@ const mockTestModel = (sequelize, DataTypes) => {
     uploaderType: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
   });
 };
 
