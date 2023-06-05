@@ -45,8 +45,8 @@ revenueUtil.getTotalRevenue = async (orgId, year) => {
         });
 
         return {
-            walkInRevenue: walkInRevenue ? walkInRevenue.getDataValue('totalRevenue') : 0,
-            inGeltRevenue: inGeltRevenue ? inGeltRevenue.getDataValue('totalRevenue') : 0,
+            walkInRevenue: (walkInRevenue ? walkInRevenue.getDataValue('totalRevenue') : 0) || 0,
+            inGeltRevenue: (inGeltRevenue ? inGeltRevenue.getDataValue('totalRevenue') : 0) || 0,
         };
     } catch (err) {
         throw err;
