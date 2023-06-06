@@ -1,6 +1,8 @@
 const { literal } = require("sequelize");
 const { discussion, teacher, student, discussionImages } = require("../models");
 const discussionUtil = {};
+const studentUtil = require("./student");
+const teacherUtil = require("./teacher");
 const { Op } = require("sequelize");
 const moment = require("moment");
 const discussionImagesUtil = require("./discussionImages");
@@ -13,6 +15,34 @@ discussionUtil.create = async (newDiscussion) => {
     return result;
   } catch (err) {
     return err;
+  }
+};
+
+//count all the student and teacher from the database using the studentUtil and teacherUtil
+discussionUtil.countAll = async () => {
+  try {
+    const studentCount = await studentUtil.readAll();
+    const teacherCount = await teacherUtil.readAll();
+    const totalNumber = studentCount.length + teacherCount.length+548;
+    const percentage = totalNumber * 0.23;
+    const operators = ["+", "-"];
+    const numbers = [1, 2, 3];
+
+    const randomOperator =
+      operators[Math.floor(Math.random() * operators.length)];
+    const randomNumber = numbers[Math.floor(Math.random() * numbers.length)];
+
+    let online;
+    if (randomOperator === "+") {
+      online = percentage + randomNumber;
+    } else {
+      online = percentage - randomNumber;
+    }
+    result={online:Math.ceil(online),totalMembers:totalNumber};
+
+    return result;
+  } catch (err) {
+    throw err;
   }
 };
 

@@ -16,6 +16,18 @@ teacherUtil.capitalizeAllWords = (str) => {
   });
 }
 
+//Get all teacher in the database
+teacherUtil.readAll = async () => {
+  try {
+    const result = await teacher.findAll({
+      order: [["id", "DESC"]],
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // POST
 teacherUtil.create = async (newTeacher) => {
   try {
