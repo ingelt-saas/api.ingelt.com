@@ -17,7 +17,6 @@ const authenticateStudent = async (req, res) => {
     studentValue = studentValue.get({ plain: true });
   }
 
-  console.log(studentValue)
   // If user does not exist, return error
   if (!studentValue) {
     return res.status(404).json({
