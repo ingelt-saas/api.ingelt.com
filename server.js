@@ -29,7 +29,13 @@ const server = createServer(app);
 exports.io = new Server(server, {
   // To be used in socket/socket.js
   cors: {
-    origin: "*",
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://student.ingelt.com",
+      "https://teacher.ingelt.com",
+      "https://partner.ingelt.com",
+    ],
   },
 });
 // Socket Functionality
