@@ -26,18 +26,7 @@ app.use(
 
 // Socket Config
 const server = createServer(app);
-exports.io = new Server(server, {
-  // To be used in socket/socket.js
-  cors: {
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "https://student.ingelt.com",
-      "https://teacher.ingelt.com",
-      "https://partner.ingelt.com",
-    ],
-  },
-});
+exports.io = new Server(server);
 // Socket Functionality
 require("./socket/socket");
 
