@@ -13,6 +13,8 @@ const { authenticateStudent } = require("../../auth/student");
 const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
 const { resetEmail, resetTokenVerify, passwordUpdate } = require("./resetPassword");
+const moduleService = require("./modules");
+const instituteService = require("./institute");
 
 
 // authentication route
@@ -38,6 +40,8 @@ router.use("/submission", verifyJWT, submissionService);
 router.use("/notes", verifyJWT, notesService);
 router.use("/discussion", verifyJWT, discussionsService);
 router.use("/settings", verifyJWT, settingsService);
+router.use("/modules", verifyJWT, moduleService);
+router.use("/institute", verifyJWT, instituteService);
 
 
 module.exports = router;
