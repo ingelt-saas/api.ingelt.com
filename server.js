@@ -11,22 +11,20 @@ const { Server } = require("socket.io");
 
 // App Config
 const app = express();
-app.use(
-  cors({
+const server = createServer(app);
+// Socket Config
+exports.io = new Server(server, {
+  // To be used in socket/socket.js
+  cors: {
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://board.ingelt.com",
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
       "https://partner.ingelt.com",
     ],
-  })
-);
-
-// Socket Config
-const server = createServer(app);
-exports.io = new Server(server);
+  },
+});
 // Socket Functionality
 require("./socket/socket");
 
