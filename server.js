@@ -13,18 +13,18 @@ const { Server } = require("socket.io");
 const app = express();
 const server = createServer(app);
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "https://board.ingelt.com",
-      "https://student.ingelt.com",
-      "https://teacher.ingelt.com",
-      "https://partner.ingelt.com",
-    ],
-  })
-);
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:3000",
+//       "http://localhost:3001",
+//       "https://board.ingelt.com",
+//       "https://student.ingelt.com",
+//       "https://teacher.ingelt.com",
+//       "https://partner.ingelt.com",
+//     ],
+//   })
+// );
 
 // Socket Config
 exports.io = new Server(server, {
@@ -33,6 +33,7 @@ exports.io = new Server(server, {
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
+      "https://board.ingelt.com",
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
       "https://partner.ingelt.com",
