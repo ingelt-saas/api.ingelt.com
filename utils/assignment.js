@@ -59,6 +59,48 @@ assignmentUtil.getAssignmentByOrg = async (orgId, pageNo, limit, searchQuery) =>
   }
 }
 
+// get assignments and submissions by orgId and studentId
+assignmentUtil.getAssignmentByOrgAndStudent = async (orgId, studentId, pageNo, limit, searchQuery) => {
+  try {
+    let findQuery;
+    if (searchQuery) {
+      findQuery = {
+        organizationId: orgId,
+        name: { [Op.like]: `%${searchQuery}%` }
+      };
+    } else {
+      findQuery = {
+        organizationId: orgId,
+      }
+    }
+
+    const result = await assignment.findAndCountAll({
+      where: findQuery,
+      include: [
+        { model: teacher, as: 'teacherUploader', attributes: [] },
+        { model: admin, as: 'adminUploader', attributes: [] },
+      ],
+      attributes: [
+        'id', 'name', 'file', 'fileSize', 'createdAt', 'subject', 'uploaderId',
+        [literal('CASE WHEN `assignment`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `assignment`.`uploaderId`) ELSE (SELECT `organizations`.`name` FROM `admins` INNER JOIN `organizations` ON `admins`.`organizationId` = `organizations`.`id` WHERE `admins`.`id` = `assignment`.`uploaderId`) END'), 'uploaderName'],
+        // [literal('CASE WHEN `assignment`.`uploaderType` = "Teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `assignment`.`uploaderId`) ELSE (SELECT `name` FROM `admins` WHERE `admins`.`id` = `assignment`.`uploaderId`) END'), 'uploaderName'],
+        // [literal('CASE WHEN `assignment`.`uploaderType` = "Teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `assignment`.`uploaderId`) ELSE (SELECT `image` FROM `admins` WHERE `admins`.`id` = `assignment`.`uploaderId`) END'), 'uploaderImage'],
+      ],
+      include: [
+        { model: submission, required: false, where: { studentId: studentId } }
+      ],
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+      raw: true,
+      nest: true,
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // get all assignment by teacher
 assignmentUtil.getAssignmentsByTeacher = async (teacherId, pageNo, limit, searchQuery) => {
 

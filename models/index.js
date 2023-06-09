@@ -11,14 +11,23 @@ const db = {};
 let sequelize;
 
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(process.env[config.use_env_variable], {
+    ...config,
+    dialectOptions: {
+      useUTC: false,
+      dateStrings: true, // for reading from database
+    },
+    timezone: '+05:30', // for writing to database
+  });
 } else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-  );
+  sequelize = new Sequelize(config.database, config.username, config.password, {
+    ...config,
+    dialectOptions: {
+      useUTC: false,
+      dateStrings: true, // for reading from database
+    },
+    timezone: '+05:30', // for writing to database
+  });
 }
 
 fs.readdirSync(__dirname)
@@ -64,5 +73,6 @@ db.studentApplied = require("./studentApplied.model")(sequelize, Sequelize);
 db.blog = require("./blog.model")(sequelize, Sequelize);
 db.revenue = require("./revenue.model")(sequelize, Sequelize);
 db.discussionImages = require("./discussionImages.model")(sequelize, Sequelize);
+db.modules = require("./modules.model")(sequelize, Sequelize);
 
 module.exports = db;

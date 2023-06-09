@@ -231,9 +231,8 @@ studentService.get("/mockTestMarks/:studentId", async (req, res) => {
 studentService.put("/:studentId", async (req, res) => {
   const studentId = req.params.studentId;
   const student = await studentUtil.readById(studentId);
-  console.log(student);
   const updateData = req.body;
-  console.log(updateData.batchAssignedDate);
+  
   if(updateData.batchAssignedDate && student.batchAssignedDate!==null) {
     const lastBatchAssignedDate =  student.batchAssignedDate;
     updateData.batchAssignedDate = lastBatchAssignedDate;

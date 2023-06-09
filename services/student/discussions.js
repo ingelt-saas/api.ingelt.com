@@ -62,6 +62,17 @@ discussionService.get("/all", async (req, res) => {
   }
 });
 
+//get count of all student and teacher from the database
+discussionService.get("/count", async (req, res) => {
+  try {
+    const result = await discussionUtil.countAll();
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
+
 //post a Image to the discussions
 discussionService.post('/sendImage', upload.single('image'), async (req, res) => {
   try {

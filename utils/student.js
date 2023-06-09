@@ -783,40 +783,35 @@ studentUtil.delete = async (studentId) => {
 studentUtil.updateStudentStatus = async () => {
   try {
         // Get all active students
-        const activeStudents = await Student.findAll({ where: { active: true } });
-
+        const activeStudents = await student.findAll();
         // Loop through each active student and update their status based on the duration
         for (const student of activeStudents) {
           const currentDate = new Date();
-          const assignmentDate = student.assignmentDate; // Assuming you have an 'assignmentDate' field in the student model
+          const assignmentDate = student.batchAssignedDate; // Assuming you have an 'assignmentDate' field in the student model
     
           // Calculate the duration in milliseconds
           const duration45Days = 45 * 24 * 60 * 60 * 1000;
-          const duration55Days = 55 * 24 * 60 * 60 * 1000;
     
-          if (currentDate - assignmentDate >= duration45Days) {
+          if (assignmentDate&&currentDate - assignmentDate >= duration45Days) {
             // Update the student's status after 45 days of assignment
-            await student.update({ active: false, batch: null });
-          } else if (currentDate - assignmentDate >= duration55Days) {
-            // Update the 'passed' attribute after 55 days of inactivity
-            await student.update({ passed: true });
+            await student.update({ active: false, batchId: null });
           }
         }
+
+        // // Get all inactive students
+        const inactiveStudents = await student.findAll();
     
-        // Get all inactive students
-        const inactiveStudents = await Student.findAll({ where: { active: false } });
-    
-        // Loop through each inactive student and update their 'passed' attribute after 55 days of inactivity
+        // // Loop through each inactive student and update their 'passed' attribute after 55 days of inactivity
         for (const student of inactiveStudents) {
           const currentDate = new Date();
-          const assignmentDate = student.assignmentDate; // Assuming you have an 'assignmentDate' field in the student model
+          const assignmentDate = student.batchAssignedDate; // Assuming you have an 'assignmentDate' field in the student model
     
-          // Calculate the duration in milliseconds
+        //   // Calculate the duration in milliseconds
           const duration55Days = 55 * 24 * 60 * 60 * 1000;
     
-          if (currentDate - assignmentDate >= duration55Days) {
-            // Update the 'passed' attribute after 55 days of inactivity
-            await student.update({ passed: true });
+          if (assignmentDate&&currentDate - assignmentDate >= duration55Days) {
+        //     // Update the 'passed' attribute after 55 days of inactivity
+            await student.update({ passed: true,active:false,batchId:null });
           }
         }
       } catch (error) {

@@ -16,6 +16,18 @@ teacherUtil.capitalizeAllWords = (str) => {
   });
 }
 
+//Get all teacher in the database
+teacherUtil.readAll = async () => {
+  try {
+    const result = await teacher.findAll({
+      order: [["id", "DESC"]],
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // POST
 teacherUtil.create = async (newTeacher) => {
   try {
@@ -63,7 +75,7 @@ teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
   }
 };
 
-// get all teachers in the organization
+// get active teachers in the organization
 teacherUtil.readByOrg = async (orgId, pageNo, limit, searchQuery) => {
 
   let findQuery;
@@ -71,6 +83,7 @@ teacherUtil.readByOrg = async (orgId, pageNo, limit, searchQuery) => {
   if (searchQuery) {
     findQuery = {
       organizationId: orgId,
+      active: true,
       [Op.or]: [
         { name: { [Op.like]: `%${searchQuery}%` } },
         { email: { [Op.like]: `%${searchQuery}%` } },
@@ -79,6 +92,7 @@ teacherUtil.readByOrg = async (orgId, pageNo, limit, searchQuery) => {
   } else {
     findQuery = {
       organizationId: orgId,
+      active: true,
     };
   }
 

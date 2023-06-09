@@ -7,7 +7,7 @@ assignmentService.get("/all", async (req, res) => {
   try {
     const orgId = req.decoded.organizationId;
     const { s, pageNo, limit } = req.query;
-    const result = await assignmentUtil.getAssignmentByOrg(orgId, parseInt(pageNo), parseInt(limit), s);
+    const result = await assignmentUtil.getAssignmentByOrgAndStudent(orgId, req.decoded.id, parseInt(pageNo), parseInt(limit), s);
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
