@@ -38,24 +38,13 @@ organizationUtil.create = async (newOrganization) => {
 // GET all
 organizationUtil.read = async () => {
   try {
-    let organizations = await organization.findAll({
+    let result = await organisation.findAll({
+      include: {
+        model: orgImages,
+      },
       order: [["name", "ASC"]],
     });
-
-    const resultArr = [];
-
-    // get org images
-    for (let org of [...organizations]) {
-      const result = await orgImages.findAll({
-        where: {
-          organizationId: org.id,
-        },
-      });
-      org.images = result;
-      resultArr.push(org);
-    }
-
-    return resultArr;
+    return result;
   } catch (err) {
     throw err;
   }
