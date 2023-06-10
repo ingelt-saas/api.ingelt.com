@@ -149,11 +149,11 @@ Organisation.hasMany(OrgImages);
 OrgImages.belongsTo(Organisation);
 
 // STUDENT APPLIED
-// Organisation.hasMany(StudentApplied);
-// StudentApplied.belongsTo(Organisation);
+Organisation.hasMany(StudentApplied);
+StudentApplied.belongsTo(Organisation);
 
-// Student.hasMany(StudentApplied);
-// StudentApplied.belongsTo(Student);
+Student.hasMany(StudentApplied);
+StudentApplied.belongsTo(Student);
 
 // ORGANISATION - STUDENT
 Organisation.hasMany(Student);
