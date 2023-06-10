@@ -21,6 +21,36 @@ libraryUtil.create = async (newDoc) => {
   }
 };
 
+// read all
+libraryUtil.readAll = async (subject, pageNo, limit, searchQuery = null) => {
+  try {
+    const sub = subject === 'all' ? ['reading', 'writing', 'speaking', 'listening'] : subject;
+    let findQuery;
+    if (searchQuery) {
+      findQuery = {
+        subject: sub,
+        name: { [Op.like]: `%${searchQuery}%` }
+      }
+    } else {
+      findQuery = {
+        subject: sub,
+      };
+    }
+
+    const result = await library.findAndCountAll({
+      where: findQuery,
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+
+    return result;
+
+  } catch (err) {
+    throw err;
+  }
+}
+
 // READ
 libraryUtil.read = async (pageNo, limit, searchQuery = null) => {
   try {

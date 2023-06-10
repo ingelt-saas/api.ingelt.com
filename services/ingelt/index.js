@@ -16,6 +16,17 @@ const teacherService = require("./teacher");
 const adminService = require("./admin");
 const subscriberService = require("./subscriber");
 const blogService = require("./blog");
+const file = require('../../aws/file');
+const moduleService = require("./modules");
+
+// get file
+router.get('/get-file', async (req, res) => {
+    try {
+        const key = req.headers.awskey;
+        const result = await file(key);
+        res.send(result);
+    } catch (err) { res.send('') }
+});
 
 // InGelt Admin Router
 router.use("/admin", adminService);
@@ -43,6 +54,9 @@ router.use("/notes", notesService);
 
 // InGelt Library Router
 router.use("/library", libraryService);
+
+// InGelt Modules Router
+router.use("/modules", moduleService);
 
 // InGelt Organization Router
 router.use("/organization", orgService);
