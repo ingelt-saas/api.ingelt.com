@@ -6,7 +6,6 @@ const multer = require('multer');
 const storage = memoryStorage();
 const upload = multer({ storage });
 const awsUpload = require('../../aws/upload');
-const { modules } = require('../../models');
 
 // create modules
 moduleService.post('/', upload.fields([{ name: 'file' }, { name: 'thumbnail' }]), async (req, res) => {
@@ -24,8 +23,8 @@ moduleService.post('/', upload.fields([{ name: 'file' }, { name: 'thumbnail' }])
             });
         });
 
-        const uploadedModule = await fileUpload(moduleVideo, 'modules/videos');
-        const uploadedThumbnail = await fileUpload(thumbnail, 'modules/thumbnails');
+        const uploadedModule = await fileUpload(moduleVideo, 'ingelt/modules/videos');
+        const uploadedThumbnail = await fileUpload(thumbnail, 'ingetl/modules/thumbnails');
 
         const newModule = req.body;
         newModule.name = moduleVideo.originalname;

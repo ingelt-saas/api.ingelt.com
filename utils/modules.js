@@ -25,7 +25,7 @@ moduleUtil.create = async (data) => {
 // get modules
 moduleUtil.getModules = async (pageNo, limit, subject, searchQuery) => {
     try {
-        const sub = subject === 'all' ? ['reading', 'writing', 'speaking', 'listening'] : subject;
+        const sub = subject === 'all' ? ['reading', 'writing', 'speaking', 'listening', 'all'] : subject;
         let findQuery;
         if (searchQuery) {
             findQuery = {

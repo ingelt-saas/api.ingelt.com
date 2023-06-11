@@ -74,5 +74,7 @@ db.blog = require("./blog.model")(sequelize, Sequelize);
 db.revenue = require("./revenue.model")(sequelize, Sequelize);
 db.discussionImages = require("./discussionImages.model")(sequelize, Sequelize);
 db.modules = require("./modules.model")(sequelize, Sequelize);
+db.studentShortlist = require("./studentShortlist.model")(sequelize, Sequelize);
+db.university = require("./university.model")(sequelize, Sequelize);
 
 module.exports = db;

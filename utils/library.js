@@ -11,7 +11,7 @@ libraryUtil.capitalizeAllWords = (str) => {
 // POST
 libraryUtil.create = async (newDoc) => {
   try {
-    if (newDo.name) {
+    if (newDoc.name) {
       newDoc.name = libraryUtil.capitalizeAllWords(newDoc.name);
     }
     const result = await library.create(newDoc);
@@ -24,7 +24,7 @@ libraryUtil.create = async (newDoc) => {
 // read all
 libraryUtil.readAll = async (subject, pageNo, limit, searchQuery = null) => {
   try {
-    const sub = subject === 'all' ? ['reading', 'writing', 'speaking', 'listening'] : subject;
+    const sub = subject === 'all' ? ['reading', 'writing', 'speaking', 'listening', 'all'] : subject;
     let findQuery;
     if (searchQuery) {
       findQuery = {

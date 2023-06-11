@@ -18,6 +18,7 @@ const subscriberService = require("./subscriber");
 const blogService = require("./blog");
 const file = require('../../aws/file');
 const moduleService = require("./modules");
+const universityService = require("./university");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -69,7 +70,11 @@ router.use("/teacher", teacherService);
 
 // InGelt Subscriber Router
 router.use("/subscriber", subscriberService);
+
 // InGelt Blog Router
 router.use("/blog", blogService);
+
+// InGelt University Router
+router.use("/university", universityService);
 
 module.exports = router;

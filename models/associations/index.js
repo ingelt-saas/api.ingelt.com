@@ -20,6 +20,8 @@ const StudentApplied = db.studentApplied;
 const Discussion = db.discussion;
 const Revenue = db.revenue;
 const DiscussionImages = db.discussionImages;
+const StudentShortlist = db.studentShortlist;
+const University = db.university;
 
 // Associations
 
@@ -234,3 +236,21 @@ Revenue.belongsTo(Student);
 // DISCUSSIONIMGAES - DISCUSSION
 Discussion.hasMany(DiscussionImages);
 DiscussionImages.belongsTo(Discussion);
+
+// STUDENT - STUDENT SHORTLIST
+Student.hasMany(StudentShortlist);
+StudentShortlist.belongsTo(Student, {
+  foreignKey: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  }
+});
+
+// SHORTLIST UNIVERSITY - STUDENT SHORTLIST
+University.hasMany(StudentShortlist);
+StudentShortlist.belongsTo(University, {
+  foreignKey: {
+    type: Sequelize.UUID,
+    allowNull: false,
+  }
+});
