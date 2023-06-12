@@ -17,7 +17,7 @@ if (config.use_env_variable) {
       useUTC: false,
       dateStrings: true, // for reading from database
     },
-    timezone: '+05:30', // for writing to database
+    timezone: "+05:30", // for writing to database
   });
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -26,7 +26,7 @@ if (config.use_env_variable) {
       useUTC: false,
       dateStrings: true, // for reading from database
     },
-    timezone: '+05:30', // for writing to database
+    timezone: "+05:30", // for writing to database
   });
 }
 
@@ -73,12 +73,12 @@ db.studentApplied = require("./studentApplied.model")(sequelize, Sequelize);
 db.blog = require("./blog.model")(sequelize, Sequelize);
 db.revenue = require("./revenue.model")(sequelize, Sequelize);
 db.discussionImages = require("./discussionImages.model")(sequelize, Sequelize);
-db.communityQuery = require("./communityQuery.model")(sequelize,Sequelize);
-db.universityQuery = require("./universityQuery.model") (sequelize,Sequelize);
-db.ieltsPrep = require("./ieltsPrepQuery.model") (sequelize,Sequelize);
-db.loanQuery = require("./loanQuery.model") (sequelize,Sequelize);
-db.visaQuery = require("./visaQuery.model") (sequelize,Sequelize);
-db.findIELTSQuery = require("./findIELTSQuery.model") (sequelize,Sequelize);
+db.communityQuery = require("./communityQuery.model")(sequelize, Sequelize);
+db.universityQuery = require("./universityQuery.model")(sequelize, Sequelize);
+db.ieltsPrep = require("./ieltsPrepQuery.model")(sequelize, Sequelize);
+db.loanQuery = require("./loanQuery.model")(sequelize, Sequelize);
+db.visaQuery = require("./visaQuery.model")(sequelize, Sequelize);
+db.findIELTSQuery = require("./findIELTSQuery.model")(sequelize, Sequelize);
 db.modules = require("./modules.model")(sequelize, Sequelize);
 db.studentShortlist = require("./studentShortlist.model")(sequelize, Sequelize);
 db.university = require("./university.model")(sequelize, Sequelize);

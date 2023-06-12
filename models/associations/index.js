@@ -20,17 +20,14 @@ const StudentApplied = db.studentApplied;
 const Discussion = db.discussion;
 const Revenue = db.revenue;
 const DiscussionImages = db.discussionImages;
-<<<<<<< HEAD
 const communityQuery = db.communityQuery;
 const universityQuery = db.universityQuery;
 const ieltsPrep = db.ieltsPrep;
 const loanQuery = db.loanQuery;
 const visaQuery = db.visaQuery;
 const findIELTSQuery = db.findIELTSQuery;
-=======
 const StudentShortlist = db.studentShortlist;
 const University = db.university;
->>>>>>> 2f40263c617fc931841397bd1584a130f8ba68b6
 
 // Associations
 
@@ -246,7 +243,6 @@ Revenue.belongsTo(Student);
 Discussion.hasMany(DiscussionImages);
 DiscussionImages.belongsTo(Discussion);
 
-<<<<<<< HEAD
 //Queries-STUDENT
 Student.hasOne(communityQuery,{
   foreignKey: {
@@ -329,9 +325,9 @@ findIELTSQuery.belongsTo(Student,{
     name: 'studentId',
     allowNull: true,
   },
-=======
+});
 // STUDENT - STUDENT SHORTLIST
-Student.hasMany(StudentShortlist);
+ Student.hasMany(StudentShortlist);
 StudentShortlist.belongsTo(Student, {
   foreignKey: {
     type: Sequelize.STRING,
@@ -346,5 +342,4 @@ StudentShortlist.belongsTo(University, {
     type: Sequelize.UUID,
     allowNull: false,
   }
->>>>>>> 2f40263c617fc931841397bd1584a130f8ba68b6
 });
