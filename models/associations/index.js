@@ -20,6 +20,12 @@ const StudentApplied = db.studentApplied;
 const Discussion = db.discussion;
 const Revenue = db.revenue;
 const DiscussionImages = db.discussionImages;
+const communityQuery = db.communityQuery;
+const universityQuery = db.universityQuery;
+const ieltsPrep = db.ieltsPrep;
+const loanQuery = db.loanQuery;
+const visaQuery = db.visaQuery;
+const findIELTSQuery = db.findIELTSQuery;
 
 // Associations
 
@@ -234,3 +240,87 @@ Revenue.belongsTo(Student);
 // DISCUSSIONIMGAES - DISCUSSION
 Discussion.hasMany(DiscussionImages);
 DiscussionImages.belongsTo(Discussion);
+
+//Queries-STUDENT
+Student.hasOne(communityQuery,{
+  foreignKey: {
+    name:'studentId',
+    allowNull: true,
+  },
+});
+
+communityQuery.belongsTo(Student,{
+  foreignKey: {
+    name:'studentId',
+    allowNull: true,
+  },
+});
+
+// Association in student model
+Student.hasOne(universityQuery, {
+  foreignKey: {
+    name: 'studentId',
+    allowNull: true,
+  },
+});
+
+universityQuery.belongsTo(Student, {
+  foreignKey: 'studentId',
+  allowNull: true,
+});
+
+
+// Association in student model
+Student.hasOne(loanQuery, {
+  foreignKey: {
+    name: 'studentId',
+    allowNull: true,
+  },
+});
+
+loanQuery.belongsTo(Student, {
+  foreignKey: 'studentId',
+  allowNull: true,
+});
+// Association in student model
+Student.hasOne(ieltsPrep , {
+  foreignKey: {
+    name: 'studentId',
+    allowNull: true,
+  },
+});
+
+ieltsPrep.belongsTo(Student, {
+  foreignKey: 'studentId',
+  allowNull: true,
+});
+
+// Association in student model
+Student.hasOne(visaQuery,{
+  foreignKey: {
+    name: 'studentId',
+    allowNull: true,
+  },  
+});
+
+visaQuery.belongsTo(Student,{
+  foreignKey: {
+    name: 'studentId',
+    allowNull: true,
+  },
+});
+
+// Association in student model
+Student.hasOne(findIELTSQuery,{
+  foreignKey: {
+    name: 'studentId',
+    allowNull: true,
+  },
+});
+
+findIELTSQuery.belongsTo(Student,{
+  foreignKey: {
+    name: 'studentId',
+    allowNull: true,
+  },
+});

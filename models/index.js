@@ -73,5 +73,11 @@ db.studentApplied = require("./studentApplied.model")(sequelize, Sequelize);
 db.blog = require("./blog.model")(sequelize, Sequelize);
 db.revenue = require("./revenue.model")(sequelize, Sequelize);
 db.discussionImages = require("./discussionImages.model")(sequelize, Sequelize);
+db.communityQuery = require("./communityQuery.model")(sequelize,Sequelize);
+db.universityQuery = require("./universityQuery.model") (sequelize,Sequelize);
+db.ieltsPrep = require("./ieltsPrepQuery.model") (sequelize,Sequelize);
+db.loanQuery = require("./loanQuery.model") (sequelize,Sequelize);
+db.visaQuery = require("./visaQuery.model") (sequelize,Sequelize);
+db.findIELTSQuery = require("./findIELTSQuery.model") (sequelize,Sequelize);
 
 module.exports = db;
