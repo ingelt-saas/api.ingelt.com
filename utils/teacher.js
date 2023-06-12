@@ -9,12 +9,11 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const teacherUtil = {};
 
-
 teacherUtil.capitalizeAllWords = (str) => {
   return str.replace(/\b\w/g, (match) => {
     return match.toUpperCase();
   });
-}
+};
 
 //Get all teacher in the database
 teacherUtil.readAll = async () => {
@@ -42,7 +41,7 @@ teacherUtil.create = async (newTeacher) => {
 
     const teacherResult = await teacher.create(newTeacher);
 
-    return teacherResult.get({ raw: true })
+    return teacherResult.get({ raw: true });
   } catch (err) {
     throw err;
   }
@@ -56,7 +55,7 @@ teacherUtil.addTeacherInBatch = async (data) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
 // GET all teacher by batch id
 teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
@@ -64,7 +63,7 @@ teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
     const result = await BatchesTeachers.findAndCountAll({
       where: { batchId: batchId },
       include: {
-        model: teacher
+        model: teacher,
       },
       offset: (pageNo - 1) * limit,
       limit: limit,
@@ -77,7 +76,6 @@ teacherUtil.getTeachersByBatch = async (batchId, pageNo, limit) => {
 
 // get active teachers in the organization
 teacherUtil.readByOrg = async (orgId, pageNo, limit, searchQuery) => {
-
   let findQuery;
 
   if (searchQuery) {
@@ -87,7 +85,7 @@ teacherUtil.readByOrg = async (orgId, pageNo, limit, searchQuery) => {
       [Op.or]: [
         { name: { [Op.like]: `%${searchQuery}%` } },
         { email: { [Op.like]: `%${searchQuery}%` } },
-      ]
+      ],
     };
   } else {
     findQuery = {
@@ -100,12 +98,12 @@ teacherUtil.readByOrg = async (orgId, pageNo, limit, searchQuery) => {
     let result = await teacher.findAndCountAll({
       where: findQuery,
       attributes: {
-        exclude: ['password']
+        exclude: ["password"],
       },
       include: {
         model: batch,
         required: false,
-        attributes: ['name', 'id']
+        attributes: ["name", "id"],
       },
       order: [["name", "ASC"]],
       offset: (pageNo - 1) * limit,
@@ -125,23 +123,23 @@ teacherUtil.readByEmail = async (email) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
 // search teacher
 teacherUtil.search = async (searchQuery) => {
   try {
     const result = await teacher.findAll({
       where: {
-        name: { [Op.like]: `%${searchQuery}%` }
-      }
+        name: { [Op.like]: `%${searchQuery}%` },
+      },
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
-// read by id with password 
+// read by id with password
 teacherUtil.readByIdWithPWD = async (teacherId) => {
   try {
     let result = await teacher.findByPk(teacherId);
@@ -152,7 +150,7 @@ teacherUtil.readByIdWithPWD = async (teacherId) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
 // GET by id
 teacherUtil.readById = async (teacherId) => {
@@ -166,9 +164,9 @@ teacherUtil.readById = async (teacherId) => {
         {
           model: organisation,
           // required: true,
-        }
+        },
       ],
-      attributes: { exclude: ['password'] }
+      attributes: { exclude: ["password"] },
     });
     if (result) {
       result = result.get({ plain: true });
@@ -191,23 +189,21 @@ teacherUtil.batchesUpdated = async (teacherId, updateData) => {
 
 // get live batches and complete batches by teacher id
 teacherUtil.liveAndCompleteBatches = async (teacherId) => {
-
   try {
-
     const completeBatches = await batch.count({
       where: {
         active: false,
         endDate: {
-          [Op.lte]: new Date()
-        }
+          [Op.lte]: new Date(),
+        },
       },
       include: {
         model: teacher,
         Request: true,
         where: {
           id: teacherId,
-        }
-      }
+        },
+      },
     });
 
     const liveBatches = await batch.count({
@@ -219,15 +215,14 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
         required: true,
         where: {
           id: teacherId,
-        }
-      }
+        },
+      },
     });
 
     // return complete and live batches as a object
     return { completeBatches, liveBatches };
 
     // new Date().getTime(batchInfo.endDate) < new Date().getTime()
-
   } catch (err) {
     throw err;
   }
@@ -236,12 +231,11 @@ teacherUtil.liveAndCompleteBatches = async (teacherId) => {
 // get taught students and band students by teacher id
 teacherUtil.taughtAndBandStudents = async (teacherId) => {
   try {
-
     const bandStudents = await student.count({
       where: {
         averageBands: {
           [Op.gte]: 7.5,
-        }
+        },
       },
       include: {
         model: batch,
@@ -250,10 +244,10 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
           model: teacher,
           required: true,
           where: {
-            id: teacherId
-          }
-        }
-      }
+            id: teacherId,
+          },
+        },
+      },
     });
 
     const taughtStudents = await student.count({
@@ -264,15 +258,14 @@ teacherUtil.taughtAndBandStudents = async (teacherId) => {
           model: teacher,
           required: true,
           where: {
-            id: teacherId
-          }
-        }
-      }
+            id: teacherId,
+          },
+        },
+      },
     });
 
     // return taught and band students as a object
     return { taughtStudents, bandStudents };
-
   } catch (err) {
     console.log(err);
     throw err;
@@ -285,7 +278,7 @@ teacherUtil.totalTeachersInTheOrg = async (orgId) => {
     const result = await teacher.count({
       where: {
         organizationId: orgId,
-      }
+      },
     });
     return result;
   } catch (err) {
@@ -300,13 +293,13 @@ teacherUtil.deleteTeacherFromBatch = async (batchId, teacherId) => {
       where: {
         batchId: batchId,
         teacherId: teacherId,
-      }
+      },
     });
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // teacher subject update
 teacherUtil.teacherSubjectUpdate = async (id, subject) => {
@@ -320,24 +313,27 @@ teacherUtil.teacherSubjectUpdate = async (id, subject) => {
     if (!getSubject.subject) {
       newSubjects = [subject];
     } else {
-      const subjects = getSubject.subject.split(';');
+      const subjects = getSubject.subject.split(";");
       if (subjects.includes(subject)) {
-        newSubjects = subjects.filter(i => i !== subject);
+        newSubjects = subjects.filter((i) => i !== subject);
       } else {
         newSubjects = [...subjects, subject];
       }
     }
 
-    const result = await BatchesTeachers.update({ subject: newSubjects.join(';') }, {
-      where: {
-        id: id,
+    const result = await BatchesTeachers.update(
+      { subject: newSubjects.join(";") },
+      {
+        where: {
+          id: id,
+        },
       }
-    });
+    );
     return result;
   } catch (err) {
     throw err;
   }
-}
+};
 
 // PUT
 teacherUtil.update = async (teacherId, updateData) => {
