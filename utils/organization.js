@@ -17,7 +17,7 @@ organizationUtil.capitalizeAllWords = (str) => {
   });
 }
 
-// POST
+// Post orgainzation with foam data
 organizationUtil.create = async (newOrganization) => {
   try {
     let name = newOrganization.name;
@@ -32,34 +32,60 @@ organizationUtil.create = async (newOrganization) => {
   } catch (err) {
     throw err;
   }
-};
-// Post orgainzation with foam data
+}
 
 // GET all
 organizationUtil.read = async () => {
   try {
-    let organizations = await organization.findAll({
+    let result = await organisation.findAll({
+      include: {
+        model: orgImages,
+      },
       order: [["name", "ASC"]],
     });
-
-    const resultArr = [];
-
-    // get org images
-    for (let org of [...organizations]) {
-      const result = await orgImages.findAll({
-        where: {
-          organizationId: org.id,
-        },
-      });
-      org.images = result;
-      resultArr.push(org);
-    }
-
-    return resultArr;
+    return result;
   } catch (err) {
     throw err;
   }
 };
+
+// search organization
+organizationUtil.searchInstitute = async (mode, location, searchQuery) => {
+  try {
+
+    const classMode = mode ? mode.split(',') : mode;
+
+    let findQuery;
+    if (mode || location || searchQuery) {
+      findQuery = {
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                { name: { [Op.like]: `%${searchQuery}%` } },
+                { address: { [Op.like]: `%${searchQuery}%` } },
+              ]
+            },
+            { modeOfClasses: { [mode ? Op.in : Op.not]: classMode } },
+            { state: { [location ? Op.eq : Op.not]: location } }
+          ]
+        }
+      };
+    }
+
+
+    let result = await organisation.findAll({
+      ...findQuery,
+      include: {
+        model: orgImages,
+      },
+      order: [["name", "ASC"]],
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // GET by id
 organizationUtil.readById = async (organizationId) => {

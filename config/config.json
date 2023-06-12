@@ -16,7 +16,7 @@
   "development3": {
     "username": "root",
     "password": "Nish2002",
-    "database": "ingelt_dev", 
+    "database": "ingelt_dev",
     "dialect": "mysql",
     "logging": false
   },
