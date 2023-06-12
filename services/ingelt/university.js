@@ -6,6 +6,7 @@ const storage = memoryStorage();
 const upload = multer({ storage });
 const awsUpload = require('../../aws/upload');
 const deleteFile = require('../../aws/delete');
+const universityUtil = require('../../utils/university');
 
 // create university
 universityService.post('/', upload.single('logo'), async (req, res) => {
@@ -27,9 +28,10 @@ universityService.post('/', upload.single('logo'), async (req, res) => {
         if (uploadedLogo) {
             newUniversity.logo = uploadedLogo.Key
         }
-
-
+        const result = await universityUtil.create(newUniversity);
+        res.status(201).send(result);
     } catch (err) {
+        console.log(err)
         res.status(400).send(err);
     }
 });
@@ -38,6 +40,8 @@ universityService.post('/', upload.single('logo'), async (req, res) => {
 universityService.get('/getall', async (req, res) => {
     try {
         const { s, pageNo, limit } = req.query;
+        const result = await universityUtil.read(parseInt(pageNo), parseInt(limit));
+        res.json(result);
     } catch (err) {
         res.status(400).send(err);
     }
@@ -64,7 +68,10 @@ universityService.put(':universityId', async (req, res) => {
 // delete university
 universityService.delete('/:universityId', async (req, res) => {
     try {
-        // deleteFile(); // delete university logo
+        const getUniversity = await universityUtil.readyById(req.params.universityId);
+        getUniversity.logo && await deleteFile(getUniversity.logo); // delete university logo
+        const result = await universityUtil.delete(req.params.universityId);
+        res.status(202).json(result);
     } catch (err) {
         res.status(400).send(err);
     }

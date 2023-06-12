@@ -36,6 +36,18 @@ universityUtil.read = async (pageNo, limit) => {
         throw err;
     }
 }
+// read by id
+universityUtil.readyById = async (universityId) => {
+    try {
+        let result = await university.findByPk(universityId);
+        if (result) {
+            result = result.get({ plain: true });
+        }
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
 
 // get university  with shortlist by student
 universityUtil.universityWithShortlist = async (studentId, pageNo, limit) => {
@@ -61,5 +73,17 @@ universityUtil.universityWithShortlist = async (studentId, pageNo, limit) => {
 // update university / TODO
 
 // delete university / TODO
+universityUtil.delete = async (universityId) => {
+    try {
+        const result = await university.destroy({
+            where: {
+                id: universityId,
+            }
+        });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
 
 module.exports = universityUtil;
