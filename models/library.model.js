@@ -23,7 +23,7 @@ const libraryModel = (sequelize, DataTypes) => {
       },
       subject: {
         type: DataTypes.ENUM,
-        values: ['reading', 'writing', 'speaking', 'listening']
+        values: ['Reading', 'Writing', 'Speaking', 'Listening', 'All']
       },
 
       fileSize: DataTypes.INTEGER,

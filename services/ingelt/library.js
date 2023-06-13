@@ -34,21 +34,10 @@ libraryService.post("/", upload.single("file"), async (req, res) => {
 });
 
 // GET all items in library
-libraryService.get("/get-all", async (req, res) => {
+libraryService.get("/getall", async (req, res) => {
   try {
-    const { pageno, limit } = req.query;
-    const items = await libraryUtil.read(parseInt(pageno), parseInt(limit));
-    return res.status(200).json(items);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-// search items in library
-libraryService.get("/search", async (req, res) => {
-  try {
-    const { s, pageno, limit } = req.query;
-    const items = await libraryUtil.search(s, parseInt(pageno), parseInt(limit));
+    const { subject, pageNo, limit, s } = req.query;
+    const items = await libraryUtil.readAll(subject, parseInt(pageNo), parseInt(limit), s);
     return res.status(200).json(items);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -60,8 +49,8 @@ libraryService.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const item = await libraryUtil.readById(id);
-    if (item) { 
-      deleteFile(item.file);
+    if (item) {
+      await deleteFile(item.file);
       await libraryUtil.delete(id);
       return res.status(200).json({ message: "Item deleted successfully" });
     } else {

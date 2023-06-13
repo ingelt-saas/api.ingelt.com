@@ -3,6 +3,7 @@ const studentModel = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
+      unique: true,
     },
     // roll: {
     //   type: DataTypes.UUID,

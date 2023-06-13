@@ -15,6 +15,7 @@ const file = require("../../aws/file");
 const { resetEmail, resetTokenVerify, passwordUpdate } = require("./resetPassword");
 const moduleService = require("./modules");
 const instituteService = require("./institute");
+const universityService = require("./university");
 
 
 // authentication route
@@ -42,6 +43,7 @@ router.use("/discussion", verifyJWT, discussionsService);
 router.use("/settings", verifyJWT, settingsService);
 router.use("/modules", verifyJWT, moduleService);
 router.use("/institute", verifyJWT, instituteService);
+router.use("/university", verifyJWT, universityService);
 
 
 module.exports = router;

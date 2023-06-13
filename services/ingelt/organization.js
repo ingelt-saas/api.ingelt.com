@@ -10,8 +10,7 @@ const orgImagesUtils = require("../../utils/orgImages");
 const adminUtil = require("../../utils/admin");
 
 // create new organization
-organizationService.post(
-  "/",
+organizationService.post("/",
   upload.fields([{ name: "PartnerImages", maxCount: 5 }]),
   async (req, res) => {
     const uploadFileToS3 = (file, filepath) =>

@@ -17,6 +17,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
+      "http://localhost:5173",
       "https://board.ingelt.com",
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
@@ -32,6 +33,7 @@ exports.io = new Server(server, {
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
+      "http://localhost:5173",
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
       "https://partner.ingelt.com",
