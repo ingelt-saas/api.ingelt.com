@@ -35,13 +35,30 @@ organizationUtil.create = async (newOrganization) => {
 }
 
 // GET all
-organizationUtil.read = async () => {
+organizationUtil.read = async (pageNo, limit, searchQuery) => {
   try {
-    let result = await organisation.findAll({
+
+    let findQuery = {};
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          [Op.or]: [
+            { name: { [Op.like]: `%${searchQuery}%` } },
+            { ownerName: { [Op.like]: `%${searchQuery}%` } },
+            { address: { [Op.like]: `%${searchQuery}%` } },
+          ]
+        }
+      };
+    }
+
+    let result = await organisation.findAndCountAll({
+      ...findQuery,
       include: {
         model: orgImages,
       },
       order: [["name", "ASC"]],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {

@@ -106,8 +106,9 @@ organizationService.post("/",
 // get all organization
 organizationService.get("/", async (req, res) => {
   try {
-    const result = await organizationUtil.read();
-    res.status(200).send(result);
+    const { s, pageNo, limit } = req.query;
+    const result = await organizationUtil.read(parseInt(pageNo), parseInt(limit), s);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
