@@ -82,5 +82,6 @@ db.findIELTSQuery = require("./findIELTSQuery.model")(sequelize, Sequelize);
 db.modules = require("./modules.model")(sequelize, Sequelize);
 db.studentShortlist = require("./studentShortlist.model")(sequelize, Sequelize);
 db.university = require("./university.model")(sequelize, Sequelize);
+db.inGelt = require("./ingelt.model")(sequelize, Sequelize);
 
 module.exports = db;
