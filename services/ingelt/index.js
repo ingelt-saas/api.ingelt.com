@@ -105,6 +105,7 @@ router.use("/visa-query", visaQueryService);
 
 //InGelt Find IELTS Query Router    
 router.use("/find-ielts-query", findIELTSQueryService);
+
 // InGelt University Router
 router.use("/university", universityService);
 

@@ -12,6 +12,7 @@ const { Server } = require("socket.io");
 // App Config
 const app = express();
 const server = createServer(app);
+
 app.use(
   cors({
     origin: [

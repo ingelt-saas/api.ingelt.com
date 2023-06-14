@@ -1,16 +1,33 @@
 const express = require("express");
 const blogUtil = require("../../utils/blog");
+const { memoryStorage } = require("multer");
+const multer = require("multer");
 const blogService = express.Router();
+const storage = memoryStorage();
+const upload = multer({ storage });
+const awsUpload = require('../../aws/upload');
+const deleteFile = require('../../aws/delete');
 
 // create new blog
-blogService.post("/", async (req, res) => {
+blogService.post("/", upload.single('thumbnail'), async (req, res) => {
   try {
-    const result = await blogUtil.create(req.body);
-    res.status(201).json(result);
+    const file = req.file;
+
+    awsUpload(file, 'ingelt/blogs', async (err, data) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        const newBlog = req.body;
+        newBlog.picture = data.Key;
+        const result = await blogUtil.create(newBlog);
+        res.status(201).json(result);
+      }
+    });
   } catch (err) {
     res.status(400).json(err);
   }
 });
+
 // read all categories
 blogService.get("/categories", async (req, res) => {
   console.log("inside categories");
@@ -26,9 +43,12 @@ blogService.get("/categories", async (req, res) => {
 blogService.delete("/:blogId", async (req, res) => {
   const blogId = req.params.blogId;
   try {
+    const getBlog = await blogUtil.readById(blogId);
+    getBlog.picture && await deleteFile(getBlog.picture);
+
     const result = await blogUtil.delete(blogId);
     const message = `Blog with id${blogId} deleted successfully`;
-    res.status(201).json({ message });
+    res.status(208).json({ message });
   } catch (err) {
     res.status(400).json(err);
   }
@@ -45,20 +65,23 @@ blogService.put("/:blogId", async (req, res) => {
     res.status(400).json(err);
   }
 });
-// read by id
-blogService.get("/:blogId", async (req, res) => {
+
+
+// read all blogs
+blogService.get("/getall", async (req, res) => {
   try {
-    const result = await blogUtil.readById(req.params.blogId);
-    res.status(201).json(result);
+    const { s, pageNo, limit } = req.query;
+    const result = await blogUtil.read(parseInt(pageNo), parseInt(limit), s);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
 });
-// read all blogs
-blogService.get("/", async (req, res) => {
-  console.log("inside blog");
+
+// read by id
+blogService.get("/:blogId", async (req, res) => {
   try {
-    const result = await blogUtil.read();
+    const result = await blogUtil.readById(req.params.blogId);
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
