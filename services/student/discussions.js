@@ -68,7 +68,6 @@ discussionService.get("/all", async (req, res) => {
         );
         discussion.dataValues.gender = student?.gender;
 
-        console.log("student", student?.gender);
       } else {
         const teacher = await teacherUtil.readById(
           discussion.dataValues.senderId
@@ -77,7 +76,6 @@ discussionService.get("/all", async (req, res) => {
       }
     }
 
-    console.log("result", result.rows);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
