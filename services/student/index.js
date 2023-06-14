@@ -9,10 +9,10 @@ const libraryService = require("./library");
 const submissionService = require("./submission");
 const settingsService = require("./settings");
 const notesService = require("./notes");
-const { authenticateStudent } = require("../../auth/student");
+const { authenticateStudent, studentEmailCheck, authorizationStudent } = require("../../auth/student");
 const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
-const { resetEmail, resetTokenVerify, passwordUpdate } = require("./resetPassword");
+const { resetEmail, resetTokenVerify, passwordUpdate, } = require("./resetPassword");
 const moduleService = require("./modules");
 const instituteService = require("./institute");
 const universityService = require("./university");
@@ -20,6 +20,8 @@ const universityService = require("./university");
 
 // authentication route
 router.post("/auth", authenticateStudent);
+router.post("/auth/emailCheck", studentEmailCheck);
+router.post("/auth/signup", authorizationStudent);
 router.post('/auth/resetEmail', resetEmail);
 router.post('/auth/resetTokenVerify', resetTokenVerify);
 router.post('/auth/passwordUpdate', passwordUpdate);
