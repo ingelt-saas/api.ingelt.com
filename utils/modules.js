@@ -58,10 +58,26 @@ moduleUtil.readById = async (moduleId) => {
         if (result) {
             result = result.get({ plain: true });
         }
+        return result;
     } catch (err) {
         throw err;
     }
 }
+
+// update module
+moduleUtil.update = async (moduleId, updatedData) => {
+    try {
+        const result = await modules.update(updatedData, {
+            where: {
+                id: moduleId,
+            }
+        });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
 
 // delete modules
 moduleUtil.delete = async (moduleId) => {
