@@ -42,7 +42,10 @@ blogUtil.update = async (blogId, updateData) => {
 // read by id
 blogUtil.readById = async (blogId) => {
   try {
-    const result = await blog.findByPk(blogId);
+    let result = await blog.findByPk(blogId);
+    if (result) {
+      result = result.get({ plain: true });
+    }
     return result;
   } catch (err) {
     throw err;
@@ -50,10 +53,26 @@ blogUtil.readById = async (blogId) => {
 };
 
 // read all blogs
-blogUtil.read = async () => {
+blogUtil.read = async (pageNo, limit, searchQuery) => {
   try {
-    const result = await blog.findAll({
-      order: [["id", "DESC"]],
+    let findQuery = {};
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          [sequelize.Op.or]: [
+            { title: { [sequelize.Op.like]: `%${searchQuery}%` } },
+            { text: { [sequelize.Op.like]: `%${searchQuery}%` } },
+            { category: { [sequelize.Op.like]: `%${searchQuery}%` } },
+          ]
+        }
+      }
+    }
+
+    const result = await blog.findAndCountAll({
+      ...findQuery,
+      order: [["createdAt", "DESC"]],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {

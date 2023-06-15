@@ -13,4 +13,16 @@ moduleService.get('/getall', async (req, res) => {
     }
 });
 
+// count views 
+moduleService.put('/countViews/:moduleId', async (req, res) => {
+    try {
+        const getModule = await moduleUtil.readById(req.params.moduleId);
+        const result = await moduleUtil.update(req.params.moduleId, { views: getModule.views + 1 });
+        res.status(202).json(result);
+    } catch (err) {
+        console.log(err)
+        res.status(400).send(err);
+    }
+});
+
 module.exports = moduleService;
