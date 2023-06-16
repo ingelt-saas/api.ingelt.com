@@ -7,17 +7,17 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         unique: true,
-        },
+      },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         // validate: {
         //   notNull: { msg: "name is required" },
         // },
       },
       phoneNo: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         // validate: {
         //   notNull: { msg: "Phone Number is required" },
         // },
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: true,
-        },
+      },
       state: {
         type: DataTypes.STRING,
         allowNull: true,

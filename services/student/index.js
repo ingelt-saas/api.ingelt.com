@@ -9,30 +9,44 @@ const libraryService = require("./library");
 const submissionService = require("./submission");
 const settingsService = require("./settings");
 const notesService = require("./notes");
-const { authenticateStudent, studentEmailCheck, authorizationStudent } = require("../../auth/student");
+const {
+  authenticateStudent,
+  studentEmailCheck,
+  authorizationStudent,
+} = require("../../auth/student");
 const verifyJWT = require("../../middleware/verifyJWT");
 const file = require("../../aws/file");
-const { resetEmail, resetTokenVerify, passwordUpdate, } = require("./resetPassword");
+const {
+  resetEmail,
+  resetTokenVerify,
+  passwordUpdate,
+} = require("./resetPassword");
+
 const moduleService = require("./modules");
 const instituteService = require("./institute");
 const universityService = require("./university");
-
+const loanQueryService = require("./loanQuery");
+const visaQueryService = require("./visaQuery");
 
 // authentication route
 router.post("/auth", authenticateStudent);
+
+router.post("/auth/resetEmail", resetEmail);
+router.post("/auth/resetTokenVerify", resetTokenVerify);
+router.post("/auth/passwordUpdate", passwordUpdate);
+
 router.post("/auth/emailCheck", studentEmailCheck);
 router.post("/auth/signup", authorizationStudent);
-router.post('/auth/resetEmail', resetEmail);
-router.post('/auth/resetTokenVerify', resetTokenVerify);
-router.post('/auth/passwordUpdate', passwordUpdate);
 
 // get document
-router.get('/files', async (req, res) => {
-    try {
-        const key = req.headers.awskey;
-        const result = await file(key);
-        res.send(result);
-    } catch (err) { res.send('') }
+router.get("/files", async (req, res) => {
+  try {
+    const key = req.headers.awskey;
+    const result = await file(key);
+    res.send(result);
+  } catch (err) {
+    res.send("");
+  }
 });
 
 // Student Services Router
@@ -46,6 +60,7 @@ router.use("/settings", verifyJWT, settingsService);
 router.use("/modules", verifyJWT, moduleService);
 router.use("/institute", verifyJWT, instituteService);
 router.use("/university", verifyJWT, universityService);
-
+router.use("/loan-query", loanQueryService);
+router.use("/visa-query", visaQueryService);
 
 module.exports = router;

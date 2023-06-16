@@ -10,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         // validate: {
         //   notNull: { msg: "name is required" },
         // },
       },
       phoneNo: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         // validate: {
         //   notNull: { msg: "Phone Number is required" },
         // },
