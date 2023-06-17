@@ -27,6 +27,7 @@ const moduleService = require("./modules");
 const universityService = require("./university");
 const { authentication, getInGeltAdmin } = require("./ingelt");
 const verifyJWT = require('../../middleware/verifyJWT');
+const categoryService = require("./category");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -42,6 +43,7 @@ router.post('/login', authentication);
 
 // get inGelt admin
 router.get('/verify-ingelt', verifyJWT, getInGeltAdmin);
+
 
 // InGelt Admin Router
 router.use("/admin", adminService);
@@ -108,5 +110,8 @@ router.use("/find-ielts-query", findIELTSQueryService);
 
 // InGelt University Router
 router.use("/university", universityService);
+
+// InGelt Category Router
+router.use("/category", categoryService);
 
 module.exports = router;

@@ -17,11 +17,18 @@ module.exports = (sequelize, DataTypes) => {
       picture: {
         type: DataTypes.STRING,
       },
-      text: {
+      content: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-          notNull: { msg: "Text is required" },
+          notNull: { msg: "HTML content is required" },
+        },
+      },
+      textContent: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Text content is required" },
         },
       },
       category: {
