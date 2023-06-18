@@ -1,3 +1,4 @@
+const ShortlistUniversityMail = require('../../mail/student.university.query');
 const studentShortlistUtil = require('../../utils/studentShortlist');
 const universityUtil = require('../../utils/university');
 const universityService = require('express').Router();
@@ -10,6 +11,17 @@ universityService.get('/getall', async (req, res) => {
         res.json(result);
     } catch (err) {
         // console.log(err)
+        res.status(400).send(err);
+    }
+});
+
+// send query
+universityService.post('/sendQuery', async (req, res) => {
+    try {
+        const student = req.decoded;
+        const result = await ShortlistUniversityMail(student);
+        res.json(result);
+    } catch (err) {
         res.status(400).send(err);
     }
 });
