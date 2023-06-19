@@ -16,10 +16,7 @@ const moduleModel = (sequelize, DataTypes) => {
             },
             file: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notNull: { msg: "file is required" },
-                },
+                allowNull: true,
             },
             subject: {
                 type: DataTypes.ENUM,
@@ -38,6 +35,10 @@ const moduleModel = (sequelize, DataTypes) => {
             thumbnail: {
                 type: DataTypes.STRING,
                 allowNull: true,
+            },
+            releaseDate: {
+                type: DataTypes.DATE,
+                defaultValue: DataTypes.NOW,
             },
         },
         {
