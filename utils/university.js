@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { university, studentShortlist } = require('../models');
 const universityUtil = {};
 
@@ -50,9 +51,15 @@ universityUtil.readyById = async (universityId) => {
 }
 
 // get university  with shortlist by student
-universityUtil.universityWithShortlist = async (studentId, pageNo, limit) => {
+universityUtil.universityWithShortlist = async (studentId, pageNo, limit, country = null, course = null, areaOfInterest = null) => {
     try {
+
         const result = await university.findAndCountAll({
+            where: {
+                address: { [country ? Op.like : Op.notLike]: `%${country}%` },
+                course: { [course ? Op.like : Op.notLike]: `%${course}%` },
+                // address: { [country ? Op.like : Op.notLike]: [country] },
+            },
             include: {
                 model: studentShortlist,
                 required: false,

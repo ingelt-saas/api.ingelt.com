@@ -6,7 +6,7 @@ const universityService = require('express').Router();
 // get all university
 universityService.get('/getall', async (req, res) => {
     try {
-        const { pageNo, limit } = req.query;
+        const { country, course, areaOfInterest, pageNo, limit } = req.query;
         const result = await universityUtil.universityWithShortlist(req.decoded.id, parseInt(pageNo), parseInt(limit));
         res.json(result);
     } catch (err) {
