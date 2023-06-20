@@ -51,6 +51,10 @@ const universityModel = (sequelize, DataTypes) => {
                 notNull: { msg: 'course duration is required' }
             }
         },
+        areaOfInterest: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
 }
 

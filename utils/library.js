@@ -103,7 +103,24 @@ libraryUtil.search = async (searchQuery, pageNo, limit) => {
 // GET by id
 libraryUtil.readById = async (docId) => {
   try {
-    const result = await library.findByPk(docId);
+    let result = await library.findByPk(docId);
+    if (result) {
+      result = result.get({ plain: true });
+    }
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// update
+libraryUtil.update = async (docId, updatedData) => {
+  try {
+    const result = await library.update(updatedData, {
+      where: {
+        id: docId,
+      },
+    });
     return result;
   } catch (err) {
     throw err;

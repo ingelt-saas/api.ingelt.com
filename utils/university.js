@@ -57,8 +57,8 @@ universityUtil.universityWithShortlist = async (studentId, pageNo, limit, countr
         const result = await university.findAndCountAll({
             where: {
                 address: { [country ? Op.like : Op.notLike]: `%${country}%` },
-                course: { [course ? Op.like : Op.notLike]: `%${course}%` },
-                // address: { [country ? Op.like : Op.notLike]: [country] },
+                courseName: { [course ? Op.like : Op.notLike]: `%${course}%` },
+                areaOfInterest: { [areaOfInterest ? Op.like : Op.notLike]: [areaOfInterest] },
             },
             include: {
                 model: studentShortlist,
@@ -73,6 +73,7 @@ universityUtil.universityWithShortlist = async (studentId, pageNo, limit, countr
         });
         return result;
     } catch (err) {
+        console.log(err)
         throw err;
     }
 }
