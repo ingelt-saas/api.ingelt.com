@@ -1,5 +1,6 @@
 const express = require("express");
 const studentUtil = require("../../utils/student");
+const appliedStudentsUtils = require("../../utils/appliedStudents");
 const studentService = express.Router();
 
 // POST new student
@@ -9,6 +10,32 @@ studentService.post("/", async (req, res) => {
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);
+  }
+});
+
+// applied student
+studentService.get('/appliedStudents', async (req, res) => {
+  try {
+    const { s, pageNo, limit } = req.query;
+    const result = await appliedStudentsUtils.getAllAppliedStudents(parseInt(pageNo), parseInt(limit), s);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// applied student
+studentService.put('/acceptStudent/:id', async (req, res) => {
+  try {
+    const getAppliedRow = await appliedStudentsUtils.readById(req.params.id);
+
+    // student org id update
+    await studentUtil.update(getAppliedRow.studentId, { organizationId: getAppliedRow.organizationId });
+
+    const result = await appliedStudentsUtils.acceptStudent(req.params.id);
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 

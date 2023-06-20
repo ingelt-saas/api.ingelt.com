@@ -11,8 +11,9 @@ const adminUtil = require("../../utils/admin");
 
 // create new organization
 organizationService.post("/",
-  upload.fields([{ name: "PartnerImages", maxCount: 5 }]),
+  upload.fields([{ name: "images", maxCount: 5 }]),
   async (req, res) => {
+
     const uploadFileToS3 = (file, filepath) =>
       new Promise((resolve, reject) => {
         awsUpload(file, filepath, (err, data) => {
@@ -25,6 +26,9 @@ organizationService.post("/",
       });
 
     try {
+
+      const instituteImages = req.files.images
+
       const {
         PartnerImages,
         Partnername,
@@ -55,13 +59,14 @@ organizationService.post("/",
         zone: Zone,
         ownerName: Partnername,
       };
+
       const newAdmin = {
         name: Partnername,
         phoneNo: PartnerPhoneNo,
         email: PartnerEmail,
       };
 
-      let result = await organizationUtil.create(newInstitute);
+      let institute = await organizationUtil.create(newInstitute);
       let result2 = await adminUtil.create(newAdmin);
 
       //   const logo = req.files.logo[0]; // institute logo
@@ -76,16 +81,22 @@ organizationService.post("/",
       //     newInstitute.panPicture = uploadPanPic.Key; // set key in newInstitute object
       //   }
 
-      //   let uploadOrgImages = await uploadFileToS3(PartnerImages, "institute"); // upload to aws
+      if (Array.isArray(instituteImages) && instituteImages.length > 0) {
+        let uploadOrgImages = await uploadFileToS3(instituteImages, "institute"); // upload to aws
+        uploadOrgImages = uploadOrgImages.map((i) => ({
+          name: i.Key,
+          organizationId: institute.id,
+        }));
+        await orgImagesUtils.create(uploadOrgImages); // insert institute images
+      }
+
+
 
       // insert new institute
 
-      //   uploadOrgImages = uploadOrgImages.map((i) => ({
-      //     name: i.Key,
-      //     organizationId: result.id,
-      //   }));
 
-      //   await orgImagesUtils.create(uploadOrgImages); // insert institute images
+
+
 
       // create organization admin
       //   await adminUtil.create({

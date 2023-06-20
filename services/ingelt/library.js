@@ -44,6 +44,42 @@ libraryService.get("/getall", async (req, res) => {
   }
 });
 
+// add new files in library
+libraryService.put("/:itemId", upload.single("file"), async (req, res) => {
+  try {
+    const file = req.file;
+    const updatedData = req.body;
+
+    const uploadFile = (file) => new Promise((resolve, reject) => {
+      awsUpload(file, 'ingelt/library', (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data);
+        }
+      });
+    });
+
+    if (file) {
+      const uploadedFile = await uploadFile(file);
+      updatedData.file = uploadedFile.Key;
+      updatedData.fileSize = file.size;
+
+      const getDoc = await libraryUtil.readById(req.params.itemId);
+      getDoc.file && await deleteFile(getDoc.file);
+
+    }
+
+    const result = await libraryUtil.update(req.params.itemId, updatedData);
+
+    res.json(result);
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message,
+    });
+  }
+});
+
 // delete item from library
 libraryService.delete("/:id", async (req, res) => {
   try {
