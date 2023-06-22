@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: { msg: "Category is required" },
         },
       },
+      forStudent: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       timestamps: true,
