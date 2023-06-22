@@ -80,6 +80,20 @@ blogUtil.read = async (pageNo, limit, searchQuery) => {
   }
 };
 
+// read blogs for student
+blogUtil.readForStudent = async () => {
+  try {
+    const result = await blog.findAll({
+      where: {
+        forStudent: true,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // read all categories
 blogUtil.readCategories = async () => {
   console.log("Hello");

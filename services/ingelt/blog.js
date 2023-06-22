@@ -54,6 +54,38 @@ blogService.delete("/:blogId", async (req, res) => {
   }
 });
 
+// update blog
+blogService.put("/:blogId", upload.single('thumbnail'), async (req, res) => {
+  try {
+
+    const updateData = req.body;
+    const file = req.file;
+    const getBlog = await blogUtil.readById(req.params.blogId);
+
+    const __thumbnailUpload = (file) => new Promise((resolve, reject) => {
+      awsUpload(file, 'ingelt/blogs', (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+
+    if (file) {
+      const updatedThumbnail = await __thumbnailUpload(file);
+      updateData.picture = updatedThumbnail.Key;
+      getBlog.picture && await deleteFile(getBlog.picture);
+    }
+
+    const result = await blogUtil.update(req.params.blogId, updateData);
+    res.json(result);
+
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 // update
 blogService.put("/:blogId", async (req, res) => {
   const blogId = req.params.blogId;
@@ -65,7 +97,6 @@ blogService.put("/:blogId", async (req, res) => {
     res.status(400).json(err);
   }
 });
-
 
 // read all blogs
 blogService.get("/getall", async (req, res) => {

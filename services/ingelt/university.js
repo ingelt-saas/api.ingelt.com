@@ -50,17 +50,43 @@ universityService.get('/getall', async (req, res) => {
 // read one university
 universityService.get('/:universityId', async (req, res) => {
     try {
-
+        const result = await universityUtil.readyById(req.params.universityId);
+        res.json(result);
     } catch (err) {
         res.status(400).send(err);
     }
 });
 
 // update university
-universityService.put(':universityId', async (req, res) => {
+universityService.put('/:universityId', upload.single('logo'), async (req, res) => {
     try {
 
+        const universityId = req.params.universityId;
+        const updateUniversity = req.body;
+        const logo = req.file;
+
+        const getUniversity = await universityUtil.readyById(universityId);
+
+        const __logoUpload = (file) => new Promise((resolve, reject) => {
+            awsUpload(file, 'ingelt/universities', (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+
+        const uploadedLogo = logo ? await __logoUpload(logo) : null;
+        if (uploadedLogo) {
+            updateUniversity.logo = uploadedLogo.Key;
+            getUniversity.logo && await deleteFile(getUniversity.logo);
+        }
+
+        const result = await universityUtil.update(universityId, updateUniversity);
+        res.status(200).json(result);
     } catch (err) {
+        console.log(err)
         res.status(400).send(err);
     }
 });
