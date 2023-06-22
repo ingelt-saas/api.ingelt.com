@@ -98,7 +98,6 @@ blogService.put("/:blogId", async (req, res) => {
   }
 });
 
-
 // read all blogs
 blogService.get("/getall", async (req, res) => {
   try {

@@ -78,9 +78,21 @@ universityUtil.universityWithShortlist = async (studentId, pageNo, limit, countr
     }
 }
 
-// update university / TODO
+// update university 
+universityUtil.update = async (universityId, updatedData) => {
+    try {
+        const result = await university.update(updatedData, {
+            where: {
+                id: universityId,
+            }
+        });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
 
-// delete university / TODO
+// delete university 
 universityUtil.delete = async (universityId) => {
     try {
         const result = await university.destroy({
