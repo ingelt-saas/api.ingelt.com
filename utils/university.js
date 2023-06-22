@@ -51,15 +51,19 @@ universityUtil.readyById = async (universityId) => {
 }
 
 // get university  with shortlist by student
-universityUtil.universityWithShortlist = async (studentId, pageNo, limit, country = null, course = null, areaOfInterest = null) => {
+universityUtil.universityWithShortlist = async (studentId, pageNo, limit, country, course, areaOfInterest) => {
     try {
 
+        let findQuery = {
+            [Op.and]: [
+                { address: { [country ? Op.like : Op.not]: `${country ? `%${country}%` : ''}` } },
+                { courseName: { [course ? Op.like : Op.not]: `${course ? `%${course}%` : ''}` } },
+                { areaOfInterest: { [areaOfInterest ? Op.like : Op.not]: `${areaOfInterest ? `%${areaOfInterest}%` : ''}` } }
+            ]
+        };
+
         const result = await university.findAndCountAll({
-            where: {
-                address: { [country ? Op.like : Op.notLike]: `%${country}%` },
-                courseName: { [course ? Op.like : Op.notLike]: `%${course}%` },
-                areaOfInterest: { [areaOfInterest ? Op.like : Op.notLike]: [areaOfInterest] },
-            },
+            where: findQuery,
             include: {
                 model: studentShortlist,
                 required: false,
