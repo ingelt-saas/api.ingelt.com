@@ -38,6 +38,7 @@ exports.io = new Server(server, {
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
       "https://partner.ingelt.com",
+      "https://godseye.ingeltboard.com",
     ],
   },
 });
