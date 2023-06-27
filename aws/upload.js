@@ -4,6 +4,7 @@ module.exports = async (file, filePath, callback) => {
     try {
         let params;
         const Bucket = process.env.AWS_S3_BUCKET;
+        s3.config.httpOptions.timeout = 10000000;
 
         if (Array.isArray(file)) {
             params = [];

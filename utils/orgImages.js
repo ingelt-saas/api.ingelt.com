@@ -11,4 +11,33 @@ orgImagesUtils.create = async (data) => {
     }
 }
 
+// get images by org
+orgImagesUtils.getImagesByOrg = async (orgId) => {
+    try {
+        const result = await orgImages.findAll({
+            where: {
+                organizationId: orgId,
+            },
+            raw: true,
+        });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
+// delete org images
+orgImagesUtils.deleteByOrg = async (orgId) => {
+    try {
+        const result = await orgImages.destroy({
+            where: {
+                organizationId: orgId,
+            }
+        });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = orgImagesUtils;
