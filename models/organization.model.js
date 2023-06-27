@@ -24,10 +24,10 @@ const organisationModel = (sequelize, DataTypes) => {
         // },
       },
 
-      images: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+      // images: {
+      //   type: DataTypes.STRING,
+      //   allowNull: true,
+      // },
 
       phoneNo: {
         type: DataTypes.STRING,

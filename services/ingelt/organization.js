@@ -8,6 +8,7 @@ const upload = multer({ storage });
 const awsUpload = require("../../aws/upload");
 const orgImagesUtils = require("../../utils/orgImages");
 const adminUtil = require("../../utils/admin");
+const deleteFile = require("../../aws/delete");
 
 // create new organization
 organizationService.post("/",
@@ -169,8 +170,19 @@ organizationService.put("/:orgId", async (req, res) => {
 // delete organization
 organizationService.delete("/:orgId", async (req, res) => {
   try {
+
+    // get org images
+    const orgImages = await orgImagesUtils.getImagesByOrg(req.params.orgId);
+
+    for (let image of orgImages) {
+      image.name && await deleteFile(image.name); // delete org image from cloud
+    }
+
+    // delete images data from db
+    await orgImagesUtils.deleteByOrg(req.params.orgId);
+
     const result = await organizationUtil.delete(req.params.orgId);
-    res.status(201).json(result);
+    res.status(204).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
