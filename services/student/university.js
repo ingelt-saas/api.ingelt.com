@@ -33,6 +33,17 @@ universityService.post('/sendQuery', async (req, res) => {
     }
 });
 
+//get all shortlisted universities
+universityService.get('/shortlist', async (req, res) => {
+    try {
+        const result = await universityUtil.shortlistedUniversities(req.decoded.id);    
+        res.json(result);
+    } catch (err) {
+        console.log(err)
+        res.status(400).send(err);
+    }
+});
+
 // add shortlist
 universityService.post('/shortlist/:universityId', async (req, res) => {
     try {
