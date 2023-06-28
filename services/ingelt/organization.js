@@ -11,108 +11,77 @@ const adminUtil = require("../../utils/admin");
 const deleteFile = require("../../aws/delete");
 
 // create new organization
-organizationService.post("/",
-  upload.fields([{ name: "images", maxCount: 5 }]),
-  async (req, res) => {
+organizationService.post("/", upload.fields([{ name: "images", maxCount: 5 }]), async (req, res) => {
 
-    const uploadFileToS3 = (file, filepath) =>
-      new Promise((resolve, reject) => {
-        awsUpload(file, filepath, (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        });
+  const uploadFileToS3 = (file, filepath) =>
+    new Promise((resolve, reject) => {
+      awsUpload(file, filepath, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
       });
+    });
 
-    try {
+  try {
 
-      const instituteImages = req.files.images
+    const instituteImages = req.files.images;
+    const newInstitute = req.body;
+    newInstitute.ownerName = newInstitute.partnerName;
 
-      const {
-        PartnerImages,
-        Partnername,
-        PartnerPhoneNo,
-        PartnerEmail,
-        InstituteName,
-        InstitutePhone,
-        InstituteEmail,
-        website,
-        overallRating,
-        DemoVideoURL,
-        prize,
-        discountedPrice,
-        State,
-        Zone,
-      } = req.body;
-      //   const newInstitute = req.body;
-      const newInstitute = {
-        name: InstituteName,
-        phoneNo: InstitutePhone,
-        email: InstituteEmail,
-        website,
-        overallRating,
-        demoVideoUrl: DemoVideoURL,
-        fee: prize,
-        discountedFee: discountedPrice,
-        state: State,
-        zone: Zone,
-        ownerName: Partnername,
-      };
+    const newAdmin = {
+      name: newInstitute.partnerName,
+      phoneNo: newInstitute.partnerPhoneNo,
+      email: newInstitute.partnerEmail,
+    };
 
-      const newAdmin = {
-        name: Partnername,
-        phoneNo: PartnerPhoneNo,
-        email: PartnerEmail,
-      };
+    let institute = await organizationUtil.create(newInstitute);
+    let result2 = await adminUtil.create(newAdmin); // create new admin
 
-      let institute = await organizationUtil.create(newInstitute);
-      let result2 = await adminUtil.create(newAdmin);
+    //   const logo = req.files.logo[0]; // institute logo
+    //   const panPicture = req.files.panPicture ? req.files.panPicture[0] : false; // institute pan picture
+    //   const PartnerImages = req.files.PartnerImages; // institute images
 
-      //   const logo = req.files.logo[0]; // institute logo
-      //   const panPicture = req.files.panPicture ? req.files.panPicture[0] : false; // institute pan picture
-      //   const PartnerImages = req.files.PartnerImages; // institute images
+    //   const uploadLogo = await uploadFileToS3(logo, "institute"); // upload to aws
+    //   newInstitute.logo = uploadLogo.Key; // set key in newInstitute object
 
-      //   const uploadLogo = await uploadFileToS3(logo, "institute"); // upload to aws
-      //   newInstitute.logo = uploadLogo.Key; // set key in newInstitute object
+    //   if (panPicture) {
+    //     const uploadPanPic = await uploadFileToS3(panPicture, "institute"); // upload to aws
+    //     newInstitute.panPicture = uploadPanPic.Key; // set key in newInstitute object
+    //   }
 
-      //   if (panPicture) {
-      //     const uploadPanPic = await uploadFileToS3(panPicture, "institute"); // upload to aws
-      //     newInstitute.panPicture = uploadPanPic.Key; // set key in newInstitute object
-      //   }
-
-      if (Array.isArray(instituteImages) && instituteImages.length > 0) {
-        let uploadOrgImages = await uploadFileToS3(instituteImages, "institute"); // upload to aws
-        uploadOrgImages = uploadOrgImages.map((i) => ({
-          name: i.Key,
-          organizationId: institute.id,
-        }));
-        await orgImagesUtils.create(uploadOrgImages); // insert institute images
-      }
-
-
-
-      // insert new institute
-
-
-
-
-
-      // create organization admin
-      //   await adminUtil.create({
-      //     email: newInstitute.adminEmail,
-      //     password: newInstitute.adminPassword,
-      //     name: newInstitute.ownerName,
-      //     organizationId: result.id,
-      //   });
-
-      res.status(201).json({ message: "Created" });
-    } catch (err) {
-      console.log(err);
-      res.status(400).json(err);
+    if (Array.isArray(instituteImages) && instituteImages.length > 0) {
+      let uploadOrgImages = await uploadFileToS3(instituteImages, "institute"); // upload to aws
+      uploadOrgImages = uploadOrgImages.map((i) => ({
+        name: i.Key,
+        organizationId: institute.id,
+      }));
+      await orgImagesUtils.create(uploadOrgImages); // insert institute images
     }
+
+
+
+    // insert new institute
+
+
+
+
+
+    // create organization admin
+    //   await adminUtil.create({
+    //     email: newInstitute.adminEmail,
+    //     password: newInstitute.adminPassword,
+    //     name: newInstitute.ownerName,
+    //     organizationId: result.id,
+    //   });
+
+    res.status(201).json({ message: "Created" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
   }
+}
 );
 
 // get all organization
