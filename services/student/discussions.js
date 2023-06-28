@@ -60,22 +60,6 @@ discussionService.get("/all", async (req, res) => {
   try {
     const { pageno, limit } = req.query;
     const result = await discussionUtil.read(parseInt(pageno), parseInt(limit));
-
-    for (const discussion of result.rows) {
-      if (discussion.dataValues.designation === "student") {
-        const student = await studentUtil.readById(
-          discussion.dataValues.senderId
-        );
-        discussion.dataValues.gender = student?.gender;
-
-      } else {
-        const teacher = await teacherUtil.readById(
-          discussion.dataValues.senderId
-        );
-        discussion.dataValues.gender = teacher?.gender;
-      }
-    }
-
     res.status(200).json(result);
   } catch (err) {
     console.log(err);

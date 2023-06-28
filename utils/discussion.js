@@ -23,7 +23,7 @@ discussionUtil.countAll = async () => {
   try {
     const studentCount = await studentUtil.readAll();
     const teacherCount = await teacherUtil.readAll();
-    const totalNumber = studentCount.length + teacherCount.length+548;
+    const totalNumber = studentCount.length + teacherCount.length + 548;
     const percentage = totalNumber * 0.23;
     const operators = ["+", "-"];
     const numbers = [1, 2, 3];
@@ -38,7 +38,7 @@ discussionUtil.countAll = async () => {
     } else {
       online = percentage - randomNumber;
     }
-    result={online:Math.ceil(online),totalMembers:totalNumber};
+    result = { online: Math.ceil(online), totalMembers: totalNumber };
 
     return result;
   } catch (err) {
@@ -116,7 +116,7 @@ discussionUtil.read = async (pageNo, limit) => {
     // delete discussion images
     //     await discussionImagesUtil.deleteImages()
 
-    const result = await discussion.findAndCountAll({
+    let result = await discussion.findAndCountAll({
       include: [
         { model: teacher, as: "teacherSender", attributes: [] },
         { model: student, as: "studentSender", attributes: [] },
@@ -145,20 +145,82 @@ discussionUtil.read = async (pageNo, limit) => {
           ),
           "senderCountry",
         ],
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `gender` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `gender` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderGender",
+        ],
       ],
       include: {
         model: discussionImages,
         required: false,
       },
-      order: [["createdAt", "ASC"]],
+      order: [["createdAt", "DESC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
+      // plain: true,
+      // plain: true
     });
+
     return result;
   } catch (err) {
     throw err;
   }
 };
+
+// discussion read by id
+discussionUtil.readById = async (id) => {
+  try {
+    const result = await discussion.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        { model: teacher, as: "teacherSender", attributes: [] },
+        { model: student, as: "studentSender", attributes: [] },
+      ],
+      attributes: [
+        "id",
+        "message",
+        "designation",
+        "senderId",
+        "createdAt",
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `name` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderName",
+        ],
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `image` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `image` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderImage",
+        ],
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `country` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `country` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderCountry",
+        ],
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `gender` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `gender` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderGender",
+        ],
+      ],
+      include: {
+        model: discussionImages,
+        required: false,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // DELETE
 discussionUtil.delete = async (discussionId) => {

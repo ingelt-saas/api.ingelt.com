@@ -83,10 +83,11 @@ io.on("connect", (socket) => {
   // Message Reciever
   socket.on("message", async (data) => {
     // Add Message to Database
-    console.log(data)
+
     const result = await saveMessageToDB(data);
-    console.log(result)
-    socket.broadcast.emit("message-ack", result);
+    const getDiscussion = await discussionUtil.readById(result.id);
+    // socket.broadcast.emit("message-ack", getDiscussion); // this emit it's not working perfectly
+    socket.emit("message-ack", getDiscussion);
   });
 
   // Leave Room
