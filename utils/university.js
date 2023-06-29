@@ -82,6 +82,25 @@ universityUtil.universityWithShortlist = async (studentId, pageNo, limit, countr
     }
 }
 
+// get shortlisted universities
+universityUtil.shortlistedUniversities = async (studentId) => {
+    try {
+        const result = await university.findAll({
+            include: {
+                model: studentShortlist,
+                required: true,
+                where: {
+                    studentId: studentId,
+                }
+            },
+            // order: [['studentShortlist.createdAt', 'DESC']]
+        });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
 // update university 
 universityUtil.update = async (universityId, updatedData) => {
     try {

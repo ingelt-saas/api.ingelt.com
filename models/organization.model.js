@@ -205,6 +205,10 @@ const organisationModel = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      embedUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       timestamps: true,
