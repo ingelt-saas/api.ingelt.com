@@ -11,22 +11,11 @@ const adminUtil = require("../../utils/admin");
 const deleteFile = require("../../aws/delete");
 
 // create new organization
-organizationService.post("/", upload.fields([{ name: "images", maxCount: 5 }]), async (req, res) => {
-
-  const uploadFileToS3 = (file, filepath) =>
-    new Promise((resolve, reject) => {
-      awsUpload(file, filepath, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+organizationService.post("/", async (req, res) => {
 
   try {
 
-    const instituteImages = req.files.images;
+    const instituteImages = req.body.images;
     const newInstitute = req.body;
     newInstitute.ownerName = newInstitute.partnerName;
 
@@ -36,49 +25,31 @@ organizationService.post("/", upload.fields([{ name: "images", maxCount: 5 }]), 
       email: newInstitute.partnerEmail,
     };
 
+    // get institute by email & get admin by email
+    const getInstitute = await organizationUtil.readByEmail(newInstitute.email);
+    const getAdmin = await adminUtil.readByEmail(newInstitute.partnerEmail);
+
+    if (getInstitute) {
+      return res.status(409).json({ message: 'Institute already exists at this email' });
+    }
+
+    if (getAdmin) {
+      return res.status(409).json({ message: 'Admin already exists at this email' });
+    }
+
     let institute = await organizationUtil.create(newInstitute);
-    let result2 = await adminUtil.create(newAdmin); // create new admin
-
-    //   const logo = req.files.logo[0]; // institute logo
-    //   const panPicture = req.files.panPicture ? req.files.panPicture[0] : false; // institute pan picture
-    //   const PartnerImages = req.files.PartnerImages; // institute images
-
-    //   const uploadLogo = await uploadFileToS3(logo, "institute"); // upload to aws
-    //   newInstitute.logo = uploadLogo.Key; // set key in newInstitute object
-
-    //   if (panPicture) {
-    //     const uploadPanPic = await uploadFileToS3(panPicture, "institute"); // upload to aws
-    //     newInstitute.panPicture = uploadPanPic.Key; // set key in newInstitute object
-    //   }
+    newAdmin.organizationId = institute.id;
+    await adminUtil.create(newAdmin); // create new admin
 
     if (Array.isArray(instituteImages) && instituteImages.length > 0) {
-      let uploadOrgImages = await uploadFileToS3(instituteImages, "institute"); // upload to aws
-      uploadOrgImages = uploadOrgImages.map((i) => ({
-        name: i.Key,
-        organizationId: institute.id,
-      }));
+      let uploadOrgImages = instituteImages.map((i) => ({ name: i, organizationId: institute.id }));
       await orgImagesUtils.create(uploadOrgImages); // insert institute images
     }
 
-
-
-    // insert new institute
-
-
-
-
-
-    // create organization admin
-    //   await adminUtil.create({
-    //     email: newInstitute.adminEmail,
-    //     password: newInstitute.adminPassword,
-    //     name: newInstitute.ownerName,
-    //     organizationId: result.id,
-    //   });
-
     res.status(201).json({ message: "Created" });
+
   } catch (err) {
-    console.log(err);
+    console.log(err)
     res.status(400).json(err);
   }
 }
@@ -119,9 +90,10 @@ organizationService.get("/search", async (req, res) => {
 // get a organization by organization id
 organizationService.get("/:orgId", async (req, res) => {
   try {
-    const result = await organizationUtil.readById(req.params.orgId);
-    res.status(201).json(result);
+    const result = await organizationUtil.readByIdWithAdmin(req.params.orgId);
+    res.status(200).json(result);
   } catch (err) {
+    console.log(err)
     res.status(400).json(err);
   }
 });
@@ -129,8 +101,59 @@ organizationService.get("/:orgId", async (req, res) => {
 // update organization
 organizationService.put("/:orgId", async (req, res) => {
   try {
-    const result = await organizationUtil.update(req.params.orgId, req.body);
-    res.status(201).json(result);
+
+    const updateInstitute = req.body;
+    const updateImages = updateInstitute.images;
+
+    if (updateInstitute.email) {
+      // get institute by email
+      const getInstitute = await organizationUtil.readByEmail(updateInstitute.email);
+      if (getInstitute) {
+        return res.status(409).json({ message: 'Institute already exists at this email' });
+      }
+    }
+
+    if (updateInstitute.partnerEmail) {
+      // get admin by email
+      const getAdmin = await adminUtil.readByEmail(updateInstitute.partnerEmail);
+      if (getAdmin) {
+        return res.status(409).json({ message: 'Admin already exists at this email' });
+      }
+    }
+
+    if (updateImages && Array.isArray(updateImages)) {
+      const getImages = await orgImagesUtils.getImagesByOrg(req.params.orgId);
+      let deletedImages = [];
+      let imagesData = [];
+
+      // check update images
+      for (let image of updateImages) {
+        if (!getImages.find(i => i.name === image)) {
+          imagesData.push({ name: image, organizationId: req.params.orgId });
+        }
+      }
+
+      // images insert into org images
+      await orgImagesUtils.create(imagesData);
+
+      // check which image deleted 
+      for (let image of getImages) {
+        if (!updateImages.find(i => i === image.name)) {
+          deletedImages.push(image.name);
+          await orgImagesUtils.delete(image.id);
+        }
+      }
+
+      // image delete form cloud
+      for (let image of deletedImages) {
+        await deleteFile(image);
+      }
+
+    }
+
+    // update organization data
+    const result = await organizationUtil.update(req.params.orgId, updateInstitute);
+    res.json(result);
   } catch (err) {
     res.status(400).json(err);
   }

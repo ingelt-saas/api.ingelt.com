@@ -117,6 +117,43 @@ organizationUtil.readById = async (organizationId) => {
   }
 };
 
+// read by id with admin
+organizationUtil.readByIdWithAdmin = async (organizationId) => {
+  try {
+    let result = await organisation.findOne({
+      where: {
+        id: organizationId,
+      },
+      include: [
+        {
+          model: admin,
+          required: true,
+          attributes: {
+            exclude: ['password']
+          }
+        },
+        {
+          model: orgImages,
+          required: false
+        }
+      ]
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// read by email
+organizationUtil.readByEmail = async (email) => {
+  try {
+    const result = await organisation.findOne({ where: { email: email } });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // apply
 organizationUtil.apply = async (data) => {
   try {

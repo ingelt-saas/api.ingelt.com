@@ -26,6 +26,16 @@ orgImagesUtils.getImagesByOrg = async (orgId) => {
     }
 }
 
+// delete image by image id
+orgImagesUtils.delete = async (imageId) => {
+    try {
+        const result = await orgImages.destroy({ where: { id: imageId } });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
 // delete org images
 orgImagesUtils.deleteByOrg = async (orgId) => {
     try {
