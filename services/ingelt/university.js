@@ -7,6 +7,7 @@ const upload = multer({ storage });
 const awsUpload = require('../../aws/upload');
 const deleteFile = require('../../aws/delete');
 const universityUtil = require('../../utils/university');
+const studentShortlistUtil = require('../../utils/studentShortlist');
 
 // create university
 universityService.post('/', upload.single('logo'), async (req, res) => {
@@ -41,6 +42,17 @@ universityService.get('/getall', async (req, res) => {
     try {
         const { s, pageNo, limit } = req.query;
         const result = await universityUtil.read(parseInt(pageNo), parseInt(limit));
+        res.json(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// get students shortlisted universities
+universityService.get('/studentsShortlist', async (req, res) => {
+    try {
+        const { pageNo, limit, s } = req.query;
+        const result = await studentShortlistUtil.studentsShortlist(parseInt(pageNo), parseInt(limit), s);
         res.json(result);
     } catch (err) {
         res.status(400).send(err);
