@@ -55,6 +55,10 @@ const universityModel = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        courseLevel: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
 }
 
