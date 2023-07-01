@@ -51,6 +51,35 @@ moduleUtil.getModules = async (pageNo, limit, subject, searchQuery) => {
     }
 }
 
+// get modules for student
+moduleUtil.getModulesForStudent = async (pageNo, limit, subject, searchQuery) => {
+    try {
+        const sub = subject === 'all' ? ['reading', 'writing', 'speaking', 'listening', 'all'] : subject;
+        let findQuery;
+        if (searchQuery) {
+            findQuery = {
+                subject: sub,
+                name: { [Op.like]: `%${searchQuery}%` }
+            }
+        } else {
+            findQuery = {
+                subject: sub,
+            };
+        }
+
+        const result = await modules.findAndCountAll({
+            where: findQuery,
+            order: [['order', 'DESC']],
+            offset: (pageNo - 1) * limit,
+            limit: limit,
+        });
+
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
 //read by id
 moduleUtil.readById = async (moduleId) => {
     try {

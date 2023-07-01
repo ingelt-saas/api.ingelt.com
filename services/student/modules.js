@@ -6,7 +6,7 @@ const moduleService = require('express').Router();
 moduleService.get('/getall', async (req, res) => {
     try {
         const { s, pageNo, limit, subject } = req.query;
-        const result = await moduleUtil.getModules(parseInt(pageNo), parseInt(limit), subject, s);
+        const result = await moduleUtil.getModulesForStudent(parseInt(pageNo), parseInt(limit), subject, s);
         res.json(result);
     } catch (err) {
         res.status(400).send(err);
