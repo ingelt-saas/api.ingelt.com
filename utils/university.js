@@ -57,7 +57,7 @@ universityUtil.universityWithShortlist = async (studentId, pageNo, limit, countr
         let findQuery = {
             [Op.and]: [
                 { address: { [country ? Op.like : Op.not]: `${country ? `%${country}%` : ''}` } },
-                { courseName: { [course ? Op.like : Op.not]: `${course ? `%${course}%` : ''}` } },
+                { courseLevel: { [course ? Op.like : Op.not]: `${course ? `%${course}%` : ''}` } },
                 { areaOfInterest: { [areaOfInterest ? Op.like : Op.not]: `${areaOfInterest ? `%${areaOfInterest}%` : ''}` } }
             ]
         };

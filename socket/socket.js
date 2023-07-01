@@ -86,8 +86,8 @@ io.on("connect", (socket) => {
 
     const result = await saveMessageToDB(data);
     const getDiscussion = await discussionUtil.readById(result.id);
-    // socket.broadcast.emit("message-ack", getDiscussion); // this emit it's not working perfectly
-    socket.emit("message-ack", getDiscussion);
+    socket.broadcast.emit("message-ack", getDiscussion);
+    // socket.emit("message-ack", getDiscussion);
   });
 
   // Leave Room
