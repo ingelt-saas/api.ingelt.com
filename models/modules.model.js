@@ -36,6 +36,10 @@ const moduleModel = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            order: {
+                type: DataTypes.INTEGER,
+                defaultValue: 1,
+            },
             releaseDate: {
                 type: DataTypes.DATE,
                 defaultValue: DataTypes.NOW,
