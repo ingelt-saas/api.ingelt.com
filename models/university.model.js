@@ -1,9 +1,9 @@
 const universityModel = (sequelize, DataTypes) => {
   return sequelize.define("university", {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
