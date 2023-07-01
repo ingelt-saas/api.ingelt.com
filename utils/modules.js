@@ -69,7 +69,7 @@ moduleUtil.getModulesForStudent = async (pageNo, limit, subject, searchQuery) =>
 
         const result = await modules.findAndCountAll({
             where: findQuery,
-            order: [['order', 'DESC']],
+            order: [['order', 'ASC']],
             offset: (pageNo - 1) * limit,
             limit: limit,
         });
