@@ -28,6 +28,7 @@ const visaQuery = db.visaQuery;
 const findIELTSQuery = db.findIELTSQuery;
 const StudentShortlist = db.studentShortlist;
 const University = db.university;
+const DiscussionReport = db.discussionReport;
 
 // Associations
 
@@ -244,16 +245,16 @@ Discussion.hasMany(DiscussionImages);
 DiscussionImages.belongsTo(Discussion);
 
 //Queries-STUDENT
-Student.hasOne(communityQuery,{
+Student.hasOne(communityQuery, {
   foreignKey: {
-    name:'studentId',
+    name: 'studentId',
     allowNull: true,
   },
 });
 
-communityQuery.belongsTo(Student,{
+communityQuery.belongsTo(Student, {
   foreignKey: {
-    name:'studentId',
+    name: 'studentId',
     allowNull: true,
   },
 });
@@ -285,7 +286,7 @@ loanQuery.belongsTo(Student, {
   allowNull: true,
 });
 // Association in student model
-Student.hasOne(ieltsPrep , {
+Student.hasOne(ieltsPrep, {
   foreignKey: {
     name: 'studentId',
     allowNull: true,
@@ -298,14 +299,14 @@ ieltsPrep.belongsTo(Student, {
 });
 
 // Association in student model
-Student.hasOne(visaQuery,{
+Student.hasOne(visaQuery, {
   foreignKey: {
     name: 'studentId',
     allowNull: true,
-  },  
+  },
 });
 
-visaQuery.belongsTo(Student,{
+visaQuery.belongsTo(Student, {
   foreignKey: {
     name: 'studentId',
     allowNull: true,
@@ -313,21 +314,22 @@ visaQuery.belongsTo(Student,{
 });
 
 // Association in student model
-Student.hasOne(findIELTSQuery,{
+Student.hasOne(findIELTSQuery, {
   foreignKey: {
     name: 'studentId',
     allowNull: true,
   },
 });
 
-findIELTSQuery.belongsTo(Student,{
+findIELTSQuery.belongsTo(Student, {
   foreignKey: {
     name: 'studentId',
     allowNull: true,
   },
 });
+
 // STUDENT - STUDENT SHORTLIST
- Student.hasMany(StudentShortlist);
+Student.hasMany(StudentShortlist);
 StudentShortlist.belongsTo(Student, {
   foreignKey: {
     type: Sequelize.STRING,
@@ -342,4 +344,22 @@ StudentShortlist.belongsTo(University, {
     type: Sequelize.UUID,
     allowNull: false,
   }
+});
+
+// DISCUSSION - DISCUSSION-REPORT
+Discussion.hasMany(DiscussionReport);
+DiscussionReport.belongsTo(Discussion);
+
+// STUDENT - DISCUSSION-REPORT
+DiscussionReport.belongsTo(Student, {
+  foreignKey: 'reporterId',
+  constraints: false,
+  as: 'studentReporter',
+});
+
+// TEACHER - DISCUSSION-REPORT
+DiscussionReport.belongsTo(Teacher, {
+  foreignKey: 'reporterId',
+  constraints: false,
+  as: 'teacherReporter',
 });

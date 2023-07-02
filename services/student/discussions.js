@@ -9,6 +9,7 @@ const discussionImagesUtil = require("../../utils/discussionImages");
 const e = require("express");
 const studentUtil = require("../../utils/student");
 const teacherUtil = require("../../utils/teacher");
+const discussionReportUtil = require("../../utils/discussionReport");
 
 const storage = memoryStorage();
 const upload = multer({ storage });
@@ -107,6 +108,21 @@ discussionService.post(
     }
   }
 );
+
+// report discussion
+discussionService.post('/discussionReport', async (req, res) => {
+  try {
+    const newReport = req.body;
+    newReport.reporterId = req.decoded.id;
+    newReport.reporterDesignation = 'student';
+
+    const result = await discussionReportUtil.create(newReport);
+    res.status(201).send(result);
+  } catch (err) {
+    console.log()
+    res.status(400).send(err);
+  }
+});
 
 // delete discussion
 discussionService.delete("/:discussionId", async (req, res) => {
