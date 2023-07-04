@@ -1,4 +1,4 @@
-const { visaQuery } = require("../models");
+const { visaQuery, student, organisation } = require("../models");
 const studentUtil = require("./student");
 
 const visaQueryUtil = {};
@@ -17,10 +17,35 @@ visaQueryUtil.create = async (newVisaQuery) => {
   }
 };
 // GET
-visaQueryUtil.read = async () => {
+visaQueryUtil.read = async (pageNo, limit, searchQuery) => {
   try {
-    const result = await visaQuery.findAll({
-      order: [["id", "DESC"]],
+
+    let findQuery = {};
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          [Op.or]: [
+            { '$student.name$': { [Op.like]: `%${searchQuery}%` } },
+            { '$student.email$': { [Op.like]: `%${searchQuery}%` } },
+          ]
+        }
+      };
+    }
+
+    const result = await visaQuery.findAndCountAll({
+      ...findQuery,
+      include: {
+        model: student,
+        required: true,
+        attributes: ['name', 'id', 'image', 'email', 'dob'],
+        include: {
+          model: organisation,
+          attributes: ['name', 'id', 'address', 'logo']
+        }
+      },
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {

@@ -1,4 +1,5 @@
-const { student, loanQuery } = require("../models");
+const { Op } = require("sequelize");
+const { student, loanQuery, organisation } = require("../models");
 const studentUtil = require("./student");
 
 const loanQueryUtil = {};
@@ -17,10 +18,35 @@ loanQueryUtil.create = async (newLoanQuery) => {
 };
 
 // GET all
-loanQueryUtil.read = async () => {
+loanQueryUtil.read = async (pageNo, limit, searchQuery) => {
   try {
-    const result = await loanQuery.findAll({
-      order: [["id", "DESC"]],
+
+    let findQuery = {};
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          [Op.or]: [
+            { '$student.name$': { [Op.like]: `%${searchQuery}%` } },
+            { '$student.email$': { [Op.like]: `%${searchQuery}%` } },
+          ]
+        }
+      };
+    }
+
+    const result = await loanQuery.findAndCountAll({
+      ...findQuery,
+      include: {
+        model: student,
+        required: true,
+        attributes: ['name', 'id', 'image', 'email', 'dob'],
+        include: {
+          model: organisation,
+          attributes: ['name', 'id', 'address', 'logo']
+        }
+      },
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
     });
     return result;
   } catch (err) {

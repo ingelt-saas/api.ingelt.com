@@ -11,19 +11,19 @@ loanQueryService.post("/", async (req, res) => {
         console.log(err);
         res.status(400).json(err);
     }
-    }
+}
 );
 
 // get all loanQuery
-loanQueryService.get("/", async (req, res) => {
+loanQueryService.get("/getall", async (req, res) => {
     try {
-        const result = await loanQueryUtil.read();
-        res.status(201).json(result);
+        const { s, pageNo, limit } = req.query;
+        const result = await loanQueryUtil.read(parseInt(pageNo), parseInt(limit), s);
+        res.status(200).json(result);
     } catch (err) {
         res.status(400).json(err);
     }
-    }
-);
+});
 
 // get a loanQuery by loanQuery id
 loanQueryService.get("/:studentId", async (req, res) => {
@@ -33,7 +33,7 @@ loanQueryService.get("/:studentId", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
 
 // update loanQuery
@@ -44,8 +44,9 @@ loanQueryService.put("/:studentId", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
+
 // delete loanQuery
 loanQueryService.delete("/:studentId", async (req, res) => {
     try {
@@ -54,7 +55,7 @@ loanQueryService.delete("/:studentId", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
 
 module.exports = loanQueryService;

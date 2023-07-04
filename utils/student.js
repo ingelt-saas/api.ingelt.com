@@ -378,7 +378,7 @@ studentUtil.passedStudents = async (
       search = {
         [Op.and]: [
           { organizationId: orgId },
-          {passed:true},
+          { passed: true },
           {
             [Op.or]: [
               { name: { [Op.like]: `%${searchQuery}%` } },
@@ -390,7 +390,7 @@ studentUtil.passedStudents = async (
     } else {
       search = {
         organizationId: orgId,
-        passed:true,
+        passed: true,
       };
     }
 
@@ -746,6 +746,96 @@ studentUtil.updateStudentsByBatch = async (batchId, data) => {
   }
 };
 
+// get all students for the ingelt godseye
+studentUtil.readForInGelt = async (pageNo, limit, filter, searchQuery) => {
+  try {
+
+    let findQuery = {};
+    if (searchQuery) {
+      findQuery = {
+        where: {
+          [Op.or]: [
+            { name: { [Op.like]: `%${searchQuery}%` } },
+            { email: { [Op.like]: `%${searchQuery}%` } },
+            { '$organization.name$': { [Op.like]: `%${searchQuery}%` } },
+            { '$organization.email$': { [Op.like]: `%${searchQuery}%` } },
+          ]
+        }
+      };
+    }
+
+    // filter query
+    if (filter) {
+      let filterQuery;
+
+      if (filter === 'active') { // active students
+        filterQuery = [
+          { organizationId: { [Op.not]: null } },
+          { active: true },
+          { batchId: { [Op.not]: null } },
+        ];
+      } else if (filter === 'inactive') {
+        filterQuery = [
+          { organizationId: { [Op.not]: null } },
+          { active: false },
+          { batchId: null },
+        ];
+      } else if (filter === 'passed') {
+        filterQuery = [
+          { organizationId: { [Op.not]: null } },
+          { passes: true },
+        ];
+      } else if (filter === 'fresh') {
+        filterQuery = [
+          { organizationId: { [Op.not]: null } },
+          { active: true },
+          { batchId: null },
+        ];
+      }
+
+      if (Object.keys(findQuery).length > 0) {
+        const prevQuery = findQuery.where;
+        findQuery = {
+          where: {
+            [Op.and]: [
+              ...filterQuery,
+              prevQuery
+            ]
+          }
+        };
+      } else {
+        findQuery = {
+          where: {
+            [Op.and]: [...filterQuery]
+          }
+        };
+      }
+    }
+
+    const result = await student.findAndCountAll({
+      ...findQuery,
+      include: [
+        {
+          model: organisation,
+          as: 'organization',
+          attributes: ['name', 'id', 'email', 'address']
+        }
+      ],
+      attributes: {
+        exclude: ['password']
+      },
+      order: [['createdAt', 'DESC']],
+      offset: (pageNo - 1) * limit,
+      limit: limit,
+    });
+    return result;
+  } catch (err) {
+    console.log(err)
+    throw err;
+  }
+}
+
+
 // PUT
 studentUtil.update = async (studentId, updateData) => {
   try {
@@ -753,7 +843,7 @@ studentUtil.update = async (studentId, updateData) => {
       let name = updateData.name;
       name = name.charAt(0).toUpperCase() + name.slice(1);
       updateData.name = name;
-    } 
+    }
     const result = await student.update(updateData, {
       where: {
         id: studentId,
@@ -782,41 +872,41 @@ studentUtil.delete = async (studentId) => {
 //update student status using a scheduler
 studentUtil.updateStudentStatus = async () => {
   try {
-        // Get all active students
-        const activeStudents = await student.findAll();
-        // Loop through each active student and update their status based on the duration
-        for (const student of activeStudents) {
-          const currentDate = new Date();
-          const assignmentDate = student.batchAssignedDate; // Assuming you have an 'assignmentDate' field in the student model
-    
-          // Calculate the duration in milliseconds
-          const duration45Days = 45 * 24 * 60 * 60 * 1000;
-    
-          if (assignmentDate&&currentDate - assignmentDate >= duration45Days) {
-            // Update the student's status after 45 days of assignment
-            await student.update({ active: false, batchId: null });
-          }
-        }
+    // Get all active students
+    const activeStudents = await student.findAll();
+    // Loop through each active student and update their status based on the duration
+    for (const student of activeStudents) {
+      const currentDate = new Date();
+      const assignmentDate = student.batchAssignedDate; // Assuming you have an 'assignmentDate' field in the student model
 
-        // // Get all inactive students
-        const inactiveStudents = await student.findAll();
-    
-        // // Loop through each inactive student and update their 'passed' attribute after 55 days of inactivity
-        for (const student of inactiveStudents) {
-          const currentDate = new Date();
-          const assignmentDate = student.batchAssignedDate; // Assuming you have an 'assignmentDate' field in the student model
-    
-        //   // Calculate the duration in milliseconds
-          const duration55Days = 55 * 24 * 60 * 60 * 1000;
-    
-          if (assignmentDate&&currentDate - assignmentDate >= duration55Days) {
-        //     // Update the 'passed' attribute after 55 days of inactivity
-            await student.update({ passed: true,active:false,batchId:null });
-          }
-        }
-      } catch (error) {
-        console.log(error);
+      // Calculate the duration in milliseconds
+      const duration45Days = 45 * 24 * 60 * 60 * 1000;
+
+      if (assignmentDate && currentDate - assignmentDate >= duration45Days) {
+        // Update the student's status after 45 days of assignment
+        await student.update({ active: false, batchId: null });
       }
-    };
+    }
+
+    // // Get all inactive students
+    const inactiveStudents = await student.findAll();
+
+    // // Loop through each inactive student and update their 'passed' attribute after 55 days of inactivity
+    for (const student of inactiveStudents) {
+      const currentDate = new Date();
+      const assignmentDate = student.batchAssignedDate; // Assuming you have an 'assignmentDate' field in the student model
+
+      //   // Calculate the duration in milliseconds
+      const duration55Days = 55 * 24 * 60 * 60 * 1000;
+
+      if (assignmentDate && currentDate - assignmentDate >= duration55Days) {
+        //     // Update the 'passed' attribute after 55 days of inactivity
+        await student.update({ passed: true, active: false, batchId: null });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = studentUtil;

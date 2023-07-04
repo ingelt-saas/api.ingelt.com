@@ -1,5 +1,5 @@
 const { literal } = require("sequelize");
-const { discussion, teacher, student, discussionImages } = require("../models");
+const { discussion, teacher, student, discussionImages, discussionReport } = require("../models");
 const discussionUtil = {};
 const studentUtil = require("./student");
 const teacherUtil = require("./teacher");
@@ -78,6 +78,7 @@ discussionUtil.countAll = async () => {
 //     throw err;
 //   }
 // };
+
 discussionUtil.read = async (pageNo, limit) => {
   try {
     const discussionCount = await discussion.count();
@@ -120,6 +121,8 @@ discussionUtil.read = async (pageNo, limit) => {
       include: [
         { model: teacher, as: "teacherSender", attributes: [] },
         { model: student, as: "studentSender", attributes: [] },
+        { model: discussionImages, required: false },
+        { model: discussionReport, attributes: ['id', 'reporterId'] }
       ],
       attributes: [
         "id",
@@ -152,15 +155,9 @@ discussionUtil.read = async (pageNo, limit) => {
           "senderGender",
         ],
       ],
-      include: {
-        model: discussionImages,
-        required: false,
-      },
       order: [["createdAt", "DESC"]],
       offset: (pageNo - 1) * limit,
       limit: limit,
-      // plain: true,
-      // plain: true
     });
 
     return result;

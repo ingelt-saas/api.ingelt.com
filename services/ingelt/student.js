@@ -2,6 +2,7 @@ const express = require("express");
 const studentUtil = require("../../utils/student");
 const appliedStudentsUtils = require("../../utils/appliedStudents");
 const studentService = express.Router();
+const deleteFile = require('../../aws/delete');
 
 // POST new student
 studentService.post("/", async (req, res) => {
@@ -39,15 +40,16 @@ studentService.put('/acceptStudent/:id', async (req, res) => {
   }
 });
 
-//get all student in the database
-// studentService.get("/", async (req, res) => {
-//   try {
-//     const result = await studentUtil.readAll();
-//     res.status(201).json(result);
-//   } catch (err) {
-//     res.status(400).json(err);
-//   }
-// });
+// get all student in the database
+studentService.get("/getall", async (req, res) => {
+  try {
+    const { s, pageNo, limit, filter } = req.query;
+    const result = await studentUtil.readForInGelt(parseInt(pageNo), parseInt(limit), filter, s);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
 
 //get all student in the database
 studentService.get("/", async (req, res) => {
@@ -97,8 +99,10 @@ studentService.put("/:studentId", async (req, res) => {
 studentService.delete("/:studentId", async (req, res) => {
   const studentId = req.params.studentId;
   try {
+    const getStudent = await studentUtil.readById(studentId);
+    getStudent.image && await deleteFile(getStudent.image);
     const result = await studentUtil.delete(studentId);
-    res.status(201).json(result);
+    res.status(208).json(result);
   } catch (err) {
     res.status(400).json(err);
   }
