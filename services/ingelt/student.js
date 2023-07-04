@@ -2,6 +2,7 @@ const express = require("express");
 const studentUtil = require("../../utils/student");
 const appliedStudentsUtils = require("../../utils/appliedStudents");
 const studentService = express.Router();
+const deleteFile = require('../../aws/delete');
 
 // POST new student
 studentService.post("/", async (req, res) => {
@@ -98,8 +99,10 @@ studentService.put("/:studentId", async (req, res) => {
 studentService.delete("/:studentId", async (req, res) => {
   const studentId = req.params.studentId;
   try {
+    const getStudent = await studentUtil.readById(studentId);
+    getStudent.image && await deleteFile(getStudent.image);
     const result = await studentUtil.delete(studentId);
-    res.status(201).json(result);
+    res.status(208).json(result);
   } catch (err) {
     res.status(400).json(err);
   }

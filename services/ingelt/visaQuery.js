@@ -10,17 +10,18 @@ visaQueryService.post("/", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
 // get all visaQueries
-visaQueryService.get("/", async (req, res) => {
+visaQueryService.get("/getall", async (req, res) => {
     try {
-        const result = await visaQueryUtil.read();
-        res.status(201).json(result);
+        const { s, pageNo, limit } = req.query;
+        const result = await visaQueryUtil.read(parseInt(pageNo), parseInt(limit), s);
+        res.status(200).json(result);
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
 // get a visaQuery by visaQuery id
 visaQueryService.get("/:studentId", async (req, res) => {
@@ -30,7 +31,7 @@ visaQueryService.get("/:studentId", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
 // update visaQuery
 visaQueryService.put("/:studentId", async (req, res) => {
@@ -40,17 +41,17 @@ visaQueryService.put("/:studentId", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
 // delete visaQuery
 visaQueryService.delete("/:studentId", async (req, res) => {
     try {
         const result = await visaQueryUtil.delete(req.params.studentId);
-        res.status(201).json(result);
+        res.status(208).json(result);
     } catch (err) {
         res.status(400).json(err);
     }
-    }
+}
 );
 
 module.exports = visaQueryService;
