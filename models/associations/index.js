@@ -218,6 +218,9 @@ Discussion.belongsTo(Student, {
   as: 'studentSender',
 });
 
+// DISCUSSION - PARENT-DISCUSSION
+Discussion.belongsTo(Discussion, { as: 'ParentDiscussion', foreignKey: 'parentDiscussionId' })
+
 // NOTES - ADMIN
 Notes.belongsTo(Admin, {
   foreignKey: 'uploaderId',

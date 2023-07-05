@@ -15,6 +15,10 @@ const discussionModel = (sequelize, DataTypes) => {
       message: {
         type: DataTypes.STRING,
       },
+      parentDiscussionId: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
       designation: {
         type: DataTypes.ENUM,
         values: ['student', 'teacher', 'admin']

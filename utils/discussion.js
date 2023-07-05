@@ -122,7 +122,8 @@ discussionUtil.read = async (pageNo, limit) => {
         { model: teacher, as: "teacherSender", attributes: [] },
         { model: student, as: "studentSender", attributes: [] },
         { model: discussionImages, required: false },
-        { model: discussionReport, attributes: ['id', 'reporterId'] }
+        { model: discussionReport, attributes: ['id', 'reporterId'] },
+        { model: discussion, as: 'ParentDiscussion', required: false }
       ],
       attributes: [
         "id",
