@@ -60,6 +60,7 @@ const saveMessageToDB = async (data) => {
       senderId: student.id,
       designation: "student",
       message: data.message,
+      parentDiscussionId: data.parentDiscussionId,
     };
     const result = await discussionUtil.create(newDiscussion);
 
