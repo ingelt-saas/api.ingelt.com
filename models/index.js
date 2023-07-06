@@ -85,5 +85,6 @@ db.university = require("./university.model")(sequelize, Sequelize);
 db.inGelt = require("./ingelt.model")(sequelize, Sequelize);
 db.category = require("./category.model")(sequelize, Sequelize);
 db.discussionReport = require("./discussionReport.model")(sequelize, Sequelize);
+db.course = require("./course.model")(sequelize, Sequelize);
 
 module.exports = db;
