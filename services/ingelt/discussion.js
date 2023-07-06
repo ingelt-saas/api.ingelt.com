@@ -1,5 +1,6 @@
 const express = require("express");
 const discussionUtil = require("../../utils/discussion");
+const discussionReportUtil = require("../../utils/discussionReport");
 const discussionService = express.Router();
 
 // create new discussion 
@@ -17,6 +18,16 @@ discussionService.get('/getall', async (req, res) => {
     try {
         const { pageNo, limit } = req.query;
         const result = await discussionUtil.read(parseInt(pageNo), parseInt(limit));
+        res.json(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// get discussion reports
+discussionService.get('/reports/:discussionId', async (req, res) => {
+    try {
+        const result = await discussionReportUtil.getReportsByDiscussion(req.params.discussionId);
         res.json(result);
     } catch (err) {
         res.status(400).send(err);
