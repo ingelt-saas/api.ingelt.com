@@ -1,5 +1,5 @@
 const { literal } = require("sequelize");
-const { discussion, teacher, student, discussionImages, discussionReport } = require("../models");
+const { discussion, teacher, student, discussionImages, discussionReport, sequelize } = require("../models");
 const discussionUtil = {};
 const studentUtil = require("./student");
 const teacherUtil = require("./teacher");
@@ -121,8 +121,8 @@ discussionUtil.read = async (pageNo, limit) => {
       include: [
         { model: teacher, as: "teacherSender", attributes: [] },
         { model: student, as: "studentSender", attributes: [] },
-        { model: discussionImages, required: false },
-        { model: discussionReport, attributes: ['id', 'reporterId'] },
+        { model: discussionImages, separate: true, required: false },
+        { model: discussionReport, separate: true, attributes: ['id', 'reporterId'], required: false },
         { model: discussion, as: 'ParentDiscussion', required: false }
       ],
       attributes: [
@@ -131,6 +131,7 @@ discussionUtil.read = async (pageNo, limit) => {
         "designation",
         "senderId",
         "createdAt",
+        [sequelize.fn('DATE', sequelize.col('discussion.createdAt')), 'date'],
         [
           literal(
             'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `name` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `name` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
@@ -161,7 +162,20 @@ discussionUtil.read = async (pageNo, limit) => {
       limit: limit,
     });
 
-    return result;
+    let resultArr = {};
+
+    if (Array.isArray(result.rows)) {
+      for (let item of result.rows) {
+        item = item.get({ plain: true });
+        if (resultArr[item.date]) {
+          resultArr[item.date] = [...resultArr[item.date], item];
+        } else {
+          resultArr[item.date] = [item];
+        }
+      }
+    }
+
+    return { count: result.count, rows: resultArr };
   } catch (err) {
     throw err;
   }
