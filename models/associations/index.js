@@ -29,6 +29,7 @@ const findIELTSQuery = db.findIELTSQuery;
 const StudentShortlist = db.studentShortlist;
 const University = db.university;
 const DiscussionReport = db.discussionReport;
+const Course = db.course;
 
 // Associations
 
@@ -366,3 +367,7 @@ DiscussionReport.belongsTo(Teacher, {
   constraints: false,
   as: 'teacherReporter',
 });
+
+// UNIVERSITY - COURSE
+University.hasMany(Course);
+Course.belongsTo(University);
