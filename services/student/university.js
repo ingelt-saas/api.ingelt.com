@@ -6,7 +6,11 @@ const universityService = require('express').Router();
 // get all university
 universityService.get('/getall', async (req, res) => {
     try {
-        const { country, course, areaOfInterest, pageNo, limit } = req.query;
+        let { country, course, areaOfInterest, pageNo, limit } = req.query;
+        country = country ? country.split(';') : [];
+        course = course ? course.split(';') : [];
+        areaOfInterest = areaOfInterest ? areaOfInterest.split(';') : [];
+
         const result = await universityUtil.universityWithShortlist(
             req.decoded.id,
             parseInt(pageNo),
@@ -15,6 +19,7 @@ universityService.get('/getall', async (req, res) => {
             course,
             areaOfInterest
         );
+
         res.json(result);
     } catch (err) {
         // console.log(err)
@@ -36,7 +41,7 @@ universityService.post('/sendQuery', async (req, res) => {
 //get all shortlisted universities
 universityService.get('/shortlist', async (req, res) => {
     try {
-        const result = await universityUtil.shortlistedUniversities(req.decoded.id);    
+        const result = await universityUtil.shortlistedUniversities(req.decoded.id);
         res.json(result);
     } catch (err) {
         console.log(err)
