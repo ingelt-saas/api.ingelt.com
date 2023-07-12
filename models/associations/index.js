@@ -30,6 +30,8 @@ const StudentShortlist = db.studentShortlist;
 const University = db.university;
 const DiscussionReport = db.discussionReport;
 const Course = db.course;
+const Event = db.event;
+const EventBooking = db.eventBooking;
 
 // Associations
 
@@ -371,3 +373,11 @@ DiscussionReport.belongsTo(Teacher, {
 // UNIVERSITY - COURSE
 University.hasMany(Course);
 Course.belongsTo(University);
+
+// STUDENT - EVENT-BOOKING
+Student.hasMany(EventBooking);
+EventBooking.belongsTo(Student);
+
+// EVENT - EVENT-BOOKING
+Event.hasMany(EventBooking);
+EventBooking.belongsTo(Event);

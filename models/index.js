@@ -86,5 +86,7 @@ db.inGelt = require("./ingelt.model")(sequelize, Sequelize);
 db.category = require("./category.model")(sequelize, Sequelize);
 db.discussionReport = require("./discussionReport.model")(sequelize, Sequelize);
 db.course = require("./course.model")(sequelize, Sequelize);
+db.event = require("./event.model")(sequelize, Sequelize);
+db.eventBooking = require("./eventBooking.model")(sequelize, Sequelize);
 
 module.exports = db;
