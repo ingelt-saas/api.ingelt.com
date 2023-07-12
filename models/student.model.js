@@ -91,7 +91,32 @@ const studentModel = (sequelize, DataTypes) => {
 
     passed: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,  
+      defaultValue: false,
+    },
+
+    communityUnlock: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    universityUnlock: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    libraryUnlock: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    modulesUnlock: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    educationLoanUnlock: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
 
     status: {

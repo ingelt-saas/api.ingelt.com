@@ -4,6 +4,7 @@ const studentUtil = require("../../utils/student");
 const batchUtil = require("../../utils/batch");
 const mockTestMarksUtil = require("../../utils/mockTestMarks");
 const submissionUtil = require("../../utils/submission");
+const eventUtil = require("../../utils/event");
 const homeService = express.Router();
 
 // GET student by id
@@ -75,5 +76,29 @@ homeService.get("/submissions", async (req, res) => {
     res.status(400).send(err);
   }
 });
+
+// get upcoming event
+homeService.get('/upcomingEvent', async (req, res) => {
+  try {
+    const result = await eventUtil.upcomingEvent();
+    res.json(result);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// book event
+homeService.post('/bookEvent', async (req, res) => {
+  try {
+    const bookingData = req.body;
+    bookingData.studentId = req.decoded.id;
+    const result = await eventUtil.bookEvent(bookingData);
+    res.json(result);
+
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 
 module.exports = homeService;

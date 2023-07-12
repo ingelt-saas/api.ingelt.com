@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      status: {
+        type: DataTypes.ENUM,
+        values: ['open', 'rejected', 'docCollection', 'filePreparation', 'appliedForLoan', 'loanDisbursed'],
+        defaultValue: 'open'
+      }
     },
     {
       timestamps: true,

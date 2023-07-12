@@ -28,6 +28,7 @@ const universityService = require("./university");
 const loanQueryService = require("./loanQuery");
 const visaQueryService = require("./visaQuery");
 const blogService = require("./blog");
+const paymentService = require("./payment");
 
 // authentication route
 router.post("/auth", authenticateStudent);
@@ -64,5 +65,6 @@ router.use("/university", verifyJWT, universityService);
 router.use("/loan-query", loanQueryService);
 router.use("/visa-query", visaQueryService);
 router.use("/blogs", blogService);
+router.use("/payment", verifyJWT, paymentService);
 
 module.exports = router;
