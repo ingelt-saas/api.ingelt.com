@@ -676,33 +676,24 @@ studentUtil.bandScore = async (studentId) => {
 // GET by id
 studentUtil.readById = async (studentId) => {
   try {
-    const organization = await organisation.findOne({
-      include: {
-        model: batch,
-        required: true,
-        attributes: ["name", "id"],
-        include: {
-          model: student,
-          required: true,
-          attributes: [],
-          where: {
-            id: studentId,
-          },
-        },
-      },
-      raw: true,
-    });
 
     let result = await student.findByPk(studentId, {
-      include: {
-        model: batch,
-        required: false,
-        include: {
-          model: organisation,
-          attributes: ["name", "id"],
-          include: { model: mockTest, attributes: ["name", "id"] },
+      include: [
+        {
+          model: batch,
+          required: false,
+          include: {
+            model: organisation,
+            attributes: ["name", "id"],
+            include: { model: mockTest, attributes: ["name", "id"] },
+          },
         },
-      },
+        {
+          model: organisation,
+          required: false,
+          attributes: ['name', 'id']
+        }
+      ],
     });
 
     const testAttempted = await mockTestMarks.count({
@@ -710,9 +701,9 @@ studentUtil.readById = async (studentId) => {
         studentId: studentId,
       },
     });
+
     if (result) {
       result = result.get({ plain: true });
-      result.organization = organization;
       result.testAttempted = testAttempted;
     }
     delete result?.password;
@@ -844,6 +835,7 @@ studentUtil.update = async (studentId, updateData) => {
       name = name.charAt(0).toUpperCase() + name.slice(1);
       updateData.name = name;
     }
+    updateData.payment && delete updateData.payment;
     const result = await student.update(updateData, {
       where: {
         id: studentId,

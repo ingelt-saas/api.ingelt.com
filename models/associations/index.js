@@ -32,6 +32,7 @@ const DiscussionReport = db.discussionReport;
 const Course = db.course;
 const Event = db.event;
 const EventBooking = db.eventBooking;
+const Payment = db.payment;
 
 // Associations
 
@@ -381,3 +382,7 @@ EventBooking.belongsTo(Student);
 // EVENT - EVENT-BOOKING
 Event.hasMany(EventBooking);
 EventBooking.belongsTo(Event);
+
+// PAYMENT - STUDENT
+Student.hasMany(Payment);
+Payment.belongsTo(Student);
