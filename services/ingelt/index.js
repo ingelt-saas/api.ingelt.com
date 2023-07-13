@@ -28,6 +28,7 @@ const universityService = require("./university");
 const { authentication, getInGeltAdmin } = require("./ingelt");
 const verifyJWT = require('../../middleware/verifyJWT');
 const categoryService = require("./category");
+const eventService = require("./event");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -113,5 +114,8 @@ router.use("/university", universityService);
 
 // InGelt Category Router
 router.use("/category", categoryService);
+
+// InGelt Event Router
+router.use("/event", eventService);
 
 module.exports = router;

@@ -28,6 +28,7 @@ eventUtil.read = async (pageNo, limit, searchQuery) => {
 
         const result = await event.findAndCountAll({
             ...findQuery,
+            order: [['createdAt', 'DESC']],
             offset: (pageNo - 1) * limit,
             limit: limit,
         });
