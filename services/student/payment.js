@@ -1,4 +1,5 @@
 const stripeService = require('../../stripe/stripe');
+const paymentUtil = require('../../utils/payment');
 const studentUtil = require('../../utils/student');
 
 const paymentService = require('express').Router();
@@ -22,6 +23,17 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
 
         const paymentIntent = await stripeService.createPaymentIntent(amount, 'Billing for ielts online classes', student);
         res.send(paymentIntent);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// payment success
+paymentService.post('/paymentSuccess', async (req, res) => {
+    try {
+        req.body.studentId = req.decoded.id;
+        const result = await paymentUtil.create(req.body);
+        res.json(result);
     } catch (err) {
         res.status(400).send(err);
     }

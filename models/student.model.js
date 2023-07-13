@@ -27,8 +27,6 @@ const studentModel = (sequelize, DataTypes) => {
       },
     },
 
-    fathersName: DataTypes.STRING,
-
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -128,6 +126,10 @@ const studentModel = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['ingelt', 'walk-in'],
       defaultValue: 'ingelt',
+    },
+    payment: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     batchAssignedDate: {
       type: DataTypes.DATE,
