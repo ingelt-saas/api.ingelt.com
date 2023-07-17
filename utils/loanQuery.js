@@ -7,9 +7,6 @@ const loanQueryUtil = {};
 // POST
 loanQueryUtil.create = async (newLoanQuery) => {
   try {
-    let name = newLoanQuery.name;
-    name = studentUtil.capitalizeAllWords(name);
-    newLoanQuery.name = name;
     const result = await loanQuery.create(newLoanQuery);
     return result;
   } catch (err) {
@@ -53,6 +50,7 @@ loanQueryUtil.read = async (pageNo, limit, searchQuery) => {
     throw err;
   }
 };
+
 // GET by id
 loanQueryUtil.readById = async (studentId) => {
   try {
@@ -73,12 +71,7 @@ loanQueryUtil.readById = async (studentId) => {
 // PUT
 loanQueryUtil.update = async (studentId, updateData) => {
   try {
-    if (updateData.name) {
-      let name = updateData.name;
-      name = studentUtil.capitalizeAllWords(name);
-      updateData.name = name;
-    }
-    console.log(updateData);
+
     const result = await loanQuery.update(updateData, {
       where: {
         studentId: studentId,

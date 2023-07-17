@@ -38,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         allowNull: true,
       },
+      status: {
+        type: DataTypes.ENUM,
+        values: ['open', 'rejected', 'docCollection', 'filePreparation', 'appliedForLoan', 'loanDisbursed'],
+        defaultValue: 'open'
+      }
     },
     {
       timestamps: true,

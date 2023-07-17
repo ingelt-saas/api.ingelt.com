@@ -1,21 +1,17 @@
 const { visaQuery, student, organisation } = require("../models");
-const studentUtil = require("./student");
 
 const visaQueryUtil = {};
 
 // POST
 visaQueryUtil.create = async (newVisaQuery) => {
   try {
-    let name = newVisaQuery.name;
-    name = studentUtil.capitalizeAllWords(name);
-    newVisaQuery.name = name;
     const result = await visaQuery.create(newVisaQuery);
     return result;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };
+
 // GET
 visaQueryUtil.read = async (pageNo, limit, searchQuery) => {
   try {
@@ -52,7 +48,8 @@ visaQueryUtil.read = async (pageNo, limit, searchQuery) => {
     throw err;
   }
 };
-// GET by id
+
+// GET by student id
 visaQueryUtil.readById = async (studentId) => {
   try {
     let result = await visaQuery.findOne({
@@ -68,15 +65,10 @@ visaQueryUtil.readById = async (studentId) => {
     throw err;
   }
 };
+
 // PUT
 visaQueryUtil.update = async (studentId, updateData) => {
   try {
-    if (updateData.name) {
-      let name = updateData.name;
-      name = studentUtil.capitalizeAllWords(name);
-      updateData.name = name;
-    }
-    console.log(updateData);
     const result = await visaQuery.update(updateData, {
       where: {
         studentId: studentId,
@@ -87,6 +79,7 @@ visaQueryUtil.update = async (studentId, updateData) => {
     throw err;
   }
 };
+
 // DELETE
 visaQueryUtil.delete = async (studentId) => {
   try {

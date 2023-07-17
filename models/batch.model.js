@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
 
+      classTime: {
+        type: DataTypes.DATE,
+        defaultValue: null,
+      },
+
       endDate: DataTypes.DATE,
 
       classroomLink: DataTypes.STRING,

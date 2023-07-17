@@ -10,8 +10,8 @@ visaQueryService.post("/", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-}
-);
+});
+
 // get all visaQueries
 visaQueryService.get("/getall", async (req, res) => {
     try {
@@ -21,28 +21,28 @@ visaQueryService.get("/getall", async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-}
-);
-// get a visaQuery by visaQuery id
+});
+
+// get a visaQuery by student id
 visaQueryService.get("/:studentId", async (req, res) => {
     try {
         const result = await visaQueryUtil.readById(req.params.studentId);
-        res.status(201).json(result);
+        res.status(200).json(result);
     } catch (err) {
         res.status(400).json(err);
     }
-}
-);
+});
+
 // update visaQuery
 visaQueryService.put("/:studentId", async (req, res) => {
     try {
         const result = await visaQueryUtil.update(req.params.studentId, req.body);
-        res.status(201).json(result);
+        res.status(200).json(result);
     } catch (err) {
         res.status(400).json(err);
     }
-}
-);
+});
+
 // delete visaQuery
 visaQueryService.delete("/:studentId", async (req, res) => {
     try {
