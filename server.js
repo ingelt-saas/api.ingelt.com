@@ -14,33 +14,35 @@ const app = express();
 const server = createServer(app);
 
 app.use(
-    cors({
-        origin: [
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "http://localhost:5173",
-            "https://board.ingelt.com",
-            "https://student.ingelt.com",
-            "https://teacher.ingelt.com",
-            "https://partner.ingelt.com",
-            "https://godseye.ingeltboard.com",
-        ],
-    })
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:5173",
+      "https://board.ingelt.com",
+      "https://student.ingelt.com",
+      "https://teacher.ingelt.com",
+      "https://partner.ingelt.com",
+      "https://godseye.ingeltboard.com",
+      "*.vercel.app",
+    ],
+  })
 );
 // Socket Config
 exports.io = new Server(server, {
-    // To be used in socket/socket.js
-    cors: {
-        origin: [
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "http://localhost:5173",
-            "https://student.ingelt.com",
-            "https://teacher.ingelt.com",
-            "https://partner.ingelt.com",
-            "https://godseye.ingeltboard.com",
-        ],
-    },
+  // To be used in socket/socket.js
+  cors: {
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:5173",
+      "https://student.ingelt.com",
+      "https://teacher.ingelt.com",
+      "https://partner.ingelt.com",
+      "https://godseye.ingeltboard.com",
+      "*.vercel.app",
+    ],
+  },
 });
 // Socket Functionality
 require("./socket/socket");
@@ -58,7 +60,7 @@ app.use("/student", studentServices);
 
 // Schedule the updateStudentStatus function to run every day at 00:00 (midnight)
 cron.schedule("0 0 * * *", () => {
-    studentUtil.updateStudentStatus();
+  studentUtil.updateStudentStatus();
 });
 
 // cron.schedule('30 15 * * *', () => {
@@ -88,8 +90,8 @@ require("./models/associations");
 
 // TODO: FORCE ALTER ONLY FOR DEV ENVIRONMENT { alter: true, force: true }
 db.sequelize.sync({ alter: true }).then(() => {
-    // App Listen
-    server.listen(PORT, () => {
-        console.log(`🚀 Server is running on port ${PORT}`);
-    });
+  // App Listen
+  server.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+  });
 });
