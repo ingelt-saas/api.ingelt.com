@@ -14,6 +14,11 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
         if (req.body.paymentFor === 'online') {
             amount = parseInt(process.env.LIVE_ONLINE_CLASS_FEE);
         }
+
+        if (req.body.paymentFor === 'session') {
+            amount = parseInt(process.env.SESSION_BOOKING_FEE);
+        }
+
         if (!getStudent) {
             return res.status(404).send({ message: 'student not found' })
         }
