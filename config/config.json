@@ -20,5 +20,5 @@
     "host": "ingeltboard.cmqefkjspoiz.ap-south-1.rds.amazonaws.com",
     "dialect": "mysql",
     "logging": false
-  },
+  }
 }
