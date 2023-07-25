@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       status: {
         type: DataTypes.ENUM,
-        values: ['open', 'rejected', 'docCollection', 'filePreparation', 'appliedForLoan', 'loanDisbursed'],
+        values: ['open', 'rejected', 'docCollection', 'filePreparation', 'fileReview', 'visaFilled', 'approved'],
         defaultValue: 'open'
       }
     },
