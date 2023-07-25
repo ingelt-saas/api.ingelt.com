@@ -24,7 +24,7 @@ app.use(
       "https://teacher.ingelt.com",
       "https://partner.ingelt.com",
       "https://godseye.ingeltboard.com",
-      "*.vercel.app",
+      "https://student-stage-unanimous.vercel.app/",
     ],
   })
 );
@@ -40,7 +40,7 @@ exports.io = new Server(server, {
       "https://teacher.ingelt.com",
       "https://partner.ingelt.com",
       "https://godseye.ingeltboard.com",
-      "*.vercel.app",
+      "https://student-stage-unanimous.vercel.app/",
     ],
   },
 });
