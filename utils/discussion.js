@@ -156,6 +156,12 @@ discussionUtil.read = async (pageNo, limit) => {
           ),
           "senderGender",
         ],
+        [
+          literal(
+            'CASE WHEN `discussion`.`designation` = "teacher" THEN (SELECT `verified` FROM `teachers` WHERE `teachers`.`id` = `discussion`.`senderId`) ELSE (SELECT `verified` FROM `students` WHERE `students`.`id` = `discussion`.`senderId`) END'
+          ),
+          "senderVerified",
+        ],
       ],
       order: [["createdAt", "DESC"]],
       offset: (pageNo - 1) * limit,
