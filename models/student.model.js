@@ -131,6 +131,10 @@ const studentModel = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     batchAssignedDate: {
       type: DataTypes.DATE,
       defaultValue: null,

@@ -6,7 +6,6 @@ const deleteFile = require('../../aws/delete');
 moduleService.post('/', async (req, res) => {
     try {
         const newModule = req.body;
-        console.log(newModule)
         const result = await moduleUtil.create(newModule);
         res.status(201).json(result);
     } catch (err) {
