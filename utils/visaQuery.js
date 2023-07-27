@@ -81,11 +81,11 @@ visaQueryUtil.update = async (studentId, updateData) => {
 };
 
 // DELETE
-visaQueryUtil.delete = async (studentId) => {
+visaQueryUtil.delete = async (visaQueryId) => {
   try {
     const result = await visaQuery.destroy({
       where: {
-        studentId: studentId,
+        id: visaQueryId,
       },
     });
     return result;
@@ -93,4 +93,5 @@ visaQueryUtil.delete = async (studentId) => {
     throw err;
   }
 };
+
 module.exports = visaQueryUtil;

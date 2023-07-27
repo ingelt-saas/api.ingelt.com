@@ -182,6 +182,21 @@ organizationUtil.search = async (value) => {
   }
 };
 
+// get InGelt institute
+organizationUtil.getInGelt = async () => {
+  try {
+    let result = await organisation.findOne({
+      where: {
+        modeOfClasses: 'offline'
+      }
+    });
+    result = result.get({ plain: true });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // total revenue
 organizationUtil.totalRevenueByOrg = async (orgId) => {
   try {

@@ -44,9 +44,9 @@ visaQueryService.put("/:studentId", async (req, res) => {
 });
 
 // delete visaQuery
-visaQueryService.delete("/:studentId", async (req, res) => {
+visaQueryService.delete("/:visaQueryId", async (req, res) => {
     try {
-        const result = await visaQueryUtil.delete(req.params.studentId);
+        const result = await visaQueryUtil.delete(req.params.visaQueryId);
         res.status(208).json(result);
     } catch (err) {
         res.status(400).json(err);

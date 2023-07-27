@@ -1,4 +1,5 @@
 const { payment, student } = require("../models");
+const organizationUtil = require("./organization");
 
 const paymentUtil = {};
 
@@ -6,9 +7,10 @@ const paymentUtil = {};
 paymentUtil.create = async (data) => {
     try {
         const result = await payment.create(data);
-        await student.update({ payment: true }, {
+        const getInGelt = await organizationUtil.getInGelt();
+        await student.update({ payment: true, organizationId: getInGelt.id }, {
             where: {
-                id: data.studentId
+                id: data.studentId,
             }
         });
         return result;
