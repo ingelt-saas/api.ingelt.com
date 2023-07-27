@@ -20,7 +20,8 @@ const moduleModel = (sequelize, DataTypes) => {
             },
             subject: {
                 type: DataTypes.ENUM,
-                values: ['Reading', 'Writing', 'Speaking', 'Listening', 'All']
+                values: ['Reading', 'Writing', 'Speaking', 'Listening', 'All'],
+                defaultValue: null,
             },
             fileSize: DataTypes.INTEGER,
             fileType: DataTypes.STRING,
@@ -28,6 +29,11 @@ const moduleModel = (sequelize, DataTypes) => {
             views: {
                 type: DataTypes.INTEGER,
                 defaultValue: 0
+            },
+            type: {
+                type: DataTypes.STRING,
+                values: ['modules', 'library', 'module_ppt', 'mock_test'],
+                defaultValue: null,
             },
             description: {
                 type: DataTypes.TEXT,

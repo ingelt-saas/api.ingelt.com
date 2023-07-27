@@ -52,18 +52,18 @@ moduleUtil.getModules = async (pageNo, limit, subject, searchQuery) => {
 }
 
 // get modules for student
-moduleUtil.getModulesForStudent = async (pageNo, limit, subject, searchQuery) => {
+moduleUtil.getModulesForStudent = async (pageNo, limit, type, searchQuery) => {
     try {
-        const sub = subject === 'all' ? ['reading', 'writing', 'speaking', 'listening', 'all'] : subject;
+        const moduleType = type === 'all' ? ['modules', 'library', 'module_ppt', 'mock_test'] : type;
         let findQuery;
         if (searchQuery) {
             findQuery = {
-                subject: sub,
+                type: moduleType,
                 name: { [Op.like]: `%${searchQuery}%` }
             }
         } else {
             findQuery = {
-                subject: sub,
+                type: moduleType,
             };
         }
 
@@ -106,7 +106,6 @@ moduleUtil.update = async (moduleId, updatedData) => {
         throw err;
     }
 }
-
 
 // delete modules
 moduleUtil.delete = async (moduleId) => {
