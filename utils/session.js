@@ -1,4 +1,4 @@
-const { session } = require("../models");
+const { session, student } = require("../models");
 
 const sessionUtil = {};
 
@@ -6,6 +6,25 @@ const sessionUtil = {};
 sessionUtil.create = async (data) => {
     try {
         const result = await session.create(data);
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
+// get all sessions
+sessionUtil.getSessions = async () => {
+    try {
+        const result = await session.findAll({
+            include: [
+                {
+                    model: student,
+                    required: true,
+                    attributes: ['id', 'name', 'email', 'phoneNo']
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
         return result;
     } catch (err) {
         throw err;
