@@ -54,7 +54,7 @@ moduleUtil.getModules = async (pageNo, limit, subject, searchQuery) => {
 // get modules for student
 moduleUtil.getModulesForStudent = async (pageNo, limit, type, searchQuery) => {
     try {
-        const moduleType = type === 'all' ? ['modules', 'library', 'module_ppt', 'mock_test'] : type;
+        const moduleType = type === 'all' ? ['video', 'module_ppt', 'mock_test'] : type;
         let findQuery;
         if (searchQuery) {
             findQuery = {

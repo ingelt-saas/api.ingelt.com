@@ -29,6 +29,7 @@ const { authentication, getInGeltAdmin } = require("./ingelt");
 const verifyJWT = require('../../middleware/verifyJWT');
 const categoryService = require("./category");
 const eventService = require("./event");
+const sessionService = require("./session");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -117,5 +118,8 @@ router.use("/category", categoryService);
 
 // InGelt Event Router
 router.use("/event", eventService);
+
+// InGelt session Router
+router.use("/session", verifyJWT, sessionService);
 
 module.exports = router;

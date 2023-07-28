@@ -5,6 +5,14 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
+        title: {
+            type: DataTypes.STRING,
+            defaultValue: null,
+        },
+        desc: {
+            type: DataTypes.STRING,
+            defaultValue: null,
+        },
         schedule: {
             type: DataTypes.DATE,
             defaultValue: null,
@@ -17,9 +25,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             defaultValue: null,
         },
-        speaker: {
-            type: DataTypes.ENUM,
-            values: ['indian', 'american']
-        },
+        // speaker: {
+        //     type: DataTypes.ENUM,
+        //     values: ['indian', 'american']
+        // },
     });
 }
