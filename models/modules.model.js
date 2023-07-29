@@ -24,7 +24,6 @@ const moduleModel = (sequelize, DataTypes) => {
                 defaultValue: null,
             },
             fileSize: DataTypes.INTEGER,
-            fileType: DataTypes.STRING,
             duration: DataTypes.INTEGER,
             views: {
                 type: DataTypes.INTEGER,
