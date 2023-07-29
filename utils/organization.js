@@ -187,7 +187,7 @@ organizationUtil.getInGelt = async () => {
   try {
     let result = await organisation.findOne({
       where: {
-        modeOfClasses: 'offline'
+        modeOfClasses: 'online'
       }
     });
     result = result.get({ plain: true });
