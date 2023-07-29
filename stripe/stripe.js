@@ -24,12 +24,13 @@ stripeService.createPaymentIntent = async (amount, description, customer = {}) =
             currency: "inr",
             automatic_payment_methods: {
                 enabled: true,
-            },
+            }
         });
 
         return paymentIntent.client_secret;
 
     } catch (err) {
+        console.log(err);
         throw err;
     }
 }

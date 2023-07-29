@@ -16,8 +16,8 @@ moduleService.post('/', async (req, res) => {
 // get modules
 moduleService.get('/getall', async (req, res) => {
     try {
-        const { s, pageNo, limit, subject } = req.query;
-        const result = await moduleUtil.getModules(parseInt(pageNo), parseInt(limit), subject, s);
+        const { s, pageNo, limit, type } = req.query;
+        const result = await moduleUtil.getModules(parseInt(pageNo), parseInt(limit), type, s);
         res.json(result);
     } catch (err) {
         res.status(400).send(err);
