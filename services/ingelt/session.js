@@ -2,6 +2,17 @@ const sessionUtil = require('../../utils/session');
 
 const sessionService = require('express').Router();
 
+// create a session
+sessionService.post('/', async (req, res) => {
+    try {
+        const result = await sessionUtil.create(req.body);
+        res.json(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+
 // get all sessions
 sessionService.get('/getall', async (req, res) => {
     try {
