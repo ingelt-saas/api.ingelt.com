@@ -1,3 +1,4 @@
+const { createOrder } = require('../../razorpay/razorpay');
 const stripeService = require('../../stripe/stripe');
 const paymentUtil = require('../../utils/payment');
 const studentUtil = require('../../utils/student');
@@ -11,7 +12,7 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
         const getStudent = await studentUtil.readById(student.id);
         let amount = 0;
 
-        if (req.body.paymentFor === 'online') {
+        if (req.body.paymentFor === 'classes') {
             amount = parseInt(process.env.LIVE_ONLINE_CLASS_FEE);
         }
 
@@ -26,8 +27,10 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
             return res.status(400).send({ message: 'Fee not found' });
         }
 
-        const paymentIntent = await stripeService.createPaymentIntent(amount, 'Billing for ielts online classes', student);
-        res.send(paymentIntent);
+        const order = await createOrder({amount});
+        res.json(order);
+        // const paymentIntent = await stripeService.createPaymentIntent(amount, 'Billing for ielts online classes', student);
+        // res.send(paymentIntent);
     } catch (err) {
         res.status(400).send(err);
     }

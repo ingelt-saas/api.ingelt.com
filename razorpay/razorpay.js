@@ -11,6 +11,8 @@ const instance = new Razorpay({
 exports.createOrder = ({ amount }) => new Promise((resolve, reject) => {
     try {
 
+        amount = amount * 100;
+
         // create a order
         instance.orders.create({
             amount: amount,
