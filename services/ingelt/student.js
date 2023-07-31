@@ -51,6 +51,17 @@ studentService.get("/getall", async (req, res) => {
   }
 });
 
+// search students
+studentService.get("/searchStudents", async (req, res) => {
+  try {
+    const { s } = req.query;
+    const result = await studentUtil.searchStudents(s);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 //get all student in the database
 studentService.get("/", async (req, res) => {
   try {
