@@ -826,6 +826,24 @@ studentUtil.readForInGelt = async (pageNo, limit, filter, searchQuery) => {
   }
 }
 
+// search students
+studentUtil.searchStudents = async (searchQuery) => {
+  try {
+    const result = await student.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${searchQuery}%` } },
+          { email: { [Op.like]: `%${searchQuery}%` } },
+          { id: { [Op.like]: `%${searchQuery}%` } },
+        ]
+      },
+      attributes: ['name', 'email', 'id', 'image', 'gender']
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 // PUT
 studentUtil.update = async (studentId, updateData) => {
