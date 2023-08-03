@@ -1,17 +1,20 @@
-const mailer = require('./index');
+const mailer = require('./config/nodemailer');
 
-const speakingSessionMail = async ({ email, name, }) => {
+// Congratulations, Your Speaking Session is Successfully Booked! - InGelt Board
+{/* <p style=" margin: 0; margin-top: 0.4rem;">Due date: <strong>${dueDate}</strong></p> */ }
+
+const onlineClassBookingMail = async ({ name, email }) => {
     const options = {
         from: process.env.EMAIL || "ingeltemails@gmail.com",
         to: email,
-        subject: 'Congratulations, Your Speaking Session is Successfully Booked! - InGelt Board',
+        subject: 'Congratulations, You have successfully registered with Live Classes at InGelt Board!',
         html: `<!DOCTYPE html>
                 <html lang="en">
                 
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Congratulations, Your Speaking Session is Successfully Booked! - InGelt Board</title>
+                    <title>Congratulations, You have successfully registered with Live Classes at InGelt Board!</title>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                     <style type="text/css">
                         a:hover {
@@ -69,12 +72,14 @@ const speakingSessionMail = async ({ email, name, }) => {
                                                 <tr>
                                                     <td>
                                                         <h4 style="margin: 0; margin-bottom: 0.5rem;">Dear ${name}</h4>
-                                                        <p style="margin: 0; color:#242052; font-weight: 500;">
-                                                            You have successfully registered for 1:1 English Speaking Session at InGelt
-                                                            Board. Check your booked date in the
-                                                            Calendar on <a style="text-decoration:underline;color:#242052;"
+                                                        <p style="margin: 0; color:#242052; font-weight: 500;">You have successfully
+                                                            registered with Live
+                                                            Online
+                                                            Classes at InGelt.
+                                                            Checkout your <a style="text-decoration:underline;color:#242052;"
                                                                 href="https://student.ingelt.com">InGelt Board
-                                                                Student App</a>.
+                                                                Student App</a> to get
+                                                            started with your classes.
                                                         </p>
                                                     </td>
                                                 </tr>
@@ -83,13 +88,7 @@ const speakingSessionMail = async ({ email, name, }) => {
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p
-                                                            style="font-weight: 400; margin: 0; margin-bottom: 1rem; font-style: italic;">
-                                                            Note that your
-                                                            session date will be assigned to you
-                                                            within 24 hours of booking.</p>
-                                                        <p style="font-weight: 400; margin: 0;">For any queries, contact us at +91 920
-                                                            586 6744</p>
+                                                        <p style="font-weight: 400;">For any queries, contact us at +91 920 586 6744</p>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -165,4 +164,4 @@ const speakingSessionMail = async ({ email, name, }) => {
     }
 }
 
-module.exports = speakingSessionMail;
+module.exports = onlineClassBookingMail;
