@@ -1,4 +1,5 @@
 const invoiceMail = require('../../mail/invoice.mail');
+const onlineClassBookingMail = require('../../mail/online-class.mail');
 const { createOrder } = require('../../razorpay/razorpay');
 const stripeService = require('../../stripe/stripe');
 const paymentUtil = require('../../utils/payment');
@@ -68,6 +69,7 @@ paymentService.post('/paymentSuccess', async (req, res) => {
         });
 
         // send booking mail
+        await onlineClassBookingMail({ email: student.email, name: student.name });
 
         res.json(result);
     } catch (err) {

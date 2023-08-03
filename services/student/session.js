@@ -1,4 +1,5 @@
 const invoiceMail = require('../../mail/invoice.mail');
+const speakingSessionMail = require('../../mail/speaking-session.mail');
 const sessionUtil = require('../../utils/session');
 
 const sessionService = require('express').Router();
@@ -29,6 +30,9 @@ sessionService.post('/', async (req, res) => {
                 total: amount,
             }
         });
+
+        //send booked email
+        await speakingSessionMail({ email: student.email, name: student.name });
 
         res.json(result);
     } catch (err) {
