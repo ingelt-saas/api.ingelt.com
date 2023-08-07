@@ -1,7 +1,8 @@
+const createPayment = require('../../instamojo/createPayment');
 const invoiceMail = require('../../mail/invoice.mail');
 const onlineClassBookingMail = require('../../mail/online-class.mail');
-const { createOrder } = require('../../razorpay/razorpay');
-const stripeService = require('../../stripe/stripe');
+// const { createOrder } = require('../../razorpay/razorpay');
+// const stripeService = require('../../stripe/stripe');
 const paymentUtil = require('../../utils/payment');
 const studentUtil = require('../../utils/student');
 
@@ -13,13 +14,19 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
         const student = req.decoded;
         const getStudent = await studentUtil.readById(student.id);
         let amount = 0;
+        let purpose = '';
+        let redirectUrl = '';
 
         if (req.body.paymentFor === 'classes') {
             amount = parseInt(process.env.LIVE_ONLINE_CLASS_FEE);
+            purpose = 'Payment for InGelt Board Online Classes';
+            redirectUrl = `https://student.ingelt.com/ielts-classes/online-classes?payment=success&amount=${amount}`;
         }
 
         if (req.body.paymentFor === 'session') {
             amount = parseInt(process.env.SESSION_BOOKING_FEE);
+            purpose = 'Payment for InGelt Board Session';
+            redirectUrl = `https://student.ingelt.com/ielts-preparation/speaking-session?payment=success&amount=${amount}`;
         }
 
         if (!getStudent) {
@@ -29,7 +36,15 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
             return res.status(400).send({ message: 'Fee not found' });
         }
 
-        const order = await createOrder({ amount });
+        const order = await createPayment({
+            amount,
+            purpose,
+            buyer_name: student.name,
+            email: student.email,
+            phone: student.phoneNo
+        }, redirectUrl);
+
+        // const order = await createOrder({ amount });
         res.json(order);
         // const paymentIntent = await stripeService.createPaymentIntent(amount, 'Billing for ielts online classes', student);
         // res.send(paymentIntent);
@@ -48,7 +63,7 @@ paymentService.post('/paymentSuccess', async (req, res) => {
         const result = await paymentUtil.create(req.body);
 
         let amount = req.body.amount;
-        amount = Math.ceil(amount / 100);
+        // amount = Math.ceil(amount / 100);
 
         // send receipt mail
         await invoiceMail({
