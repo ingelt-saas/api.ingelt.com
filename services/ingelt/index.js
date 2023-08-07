@@ -30,6 +30,7 @@ const verifyJWT = require('../../middleware/verifyJWT');
 const categoryService = require("./category");
 const eventService = require("./event");
 const sessionService = require("./session");
+const mailService = require("./mail");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -121,5 +122,8 @@ router.use("/event", eventService);
 
 // InGelt session Router
 router.use("/session", verifyJWT, sessionService);
+
+// InGelt session Router
+router.use("/sendMail", verifyJWT, mailService);
 
 module.exports = router;
