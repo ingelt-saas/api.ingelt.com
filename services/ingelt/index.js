@@ -31,6 +31,7 @@ const categoryService = require("./category");
 const eventService = require("./event");
 const sessionService = require("./session");
 const mailService = require("./mail");
+const moduleCouponService = require("./moduleCoupon");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -123,7 +124,10 @@ router.use("/event", eventService);
 // InGelt session Router
 router.use("/session", verifyJWT, sessionService);
 
-// InGelt session Router
+// InGelt mail Router
 router.use("/sendMail", verifyJWT, mailService);
+
+// InGelt Coupon Router
+router.use("/moduleCoupon", verifyJWT, moduleCouponService);
 
 module.exports = router;

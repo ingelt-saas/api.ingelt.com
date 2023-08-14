@@ -13,12 +13,13 @@ const createPayment = (data, redirectUrl) => new Promise(async (resolve, reject)
 
         Insta.isSandboxMode(false);
 
+        console.log(paymentData)
+
         // create payment
         Insta.createPayment(paymentData, (err, response) => {
             if (err) {
                 reject(err);
             } else {
-                console.log(response)
                 resolve(response)
             }
         })

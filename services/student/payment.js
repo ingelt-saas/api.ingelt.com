@@ -1,6 +1,7 @@
 const createPayment = require('../../instamojo/createPayment');
 const invoiceMail = require('../../mail/invoice.mail');
 const onlineClassBookingMail = require('../../mail/online-class.mail');
+const moduleCouponUtil = require('../../utils/moduleCoupon');
 // const { createOrder } = require('../../razorpay/razorpay');
 // const stripeService = require('../../stripe/stripe');
 const paymentUtil = require('../../utils/payment');
@@ -18,7 +19,18 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
         let redirectUrl = '';
 
         if (req.body.paymentFor === 'classes') {
-            amount = parseInt(process.env.LIVE_ONLINE_CLASS_FEE);
+            let fee = parseInt(process.env.LIVE_ONLINE_CLASS_FEE);
+
+            // module coupon validation
+            if (req.body.moduleCoupon) {
+                const coupon = await moduleCouponUtil.couponValidation(req.body.moduleCoupon);
+                if (coupon.validation) {
+                    const couponAmount = coupon.coupon.amount;
+                    fee = fee - couponAmount;
+                }
+            }
+
+            amount = fee;
             purpose = 'Payment for InGelt Board Online Classes';
             redirectUrl = `https://student.ingelt.com/ielts-classes/online-classes?payment=success&amount=${amount}`;
         }
@@ -88,6 +100,18 @@ paymentService.post('/paymentSuccess', async (req, res) => {
 
         res.json(result);
     } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// module coupon validation
+paymentService.post('/moduleCouponValidation', async (req, res) => {
+    try {
+        const coupon = req.body.coupon;
+        const result = await moduleCouponUtil.couponValidation(coupon);
+        res.json(result);
+    } catch (err) {
+        console.log(err)
         res.status(400).send(err);
     }
 });
