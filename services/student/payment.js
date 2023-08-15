@@ -1,7 +1,8 @@
 const createPayment = require('../../instamojo/createPayment');
 const invoiceMail = require('../../mail/invoice.mail');
 const onlineClassBookingMail = require('../../mail/online-class.mail');
-const moduleCouponUtil = require('../../utils/moduleCoupon');
+const inGeltUtil = require('../../utils/ingelt');
+const couponUtil = require('../../utils/coupon');
 // const { createOrder } = require('../../razorpay/razorpay');
 // const stripeService = require('../../stripe/stripe');
 const paymentUtil = require('../../utils/payment');
@@ -14,16 +15,19 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
     try {
         const student = req.decoded;
         const getStudent = await studentUtil.readById(student.id);
+        const inGelt = await inGeltUtil.getInGelt();
+
         let amount = 0;
         let purpose = '';
         let redirectUrl = '';
 
         if (req.body.paymentFor === 'classes') {
-            let fee = parseInt(process.env.LIVE_ONLINE_CLASS_FEE);
+
+            let fee = parseInt(inGelt.classFee);
 
             // module coupon validation
             if (req.body.moduleCoupon) {
-                const coupon = await moduleCouponUtil.couponValidation(req.body.moduleCoupon);
+                const coupon = await couponUtil.couponValidation(req.body.moduleCoupon, 'class');
                 if (coupon.validation) {
                     const couponAmount = coupon.coupon.amount;
                     fee = fee - couponAmount;
@@ -35,8 +39,26 @@ paymentService.post('/createPaymentIntent', async (req, res) => {
             redirectUrl = `https://student.ingelt.com/ielts-classes/online-classes?payment=success&amount=${amount}`;
         }
 
+        if (req.body.paymentFor === 'module') {
+
+            let fee = parseInt(inGelt.moduleFee);
+
+            // module coupon validation
+            if (req.body.moduleCoupon) {
+                const coupon = await couponUtil.couponValidation(req.body.moduleCoupon, 'module');
+                if (coupon.validation) {
+                    const couponAmount = coupon.coupon.amount;
+                    fee = fee - couponAmount;
+                }
+            }
+
+            amount = fee;
+            purpose = 'Payment for InGelt Board Modules';
+            redirectUrl = `https://student.ingelt.com/ielts-preparation/modules?payment=success&amount=${amount}`;
+        }
+
         if (req.body.paymentFor === 'session') {
-            amount = parseInt(process.env.SESSION_BOOKING_FEE);
+            amount = parseInt(inGelt.sessionFee);
             purpose = 'Payment for InGelt Board Session';
             redirectUrl = `https://student.ingelt.com/ielts-preparation/speaking-session?payment=success&amount=${amount}`;
         }
@@ -77,6 +99,11 @@ paymentService.post('/paymentSuccess', async (req, res) => {
         let amount = req.body.amount;
         // amount = Math.ceil(amount / 100);
 
+        if (req.body.moduleUnlock) {
+            const result = await studentUtil.unlockModule(student.id);
+            return res.json(result);
+        }
+
         // send receipt mail
         await invoiceMail({
             name: student.name,
@@ -108,7 +135,7 @@ paymentService.post('/paymentSuccess', async (req, res) => {
 paymentService.post('/moduleCouponValidation', async (req, res) => {
     try {
         const coupon = req.body.coupon;
-        const result = await moduleCouponUtil.couponValidation(coupon);
+        const result = await couponUtil.couponValidation(coupon, 'module');
         res.json(result);
     } catch (err) {
         console.log(err)

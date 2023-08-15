@@ -15,13 +15,24 @@ module.exports = (sequelize, DataTypes) => {
                     notNull: { msg: "email is required" },
                 },
             },
-
             password: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
                     notNull: { msg: "password is required" },
                 },
+            },
+            classFee: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0,
+            },
+            sessionFee: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0,
+            },
+            moduleFee: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0,
             },
         }
     );

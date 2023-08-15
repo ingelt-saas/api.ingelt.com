@@ -90,6 +90,6 @@ db.event = require("./event.model")(sequelize, Sequelize);
 db.eventBooking = require("./eventBooking.model")(sequelize, Sequelize);
 db.payment = require("./payment.model")(sequelize, Sequelize);
 db.session = require("./session.model")(sequelize, Sequelize);
-db.moduleCoupon = require("./moduleCoupon.model")(sequelize, Sequelize);
+db.coupon = require("./coupon.model")(sequelize, Sequelize);
 
 module.exports = db;

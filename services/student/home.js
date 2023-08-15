@@ -5,6 +5,7 @@ const batchUtil = require("../../utils/batch");
 const mockTestMarksUtil = require("../../utils/mockTestMarks");
 const submissionUtil = require("../../utils/submission");
 const eventUtil = require("../../utils/event");
+const inGeltUtil = require("../../utils/ingelt");
 const homeService = express.Router();
 
 // GET student by id
@@ -12,7 +13,13 @@ homeService.get("/", async (req, res) => {
   try {
     const studentId = req.decoded.id;
     const result = await studentUtil.readById(studentId);
-    res.status(200).json(result);
+    const inGelt = await inGeltUtil.getInGelt();
+    if (inGelt) {
+      delete inGelt.password;
+      delete inGelt.email;
+      delete inGelt.id;
+    }
+    res.status(200).json({ ...result, ...inGelt });
   } catch (err) {
     res.status(400).send(err);
   }

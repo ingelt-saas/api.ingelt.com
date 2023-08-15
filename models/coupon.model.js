@@ -1,9 +1,17 @@
-const moduleCoupon = (sequelize, DataTypes) => {
-    return sequelize.define('moduleCoupon', {
+const coupon = (sequelize, DataTypes) => {
+    return sequelize.define('coupon', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
+        },
+        couponFor: {
+            type: DataTypes.ENUM,
+            values: ['module', 'class', 'session'],
+            allowNull: false,
+            validate: {
+                notNull: { msg: 'please provide couponFor ex: module, class, session' }
+            }
         },
         couponCode: {
             type: DataTypes.STRING,
@@ -34,4 +42,4 @@ const moduleCoupon = (sequelize, DataTypes) => {
     });
 };
 
-module.exports = moduleCoupon
+module.exports = coupon

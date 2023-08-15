@@ -25,13 +25,13 @@ const findIELTSQueryService = require("./findIELTSQuery");
 const file = require('../../aws/file');
 const moduleService = require("./modules");
 const universityService = require("./university");
-const { authentication, getInGeltAdmin } = require("./ingelt");
+const { authentication, getInGeltAdmin, updateInGelt } = require("./ingelt");
 const verifyJWT = require('../../middleware/verifyJWT');
 const categoryService = require("./category");
 const eventService = require("./event");
 const sessionService = require("./session");
 const mailService = require("./mail");
-const moduleCouponService = require("./moduleCoupon");
+const couponService = require("./coupon");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -47,6 +47,9 @@ router.post('/login', authentication);
 
 // get inGelt admin
 router.get('/verify-ingelt', verifyJWT, getInGeltAdmin);
+
+// update inGelt admin
+router.put('/update-ingelt', verifyJWT, updateInGelt);
 
 
 // InGelt Admin Router
@@ -128,6 +131,6 @@ router.use("/session", verifyJWT, sessionService);
 router.use("/sendMail", verifyJWT, mailService);
 
 // InGelt Coupon Router
-router.use("/moduleCoupon", verifyJWT, moduleCouponService);
+router.use("/coupon", verifyJWT, couponService);
 
 module.exports = router;

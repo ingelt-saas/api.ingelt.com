@@ -1,14 +1,14 @@
-const { moduleCoupon } = require("../models");
+const { coupon } = require("../models");
 
-const moduleCouponUtil = {};
+const couponUtil = {};
 
 // create
-moduleCouponUtil.create = async (data) => {
+couponUtil.create = async (data) => {
     try {
         if (data.couponCode) {
             data.couponCode = data.couponCode.toUpperCase();
         }
-        const result = await moduleCoupon.create(data);
+        const result = await coupon.create(data);
         return result;
     } catch (err) {
         throw err;
@@ -16,9 +16,21 @@ moduleCouponUtil.create = async (data) => {
 }
 
 // get all
-moduleCouponUtil.getAll = async () => {
+couponUtil.getAll = async (couponFor = null) => {
     try {
-        const result = await moduleCoupon.findAll({
+
+        let searchQuery = {};
+
+        if (couponFor) {
+            searchQuery = {
+                where: {
+                    couponFor: couponFor,
+                }
+            };
+        }
+
+        const result = await coupon.findAll({
+            ...searchQuery,
             order: [['createdAt', 'DESC']],
         });
         return result;
@@ -28,27 +40,28 @@ moduleCouponUtil.getAll = async () => {
 }
 
 // coupon validation
-moduleCouponUtil.couponValidation = async (couponCode) => {
+couponUtil.couponValidation = async (couponCode, couponFor) => {
     try {
 
-        const coupon = await moduleCoupon.findOne({
+        const getCoupon = await coupon.findOne({
             where: {
                 couponCode: couponCode,
+                couponFor: couponFor,
             },
             plain: true,
         });
 
-        if (!coupon) {
+        if (!getCoupon) {
             return {
                 validation: false,
                 message: 'Invalid coupon code',
             };
         }
 
-        if (coupon.startDate && coupon.endDate) {
+        if (getCoupon.startDate && getCoupon.endDate) {
 
-            let startDate = coupon.startDate;
-            let endDate = coupon.endDate;
+            let startDate = getCoupon.startDate;
+            let endDate = getCoupon.endDate;
             let currentDate = new Date();
             startDate = new Date(startDate);
             endDate = new Date(endDate);
@@ -62,7 +75,7 @@ moduleCouponUtil.couponValidation = async (couponCode) => {
                 return {
                     validation: false,
                     message: 'This coupon code is valid from',
-                    date: coupon.startDate,
+                    date: getCoupon.startDate,
                 }
             }
 
@@ -77,7 +90,7 @@ moduleCouponUtil.couponValidation = async (couponCode) => {
         return {
             validation: true,
             message: 'Coupon applied successfully',
-            coupon: coupon,
+            coupon: getCoupon,
         };
 
     } catch (err) {
@@ -86,9 +99,9 @@ moduleCouponUtil.couponValidation = async (couponCode) => {
 }
 
 // update
-moduleCouponUtil.update = async (couponId, data) => {
+couponUtil.update = async (couponId, data) => {
     try {
-        const result = await moduleCoupon.update(data, {
+        const result = await coupon.update(data, {
             where: {
                 id: couponId,
             }
@@ -100,9 +113,9 @@ moduleCouponUtil.update = async (couponId, data) => {
 }
 
 // delete
-moduleCouponUtil.delete = async (couponId) => {
+couponUtil.delete = async (couponId) => {
     try {
-        const result = await moduleCoupon.destroy({
+        const result = await coupon.destroy({
             where: {
                 id: couponId,
             }
@@ -113,4 +126,4 @@ moduleCouponUtil.delete = async (couponId) => {
     }
 }
 
-module.exports = moduleCouponUtil;
+module.exports = couponUtil;
