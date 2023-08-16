@@ -30,7 +30,7 @@ const visaQueryService = require("./visaQuery");
 const blogService = require("./blog");
 const paymentService = require("./payment");
 const sessionService = require("./session");
-
+const stateCityServe = require('./stateAndCityServe')
 // authentication route
 router.post("/auth", authenticateStudent);
 
@@ -51,8 +51,8 @@ router.get("/files", async (req, res) => {
     res.send("");
   }
 });
-
 // Student Services Router
+
 router.use("/", verifyJWT, homeService);
 router.use("/assignment", verifyJWT, assignmentsService);
 router.use("/library", verifyJWT, libraryService);
@@ -68,5 +68,6 @@ router.use("/visa-query", visaQueryService);
 router.use("/blogs", blogService);
 router.use("/payment", verifyJWT, paymentService);
 router.use("/session", verifyJWT, sessionService);
+router.use("/state-city", verifyJWT, stateCityServe);
 
 module.exports = router;

@@ -67,7 +67,9 @@ cron.schedule("0 0 * * *", () => {
 //   console.log('Running updateStudentStatus...');
 //   studentUtil.updateStudentStatus();
 // });
-
+app.get('/', (req, res)=>{
+  res.send("server running")
+})
 app.use("/admin", adminServices);
 app.use("/teacher", teacherServices);
 
