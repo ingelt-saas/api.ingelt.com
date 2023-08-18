@@ -31,6 +31,7 @@ const categoryService = require("./category");
 const eventService = require("./event");
 const sessionService = require("./session");
 const mailService = require("./mail");
+const stateCityServe = require('./stateAndCityServe')
 const couponService = require("./coupon");
 
 // get file
@@ -41,6 +42,10 @@ router.get('/get-file', async (req, res) => {
         res.send(result);
     } catch (err) { res.send('') }
 });
+
+
+//send state city data
+router.use("/state-city", stateCityServe);
 
 // inGelt authentication
 router.post('/login', authentication);
