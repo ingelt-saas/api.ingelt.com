@@ -854,6 +854,7 @@ studentUtil.update = async (studentId, updateData) => {
       updateData.name = name;
     }
     updateData.payment && delete updateData.payment;
+    updateData.modulesUnlock && delete updateData.modulesUnlock;
     const result = await student.update(updateData, {
       where: {
         id: studentId,
@@ -878,6 +879,20 @@ studentUtil.delete = async (studentId) => {
     throw err;
   }
 };
+
+// student module unlock
+studentUtil.unlockModule = async (studentId) => {
+  try {
+    const result = await student.update({ modulesUnlock: true }, {
+      where: {
+        id: studentId,
+      }
+    });
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}
 
 //update student status using a scheduler
 studentUtil.updateStudentStatus = async () => {

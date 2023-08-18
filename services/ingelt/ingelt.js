@@ -32,4 +32,16 @@ inGeltService.getInGeltAdmin = async (req, res) => {
     }
 }
 
+// update ingelt
+inGeltService.updateInGelt = async (req, res) => {
+    try {
+        const updateData = req.body;
+
+        const result = await inGeltUtil.update(req.decoded.id, updateData);
+        res.json(result);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
 module.exports = inGeltService;
