@@ -31,6 +31,7 @@ const blogService = require("./blog");
 const paymentService = require("./payment");
 const sessionService = require("./session");
 const stateCityServe = require('./stateAndCityServe')
+
 // authentication route
 router.post("/auth", authenticateStudent);
 
