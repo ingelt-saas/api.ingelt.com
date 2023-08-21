@@ -43,8 +43,8 @@ studentService.put('/acceptStudent/:id', async (req, res) => {
 // get all student in the database
 studentService.get("/getall", async (req, res) => {
   try {
-    const { s, pageNo, limit, filter } = req.query;
-    const result = await studentUtil.readForInGelt(parseInt(pageNo), parseInt(limit), filter, s);
+    const { s, pageNo, limit, filter, mode } = req.query;
+    const result = await studentUtil.readForInGelt(parseInt(pageNo), parseInt(limit), filter, mode, s);
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
