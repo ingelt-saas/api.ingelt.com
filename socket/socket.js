@@ -4,6 +4,7 @@ const discussionUtil = require("../utils/discussion");
 const awsUpload = require('../aws/upload');
 const { default: axios } = require("axios");
 const discussionImagesUtil = require('../utils/discussionImages');
+const studentActivityUtil = require("../utils/studentActivity");
 
 // Helper Function
 const saveMessageToDB = async (data) => {
@@ -89,6 +90,18 @@ io.on("connect", (socket) => {
     const getDiscussion = await discussionUtil.readById(result.id);
     socket.broadcast.emit("message-ack", getDiscussion);
     // socket.emit("message-ack", getDiscussion);
+  });
+
+  // student active status
+  socket.on('studentActivity', async (data) => {
+    // decode data.student_auth_token
+    const student = jwt.decode(data.student_auth_token);
+    if (student) {
+      await studentActivityUtil.updateOnlineStatus(student.id);
+    }
+    const getActiveStudents = await studentActivityUtil.getActiveStudents();
+    socket.broadcast.emit('active-students', getActiveStudents); // send active students to godseye
+
   });
 
   // Leave Room

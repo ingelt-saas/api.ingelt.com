@@ -738,7 +738,7 @@ studentUtil.updateStudentsByBatch = async (batchId, data) => {
 };
 
 // get all students for the ingelt godseye
-studentUtil.readForInGelt = async (pageNo, limit, filter = null, mode = null, searchQuery) => {
+studentUtil.readForInGelt = async (pageNo, limit, filter = null, searchQuery) => {
   try {
 
     let findQuery = {};
@@ -752,20 +752,6 @@ studentUtil.readForInGelt = async (pageNo, limit, filter = null, mode = null, se
             { '$organization.email$': { [Op.like]: `%${searchQuery}%` } },
           ]
         }
-      };
-    }
-
-    // class mode
-
-    if (mode === 'online') {
-      findQuery.where = {
-        ...findQuery.where,
-        '$organization.modeOfClasses$': 'online'
-      };
-    } else if (mode === 'offline') {
-      findQuery.where = {
-        ...findQuery.where,
-        '$organization.modeOfClasses$': 'offline'
       };
     }
 
@@ -823,7 +809,7 @@ studentUtil.readForInGelt = async (pageNo, limit, filter = null, mode = null, se
         {
           model: organisation,
           as: 'organization',
-          attributes: ['name', 'id', 'email', 'address', 'modeOfClasses']
+          attributes: ['name', 'id', 'email', 'address']
         }
       ],
       attributes: {
