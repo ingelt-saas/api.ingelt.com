@@ -5,6 +5,14 @@ const studentModel = (sequelize, DataTypes) => {
       primaryKey: true,
       unique: true,
     },
+    // roll: {
+    //   type: DataTypes.UUID,
+    //   unique: true,
+    //   validate: {
+    //     notNull: { msg: "roll is required" },
+    //   }
+    // },
+
     batchId: {
       type: DataTypes.UUID,
       allowNull: true,
@@ -128,10 +136,6 @@ const studentModel = (sequelize, DataTypes) => {
       defaultValue: false,
     },
     batchAssignedDate: {
-      type: DataTypes.DATE,
-      defaultValue: null,
-    },
-    registrationDate: {
       type: DataTypes.DATE,
       defaultValue: null,
     },
