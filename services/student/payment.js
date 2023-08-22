@@ -104,8 +104,6 @@ paymentService.post('/paymentSuccess', async (req, res) => {
             return res.json(result);
         }
 
-        await studentUtil.paymentDone(student.id);
-
         // send receipt mail
         await invoiceMail({
             name: student.name,
