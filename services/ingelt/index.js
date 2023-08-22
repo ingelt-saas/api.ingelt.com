@@ -33,6 +33,7 @@ const sessionService = require("./session");
 const mailService = require("./mail");
 const stateCityServe = require('./stateAndCityServe')
 const couponService = require("./coupon");
+const studentActivityService = require("./studentActivity");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -137,5 +138,8 @@ router.use("/sendMail", verifyJWT, mailService);
 
 // InGelt Coupon Router
 router.use("/coupon", verifyJWT, couponService);
+
+// InGelt Student Activity Router
+router.use("/studentActivity", verifyJWT, studentActivityService);
 
 module.exports = router;

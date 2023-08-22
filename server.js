@@ -29,6 +29,7 @@ app.use(
     ],
   })
 );
+
 // Socket Config
 exports.io = new Server(server, {
   // To be used in socket/socket.js
@@ -64,6 +65,10 @@ cron.schedule("0 0 * * *", () => {
   studentUtil.updateStudentStatus();
 });
 
+cron.schedule('* * * * *', async () => {
+  await studentActivityUtil.updateOfflineStatus();
+});
+
 // cron.schedule('30 15 * * *', () => {
 //   console.log('Running updateStudentStatus...');
 //   studentUtil.updateStudentStatus();
@@ -89,6 +94,7 @@ app.use("/mail", mailService);
 // DB and Server Config
 const PORT = process.env.PORT || 8000;
 const db = require("./models");
+const studentActivityUtil = require("./utils/studentActivity");
 require("./models/associations");
 
 // TODO: FORCE ALTER ONLY FOR DEV ENVIRONMENT { alter: true, force: true }
