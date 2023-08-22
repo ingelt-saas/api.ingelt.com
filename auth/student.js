@@ -32,9 +32,6 @@ const authenticateStudent = async (req, res) => {
         expiresIn: "2d",
       });
 
-      // set cookie
-      res.cookie('student_auth_token', token, { domain: '.ingeltboard.com' });
-
       return res.status(200).json({
         message: "Student authenticated",
         token,
