@@ -20,12 +20,12 @@ app.use(
       "http://localhost:3001",
       "http://localhost:5173",
       "https://board.ingelt.com",
-      "https://www.ingeltboard.com",
       "https://student.ingelt.com",
       "https://teacher.ingelt.com",
       "https://partner.ingelt.com",
       "https://godseye.ingeltboard.com",
       "https://student-staging-abcd-001-020-143.ingelt.com",
+      "https://ingeltboard.com"
     ],
   })
 );
@@ -43,6 +43,7 @@ exports.io = new Server(server, {
       "https://partner.ingelt.com",
       "https://godseye.ingeltboard.com",
       "https://student-staging-abcd-001-020-143.ingelt.com",
+      "https://ingeltboard.com"
     ],
   },
 });
@@ -73,7 +74,7 @@ cron.schedule('* * * * *', async () => {
 //   console.log('Running updateStudentStatus...');
 //   studentUtil.updateStudentStatus();
 // });
-app.get('/', (req, res) => {
+app.get('/', (req, res)=>{
   res.send("server running")
 })
 app.use("/admin", adminServices);

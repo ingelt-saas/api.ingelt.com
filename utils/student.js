@@ -738,7 +738,7 @@ studentUtil.updateStudentsByBatch = async (batchId, data) => {
 };
 
 // get all students for the ingelt godseye
-studentUtil.readForInGelt = async (pageNo, limit, filter = null, searchQuery) => {
+studentUtil.readForInGelt = async (pageNo, limit, filter, searchQuery) => {
   try {
 
     let findQuery = {};
@@ -855,8 +855,6 @@ studentUtil.update = async (studentId, updateData) => {
     }
     updateData.payment && delete updateData.payment;
     updateData.modulesUnlock && delete updateData.modulesUnlock;
-    updateData.registrationDate && delete updateData.registrationDate;
-
     const result = await student.update(updateData, {
       where: {
         id: studentId,
@@ -890,21 +888,6 @@ studentUtil.unlockModule = async (studentId) => {
         id: studentId,
       }
     });
-    return result;
-  } catch (err) {
-    throw err;
-  }
-}
-
-// payment done
-studentUtil.paymentDone = async (studentId) => {
-  try {
-    const result = await student.update({ payment: true, registrationDate: Date.now() }, {
-      where: {
-        id: studentId,
-      }
-    });
-
     return result;
   } catch (err) {
     throw err;

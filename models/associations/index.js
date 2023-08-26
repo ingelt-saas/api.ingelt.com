@@ -397,7 +397,7 @@ Session.belongsTo(Student);
 
 // STUDENT - STUDENT-ACTIVITY
 Student.hasMany(StudentActivity);
-StudentActivity.belongsTo(Student);
+StudentActivity.hasOne(Student);
 
 // MODULETRACKING - STUDENT
 Student.hasMany(ModuleTracking);
@@ -406,3 +406,4 @@ ModuleTracking.belongsTo(Student);
 // MODULETRACKING - MODULE
 Modules.hasMany(ModuleTracking);
 ModuleTracking.belongsTo(Modules);
+
