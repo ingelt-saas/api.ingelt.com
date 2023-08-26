@@ -99,8 +99,9 @@ io.on("connect", (socket) => {
     if (student) {
       await studentActivityUtil.updateOnlineStatus(student.id);
     }
-    const getActiveStudents = await studentActivityUtil.getActiveStudents();
-    socket.broadcast.emit('active-students', getActiveStudents); // send active students to godseye
+
+    // const getActiveStudents = await studentActivityUtil.getActiveStudents();
+    // socket.broadcast.emit('active-students', getActiveStudents); // send active students to godseye
 
   });
 

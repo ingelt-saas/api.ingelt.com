@@ -30,7 +30,8 @@ const visaQueryService = require("./visaQuery");
 const blogService = require("./blog");
 const paymentService = require("./payment");
 const sessionService = require("./session");
-const stateCityServe = require('./stateAndCityServe')
+const stateCityServe = require('./stateAndCityServe');
+const moduleTrackingService = require("./moduleTracking");
 
 // authentication route
 router.post("/auth", authenticateStudent);
@@ -70,5 +71,6 @@ router.use("/blogs", blogService);
 router.use("/payment", verifyJWT, paymentService);
 router.use("/session", verifyJWT, sessionService);
 router.use("/state-city", verifyJWT, stateCityServe);
+router.use("/moduleTracking", verifyJWT, moduleTrackingService);
 
 module.exports = router;

@@ -35,6 +35,8 @@ const EventBooking = db.eventBooking;
 const Payment = db.payment;
 const Session = db.session;
 const StudentActivity = db.studentActivity;
+const ModuleTracking = db.moduleTracking;
+const Modules = db.modules;
 
 // Associations
 
@@ -395,4 +397,12 @@ Session.belongsTo(Student);
 
 // STUDENT - STUDENT-ACTIVITY
 Student.hasMany(StudentActivity);
-StudentActivity.hasOne(Student);
+StudentActivity.belongsTo(Student);
+
+// MODULETRACKING - STUDENT
+Student.hasMany(ModuleTracking);
+ModuleTracking.belongsTo(Student);
+
+// MODULETRACKING - MODULE
+Modules.hasMany(ModuleTracking);
+ModuleTracking.belongsTo(Modules);
