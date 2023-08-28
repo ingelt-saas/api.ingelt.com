@@ -17,7 +17,7 @@ godsEyeResetPasswordService.resetEmail = async (req, res) => {
                 expiresIn: "2h",
             });
 
-            const resetLink = `https://godseye.ingelt.com/update-password?token=${token}`;
+            const resetLink = `https://godseye.ingeltboard.com/update-password?token=${token}`;
             // const resetLink = `http://localhost:5173/update-password?token=${token}`;
             await sendEmail(email, resetLink); // password reset email
             res.json({ message: `Password reset link send to ${email}` });
