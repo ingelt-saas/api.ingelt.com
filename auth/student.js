@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { student } = require("../models");
 const passwordReset = require("../mail/passwordReset");
 const studentUtil = require("../utils/student");
+const studentRegisteredMail = require("../mail/student-registered.mail");
 
 const authenticateStudent = async (req, res) => {
   try {
@@ -78,6 +79,9 @@ const authorizationStudent = async (req, res) => {
     const token = jwt.sign(result, process.env.JWT_SECRET, {
       expiresIn: "2d",
     });
+
+    // send registered email
+    await studentRegisteredMail(result.name, result.email);
 
     res.send({ message: 'Student created', token });
 
