@@ -34,6 +34,11 @@ const mailService = require("./mail");
 const stateCityServe = require('./stateAndCityServe')
 const couponService = require("./coupon");
 const studentActivityService = require("./studentActivity");
+const {
+    resetEmail,
+    resetTokenVerify,
+    passwordUpdate,
+} = require("./resetPassword");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -44,6 +49,8 @@ router.get('/get-file', async (req, res) => {
     } catch (err) { res.send('') }
 });
 
+router.post("/auth/resetEmail", resetEmail);
+router.post("/auth/passwordUpdate", resetTokenVerify, passwordUpdate);
 
 //send state city data
 router.use("/state-city", stateCityServe);
