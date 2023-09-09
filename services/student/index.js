@@ -30,8 +30,7 @@ const visaQueryService = require("./visaQuery");
 const blogService = require("./blog");
 const paymentService = require("./payment");
 const sessionService = require("./session");
-const stateCityServe = require('./stateAndCityServe');
-const otpService= require('./sendOTP')
+const stateCityServe = require('./stateAndCityServe')
 
 // authentication route
 router.post("/auth", authenticateStudent);
@@ -41,7 +40,7 @@ router.post("/auth/resetTokenVerify", resetTokenVerify);
 router.post("/auth/passwordUpdate", passwordUpdate);
 
 router.post("/auth/emailCheck", studentEmailCheck);
-router.post("/auth/signup", otpService.verifyOTPController, authorizationStudent);
+router.post("/auth/signup", authorizationStudent);
 
 // get document
 router.get("/files", async (req, res) => {
@@ -54,7 +53,7 @@ router.get("/files", async (req, res) => {
   }
 });
 // Student Services Router
-router.use("/send-otp", otpService.smsOtpService)
+
 router.use("/", verifyJWT, homeService);
 router.use("/assignment", verifyJWT, assignmentsService);
 router.use("/library", verifyJWT, libraryService);
