@@ -51,6 +51,18 @@ studentService.get("/getall", async (req, res) => {
   }
 });
 
+// get online students by id
+studentService.post("/onlineStudents", async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const result = await studentUtil.getStudentsById(ids);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err)
+    res.status(400).json(err);
+  }
+});
+
 // search students
 studentService.get("/searchStudents", async (req, res) => {
   try {

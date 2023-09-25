@@ -78,17 +78,37 @@ const saveMessageToDB = async (data) => {
   }
 };
 
+let onlineStudents = [];
+
+
 io.on("connect", (socket) => {
   console.log(`🔌 Client Connected: ${socket.id}`);
 
   // Message Reciever
   socket.on("message", async (data) => {
     // Add Message to Database
-
     const result = await saveMessageToDB(data);
     const getDiscussion = await discussionUtil.readById(result.id);
     socket.broadcast.emit("message-ack", getDiscussion);
     // socket.emit("message-ack", getDiscussion);
+  });
+
+  // add online user
+  socket.on('online-student', (studentId) => {
+    if (!onlineStudents.find(student => student.id === studentId)) {
+      onlineStudents.push({ id: studentId, socketId: socket.id });
+    }
+    // sent online students
+    socket.broadcast.emit('get-online-students', onlineStudents);
+  });
+
+  // remove online user
+  socket.on('offline-student', () => {
+
+    onlineStudents = onlineStudents.filter(student => student.socketId !== socket.id);
+    // sent online students
+    socket.broadcast.emit('get-online-students', onlineStudents);
+
   });
 
   // Leave Room
@@ -98,6 +118,10 @@ io.on("connect", (socket) => {
   });
 
   socket.on("disconnect", () => {
+
+    onlineStudents = onlineStudents.filter(student => student.socketId !== socket.id);
+
     console.log(`❌ Client Disconnected: ${socket.id}`);
+    socket.broadcast.emit('get-online-students', onlineStudents);
   });
 });

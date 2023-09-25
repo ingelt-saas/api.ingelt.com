@@ -826,6 +826,33 @@ studentUtil.readForInGelt = async (pageNo, limit, filter, searchQuery) => {
   }
 }
 
+// get students by id
+studentUtil.getStudentsById = async (studentsId = []) => {
+  try {
+
+    const result = await student.findAll({
+      where: {
+        id: [...studentsId],
+      },
+      include: [
+        {
+          model: organisation,
+          as: 'organization',
+          attributes: ['name', 'id', 'email', 'address']
+        }
+      ],
+      attributes: {
+        exclude: ['password']
+      },
+      order: [['createdAt', 'DESC']],
+    });
+    return result;
+
+  } catch (err) {
+    throw err;
+  }
+}
+
 // search students
 studentUtil.searchStudents = async (searchQuery) => {
   try {

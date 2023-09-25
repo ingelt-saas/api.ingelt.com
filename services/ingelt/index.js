@@ -37,7 +37,8 @@ const {
     resetEmail,
     resetTokenVerify,
     passwordUpdate,
-  } = require("./resetPassword");
+} = require("./resetPassword");
+const studentFeedbackService = require("./studentFeedback");
 
 // get file
 router.get('/get-file', async (req, res) => {
@@ -144,5 +145,8 @@ router.use("/sendMail", verifyJWT, mailService);
 
 // InGelt Coupon Router
 router.use("/coupon", verifyJWT, couponService);
+
+// InGelt Feedback Router
+router.use("/feedback", verifyJWT, studentFeedbackService);
 
 module.exports = router;
