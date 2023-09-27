@@ -78,6 +78,29 @@ const saveMessageToDB = async (data) => {
   }
 };
 
+// god'seye message receiver
+const saveGodseyeMessage = async (data) => {
+  try {
+    const newDiscussion = {
+      senderId: data.id,
+      designation: "admin",
+      message: data.message,
+      parentDiscussionId: data.parentDiscussionId,
+    };
+
+    const result = await discussionUtil.create(newDiscussion);
+
+    if (Array.isArray(data.images)) {
+      for (let image of data.images) {
+        await discussionImagesUtil.create({ image: image, discussionId: result.id, });
+      }
+    }
+    return result;
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 let onlineStudents = [];
 
 
@@ -88,6 +111,15 @@ io.on("connect", (socket) => {
   socket.on("message", async (data) => {
     // Add Message to Database
     const result = await saveMessageToDB(data);
+    const getDiscussion = await discussionUtil.readById(result.id);
+    socket.broadcast.emit("message-ack", getDiscussion);
+    // socket.emit("message-ack", getDiscussion);
+  });
+
+  // God'seye Message Reciever
+  socket.on("godseye-message", async (data) => {
+    // Add Message to Database
+    const result = await saveGodseyeMessage(data);
     const getDiscussion = await discussionUtil.readById(result.id);
     socket.broadcast.emit("message-ack", getDiscussion);
     // socket.emit("message-ack", getDiscussion);
