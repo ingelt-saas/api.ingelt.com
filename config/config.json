@@ -13,6 +13,13 @@
     "dialect": "mysql",
     "logging": false
   },
+  "priyanshu":{
+    "username":"root",
+    "password":"password",
+    "database":"ingelt_server",
+    "dialect":"mysql",
+    "logging":false
+  },
   "production": {
     "username": "admin",
     "password": "Itsingelt09!",
