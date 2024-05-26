@@ -19,17 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       content: {
         type: DataTypes.TEXT,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "HTML content is required" },
-        },
       },
       textContent: {
         type: DataTypes.TEXT,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "Text content is required" },
-        },
       },
       category: {
         type: DataTypes.STRING,

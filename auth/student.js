@@ -34,7 +34,11 @@ const authenticateStudent = async (req, res) => {
       });
 
       // set cookie
-      res.cookie('student_auth_token', token, { domain: '.ingeltboard.com' });
+      res.cookie('student_auth_token', token, { domain: '.ingeltboard.com' },
+        { httpOnly: true },
+        { secure: false },
+        { sameSite: 'None' }
+      );
 
       return res.status(200).json({
         message: "Student authenticated",
@@ -49,7 +53,7 @@ const authenticateStudent = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err);
+    console.log("error",err);
   }
 
 };
