@@ -22,9 +22,9 @@
   },
   "production": {
     "username": "admin",
-    "password": "Itsingelt09!",
-    "database": "ingelt_dev",
-    "host": "ingeltboard.cmqefkjspoiz.ap-south-1.rds.amazonaws.com",
+    "password": "8565887271",
+    "database": "ed-connect",
+    "host": "ed-connect.cudewmeam3t3.ap-south-1.rds.amazonaws.com",
     "dialect": "mysql",
     "logging": false
   }
