@@ -27,7 +27,8 @@ app.use(
       "https://student-staging-abcd-001-020-143.ingelt.com",
       "https://ingeltboard.com",
       "https://macverin.com",
-      "https://student-ingelt.toystack.dev"
+      "https://student-ingelt.toystack.dev",
+      "https://godseye.toystack.dev"
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization,awskey',
@@ -48,7 +49,8 @@ exports.io = new Server(server, {
       "https://godseye.ingeltboard.com",
       "https://student-staging-abcd-001-020-143.ingelt.com",
       "https://ingeltboard.com",
-      "https://student-ingelt.toystack.dev"
+      "https://student-ingelt.toystack.dev",
+      "https://godseye.toystack.dev"
     ],
   },
 });
